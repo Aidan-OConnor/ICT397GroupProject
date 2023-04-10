@@ -87,7 +87,6 @@ Terrain::Terrain(float iterations, float minHeight, float maxHeight, float filte
 
 void Terrain::initVAO()
 {
-    unsigned int terrainVAO, terrainVBO, terrainIBO;
     glGenVertexArrays(1, &terrainVAO);
     glBindVertexArray(terrainVAO);
 
@@ -318,6 +317,8 @@ void Terrain::generateFaultFormation(float iterations, float minHeight, float ma
 
 void Terrain::renderTerrain(bool renderType)
 {
+    glBindVertexArray(this->terrainVAO);
+    
     if (renderType)
     {
         for (unsigned strip = 0; strip < numOfStrips; strip++)

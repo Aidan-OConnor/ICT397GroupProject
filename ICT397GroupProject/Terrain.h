@@ -15,6 +15,7 @@ private:
     std::vector<glm::vec3> vertices;
     std::vector<unsigned> indices;
     int rez, numOfStrips, numOfTrisPerStrip;
+    unsigned int terrainVAO, terrainVBO, terrainIBO;
 
     void initVAO();
 
