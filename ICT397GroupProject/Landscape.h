@@ -25,12 +25,12 @@ public:
 
 	void renderLandscape(bool renderType)
 	{
-		texture->bind(0);
-		terrain->renderTerrain(renderType);
+		this->texture->bind(0);
+		this->terrain->renderTerrain(renderType);
 	}
 
 	Terrain getTerrain()
 	{
-		return *terrain;
+		return *this->terrain;
 	}
 };

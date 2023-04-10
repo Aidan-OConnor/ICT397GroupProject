@@ -63,8 +63,9 @@ int main()
     glm::vec3 camPos = { 0.0f, 0.0f, 0.0f };
     camera.updatePosition(camPos);
 
-    Landscape landscape;
+    Landscape landscape, water;
     landscape.loadFromHeightmap("Terrains/test3.jpeg", 1, "Images/Ground2.jpg", GL_TEXTURE_2D);
+    water.loadFromFaultFormation(1000, -3, 3, 0.5, "Images/Water1.jpg", GL_TEXTURE_2D);
 
     shader.use();
     shader.setInt("tex1", 0);
@@ -91,14 +92,10 @@ int main()
         model = glm::translate(model, { 0.0f, 0.0f, 0.0f });
         shader.setMat4("model", model);
 
-        //ground1.bind(0);
-        //ground2.bind(1);
-        //ground3.bind(2);
-
-        //terrain.renderTerrain(camera.getRenderType());
-
         landscape.renderLandscape(camera.getRenderType());
+        water.renderLandscape(camera.getRenderType());
 
+        /*
         std::vector<glm::vec3> vertices = landscape.getTerrain().getVertices();
 
         for (int i = 0; i < vertices.size(); i++)
@@ -111,6 +108,7 @@ int main()
                 i = vertices.size();
             }
         }
+        */
 
 
         glfwSwapBuffers(window);
