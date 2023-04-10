@@ -17,6 +17,7 @@
 #include "OurCamera.h"
 #include "Terrain.h"
 #include "Landscape.h"
+#include "model.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);
@@ -29,12 +30,18 @@ float camHeight = 2.5;
 
 int main()
 {
+    sol::state lua{};
+    lua_State* L = luaL_newstate();
+    luaL_openlibs(L);
+    
+    luaL_dofile(L, "Test.lua");
+    
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
 
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "The Trials of Crusados", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "ICT397 Game Engine", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -45,7 +52,7 @@ int main()
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
-
+    
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     glewExperimental = GL_TRUE;
@@ -70,6 +77,8 @@ int main()
     shader.setInt("tex1", 0);
     shader.setInt("tileSize", 50);
 
+    Model ourModel("Models/Boat/boat.obj");
+
     while (!glfwWindowShouldClose(window))
     {
         camera.updateDeltaTime();
@@ -91,13 +100,17 @@ int main()
         model = glm::translate(model, { 0.0f, 0.0f, 0.0f });
         shader.setMat4("model", model);
 
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); 
+        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	
+        ourModel.Draw(shader);
+
         //ground1.bind(0);
         //ground2.bind(1);
         //ground3.bind(2);
 
         //terrain.renderTerrain(camera.getRenderType());
 
-        landscape.renderLandscape(camera.getRenderType());
+        //landscape.renderLandscape(camera.getRenderType());
 
         std::vector<glm::vec3> vertices = landscape.getTerrain().getVertices();
 
