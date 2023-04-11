@@ -67,7 +67,7 @@ int main()
 
     Shader shader("vertex.shader", "fragment.shader");
 
-    glm::vec3 camPos = { 0.0f, 0.0f, 0.0f };
+    glm::vec3 camPos = { 0.0f, 50.0f, 0.0f };
     camera.updatePosition(camPos);
 
     Landscape landscape, water;
@@ -101,10 +101,20 @@ int main()
         model = glm::translate(model, { 0.0f, 0.0f, 0.0f });
         shader.setMat4("model", model);
 
+        landscape.renderLandscape(camera.getRenderType());
+
+        glm::mat4 model2 = glm::mat4(1.0f);
+        model2 = glm::translate(model2, { 70.0f, 16.5f, 35.0f });
+        shader.setMat4("model", model2);
+
         ourModel.Draw(shader);
 
-        landscape.renderLandscape(camera.getRenderType());
+        glm::mat4 model3 = glm::mat4(1.0f);
+        model3 = glm::translate(model3, { 0.0f, 10.0f, 0.0f });
+        shader.setMat4("model", model3);
+        
         water.renderLandscape(camera.getRenderType());
+
 
         /*
         std::vector<glm::vec3> vertices = landscape.getTerrain().getVertices();

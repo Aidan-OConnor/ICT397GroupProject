@@ -1,4 +1,4 @@
-# Blender 3.5.0 MTL File: 'boat.blend'
+# Blender 3.5.0 MTL File: 'newBoat.blend'
 # www.blender.org
 
 newmtl Material
@@ -9,4 +9,54 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd wood_table_texture.jpg
+map_Kd black_metal_texture.jpg
+
+newmtl Material.001
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd leather_texture.jpg
+
+newmtl Material.002
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd fiberglass_texture.jpg
+
+newmtl Material.003
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd silver_metal_texture.jpg
+
+newmtl Material.004
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Material.005
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd red_fabric_texture.jpg
