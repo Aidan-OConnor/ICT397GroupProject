@@ -11,7 +11,7 @@ class Terrain
 private:
     int width, height, channels;
     unsigned char* heightMap;
-    int widthScale;
+    float widthScale;
     std::vector<glm::vec3> vertices;
     std::vector<unsigned> indices;
     int rez, numOfStrips, numOfTrisPerStrip;

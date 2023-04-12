@@ -6,6 +6,8 @@ Terrain::Terrain(const char* fileName, float scale)
     heightMap = stbi_load(fileName, &width, &height, &channels, 0);
     rez = 1;
 
+    this->widthScale = scale;
+
     float yScale = 64.0f / 256.0f, yShift = 16.0f;
     unsigned bytePerPixel = channels;
     for (int i = 0; i < height; i++)
@@ -346,10 +348,10 @@ std::vector<glm::vec3> Terrain::getVertices()
 
 int Terrain::getWidth()
 {
-    return(this->width);
+    return(this->width*this->widthScale);
 }
 
 int Terrain::getHeight()
 {
-    return(this->height);
+    return(this->height*this->widthScale);
 }
