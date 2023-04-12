@@ -10,9 +10,9 @@ class OurCamera
 {
 private:
     glm::vec3 cameraPos;
-    glm::vec3 foot;
     glm::vec3 cameraFront;
     glm::vec3 cameraUp;
+    glm::vec3 foot;
     glm::vec3 spawnPoint;
     bool firstMouse;
     bool grounded;
