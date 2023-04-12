@@ -23,9 +23,9 @@ private:
 
     float getMinY(std::vector<glm::vec3> list);
 
-    void getHeights(float faultHeights[][400], int faultWidth, int faultHeight, float iterations, float minHeight, float maxHeight);
+    void getHeights(float** faultHeights, int fWidth, int fHeight, float iterations, float minHeight, float maxHeight);
 
-    void applyFilter(float faultHeights[][400], int faultWidth, int faultHeight, float iterations, float filter);
+    void applyFilter(float** faultHeights, int fWidth, int fHeight, float iterations, float filter);
 
     void normaliseHeights(float maxHeight, float minHeight);
 public:
@@ -33,13 +33,17 @@ public:
 
     Terrain(const char* fileName, float scale);
 
-    Terrain(float iterations, float scale,float minHeight, float maxHeight, float filter);
+    Terrain(float iterations, float fWidth, float fHeight,float minHeight, float maxHeight, float filter);
 
     void loadHeightMap(const char* fileName, float scale);
 
-    void generateFaultFormation(float iterations, float minHeight, float maxHeight, float filter);
+    void generateFaultFormation(float iterations, float fWidth, float fHeight, float minHeight, float maxHeight, float filter);
 
     void renderTerrain(bool renderType);
 
     std::vector<glm::vec3> getVertices();
+
+    int getWidth();
+
+    int getHeight();
 };

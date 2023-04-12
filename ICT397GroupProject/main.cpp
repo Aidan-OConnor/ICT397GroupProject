@@ -72,7 +72,7 @@ int main()
 
     Landscape landscape, water;
     landscape.loadFromHeightmap("Terrains/test3.jpeg", 1, "Images/Ground2.jpg", GL_TEXTURE_2D);
-    water.loadFromFaultFormation(1000, 2, -3, 3, 0.5, "Images/Water1.jpg", GL_TEXTURE_2D);
+    water.loadFromFaultFormation(1000, (float)landscape.getTerrain().getWidth(), (float)landscape.getTerrain().getHeight(), -3, 3, 0.5, "Images/Water1.jpg", GL_TEXTURE_2D);
 
     shader.use();
     shader.setInt("tex1", 0);

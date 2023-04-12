@@ -42,23 +42,25 @@ Terrain::Terrain(const char* fileName, float scale)
     initVAO();
 }
 
-Terrain::Terrain(float iterations, float scale, float minHeight, float maxHeight, float filter)
+Terrain::Terrain(float iterations, float fWidth, float fHeight, float minHeight, float maxHeight, float filter)
 {
-    const int faultWidth = 400;
-    const int faultHeight = 400;
+    float** faultHeights = new float*[fWidth];
 
-    float faultHeights[faultWidth][faultHeight];
+    for (int i = 0; i < fWidth; i++)
+    {
+        faultHeights[i] = new float[fHeight];
+    }
 
-    getHeights(faultHeights, faultWidth, faultHeight, iterations, minHeight, maxHeight);
-    applyFilter(faultHeights, faultWidth, faultHeight, iterations, filter);
+    getHeights(faultHeights, fWidth, fHeight, iterations, minHeight, maxHeight);
+    applyFilter(faultHeights, fWidth, fHeight, iterations, filter);
 
-    for (int i = 0; i < faultWidth; i++) {
-        for (int j = 0; j < faultHeight; j++) {
+    for (int i = 0; i < fWidth; i++) {
+        for (int j = 0; j < fHeight; j++) {
             glm::vec3 tempVert;
 
-            tempVert.x = ((-faultHeight / 2.0f + faultHeight * i / (float)faultHeight) * scale);
+            tempVert.x = ((-fHeight / 2.0f + fHeight * i / (float)fHeight));
             tempVert.y = faultHeights[i][j];
-            tempVert.z = ((-faultWidth / 2.0f + faultWidth * j / (float)faultWidth) * scale);
+            tempVert.z = ((-fWidth / 2.0f + fWidth * j / (float)fWidth));
 
             vertices.push_back(tempVert);
         }
@@ -68,19 +70,19 @@ Terrain::Terrain(float iterations, float scale, float minHeight, float maxHeight
 
     rez = 1;
 
-    for (unsigned i = 0; i < faultHeight - 1; i += rez)
+    for (unsigned i = 0; i < fHeight - 1; i += rez)
     {
-        for (unsigned j = 0; j < faultWidth; j += rez)
+        for (unsigned j = 0; j < fWidth; j += rez)
         {
             for (unsigned k = 0; k < 2; k++)
             {
-                indices.push_back(j + faultWidth * (i + k * rez));
+                indices.push_back(j + fWidth * (i + k * rez));
             }
         }
     }
 
-    numOfStrips = (faultHeight - 1) / rez;
-    numOfTrisPerStrip = (faultWidth / rez) * 2 - 2;
+    numOfStrips = (fHeight - 1) / rez;
+    numOfTrisPerStrip = (fWidth / rez) * 2 - 2;
 
     initVAO();
 }
@@ -173,11 +175,11 @@ void Terrain::loadHeightMap(const char* fileName, float scale)
     initVAO();
 }
 
-void Terrain::getHeights(float faultHeights[][400], int faultWidth, int faultHeight, float iterations, float minHeight, float maxHeight)
+void Terrain::getHeights(float** faultHeights, int fWidth, int fHeight, float iterations, float minHeight, float maxHeight)
 {
-    for (int i = 0; i < faultWidth; i++)
+    for (int i = 0; i < fWidth; i++)
     {
-        for (int j = 0; j < faultHeight; j++)
+        for (int j = 0; j < fHeight; j++)
         {
             faultHeights[i][j] = 0;
         }
@@ -191,17 +193,17 @@ void Terrain::getHeights(float faultHeights[][400], int faultWidth, int faultHei
 
         glm::vec2 temp1, temp2;
 
-        temp1.x = rand() % faultWidth;
-        temp1.y = rand() % faultHeight;
+        temp1.x = rand() % fWidth;
+        temp1.y = rand() % fHeight;
 
-        temp2.x = rand() % faultWidth;
-        temp2.y = rand() % faultHeight;
+        temp2.x = rand() % fWidth;
+        temp2.y = rand() % fHeight;
 
         int DirX = temp2.x - temp1.x;
         int DirZ = temp2.y - temp1.y;
 
-        for (int z = 0; z < faultWidth; z++) {
-            for (int x = 0; x < faultHeight; x++) {
+        for (int z = 0; z < fWidth; z++) {
+            for (int x = 0; x < fHeight; x++) {
                 int DirX_in = x - temp1.x;
                 int DirZ_in = z - temp1.y;
 
@@ -216,38 +218,38 @@ void Terrain::getHeights(float faultHeights[][400], int faultWidth, int faultHei
     }
 }
 
-void Terrain::applyFilter(float faultHeights[][400], int faultWidth, int faultHeight, float iterations, float filter)
+void Terrain::applyFilter(float** faultHeights, int fWidth, int fHeight, float iterations, float filter)
 {
-    for (int z = 0; z < faultHeight; z++) {
+    for (int z = 0; z < fHeight; z++) {
         float PrevVal = faultHeights[0][z];
-        for (int x = 1; x < faultWidth; x++) {
+        for (int x = 1; x < fWidth; x++) {
             float CurVal = faultHeights[x][z];
             float NewVal = filter * PrevVal + (1 - filter) * CurVal;
             faultHeights[x][z] = NewVal;
         }
     }
 
-    for (int z = 0; z < faultHeight; z++) {
-        float PrevVal = faultHeights[faultWidth - 1][z];
-        for (int x = faultWidth - 2; x >= 0; x--) {
+    for (int z = 0; z < fHeight; z++) {
+        float PrevVal = faultHeights[fWidth - 1][z];
+        for (int x = fWidth - 2; x >= 0; x--) {
             float CurVal = faultHeights[x][z];
             float NewVal = filter * PrevVal + (1 - filter) * CurVal;
             faultHeights[x][z] = NewVal;
         }
     }
 
-    for (int x = 0; x < faultWidth; x++) {
+    for (int x = 0; x < fWidth; x++) {
         float PrevVal = faultHeights[x][0];
-        for (int z = 1; z < faultHeight; z++) {
+        for (int z = 1; z < fHeight; z++) {
             float CurVal = faultHeights[x][z];
             float NewVal = filter * PrevVal + (1 - filter) * CurVal;
             faultHeights[x][z] = NewVal;
         }
     }
 
-    for (int x = 0; x < faultWidth; x++) {
-        float PrevVal = faultHeights[x][faultHeight - 1];
-        for (int z = faultHeight - 2; z >= 0; z--) {
+    for (int x = 0; x < fWidth; x++) {
+        float PrevVal = faultHeights[x][fHeight - 1];
+        for (int z = fHeight - 2; z >= 0; z--) {
             float CurVal = faultHeights[x][z];
             float NewVal = filter * PrevVal + (1 - filter) * CurVal;
             faultHeights[x][z] = NewVal;
@@ -272,23 +274,25 @@ void Terrain::normaliseHeights(float maxHeight, float minHeight)
     }
 }
 
-void Terrain::generateFaultFormation(float iterations, float minHeight, float maxHeight, float filter)
+void Terrain::generateFaultFormation(float iterations, float fWidth, float fHeight, float minHeight, float maxHeight, float filter)
 {
-    const int faultWidth = 400;
-    const int faultHeight = 400;
+    float** faultHeights = new float* [fWidth];
 
-    float faultHeights[faultWidth][faultHeight];
+    for (int i = 0; i < fWidth; i++)
+    {
+        faultHeights[i] = new float[fHeight];
+    }
 
-    getHeights(faultHeights, faultWidth, faultHeight, iterations, minHeight, maxHeight);
-    applyFilter(faultHeights, faultWidth, faultHeight, iterations, filter);
+    getHeights(faultHeights, fWidth, fHeight, iterations, minHeight, maxHeight);
+    applyFilter(faultHeights, fWidth, fHeight, iterations, filter);
 
-    for (int i = 0; i < faultWidth; i++) {
-        for (int j = 0; j < faultHeight; j++) {
+    for (int i = 0; i < fWidth; i++) {
+        for (int j = 0; j < fHeight; j++) {
             glm::vec3 tempVert;
 
-            tempVert.x = ((-faultHeight / 2.0f + faultHeight * i / (float)faultHeight));
+            tempVert.x = ((-fHeight / 2.0f + fHeight * i / (float)fHeight));
             tempVert.y = faultHeights[i][j];
-            tempVert.z = ((-faultWidth / 2.0f + faultWidth * j / (float)faultWidth));
+            tempVert.z = ((-fWidth / 2.0f + fWidth * j / (float)fWidth));
 
             vertices.push_back(tempVert);
         }
@@ -298,19 +302,19 @@ void Terrain::generateFaultFormation(float iterations, float minHeight, float ma
 
     rez = 1;
 
-    for (unsigned i = 0; i < faultHeight - 1; i += rez)
+    for (unsigned i = 0; i < fHeight - 1; i += rez)
     {
-        for (unsigned j = 0; j < faultWidth; j += rez)
+        for (unsigned j = 0; j < fWidth; j += rez)
         {
             for (unsigned k = 0; k < 2; k++)
             {
-                indices.push_back(j + faultWidth * (i + k * rez));
+                indices.push_back(j + fWidth * (i + k * rez));
             }
         }
     }
 
-    numOfStrips = (faultHeight - 1) / rez;
-    numOfTrisPerStrip = (faultWidth / rez) * 2 - 2;
+    numOfStrips = (fHeight - 1) / rez;
+    numOfTrisPerStrip = (fWidth / rez) * 2 - 2;
 
     initVAO();
 }
@@ -338,4 +342,14 @@ void Terrain::renderTerrain(bool renderType)
 std::vector<glm::vec3> Terrain::getVertices()
 {
     return vertices;
+}
+
+int Terrain::getWidth()
+{
+    return(this->width);
+}
+
+int Terrain::getHeight()
+{
+    return(this->height);
 }
