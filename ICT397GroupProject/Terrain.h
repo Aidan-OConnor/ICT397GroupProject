@@ -33,7 +33,7 @@ public:
 
     Terrain(const char* fileName, float scale);
 
-    Terrain(float iterations, float minHeight, float maxHeight, float filter);
+    Terrain(float iterations, float scale,float minHeight, float maxHeight, float filter);
 
     void loadHeightMap(const char* fileName, float scale);
 

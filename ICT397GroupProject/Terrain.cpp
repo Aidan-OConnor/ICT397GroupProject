@@ -42,7 +42,7 @@ Terrain::Terrain(const char* fileName, float scale)
     initVAO();
 }
 
-Terrain::Terrain(float iterations, float minHeight, float maxHeight, float filter)
+Terrain::Terrain(float iterations, float scale,float minHeight, float maxHeight, float filter)
 {
     const int faultWidth = 400;
     const int faultHeight = 400;
@@ -56,9 +56,9 @@ Terrain::Terrain(float iterations, float minHeight, float maxHeight, float filte
         for (int j = 0; j < faultHeight; j++) {
             glm::vec3 tempVert;
 
-            tempVert.x = ((-faultHeight / 2.0f + faultHeight * i / (float)faultHeight));
+            tempVert.x = ((-faultHeight / 2.0f + faultHeight * i / (float)faultHeight) * scale);
             tempVert.y = faultHeights[i][j];
-            tempVert.z = ((-faultWidth / 2.0f + faultWidth * j / (float)faultWidth));
+            tempVert.z = ((-faultWidth / 2.0f + faultWidth * j / (float)faultWidth) * scale);
 
             vertices.push_back(tempVert);
         }

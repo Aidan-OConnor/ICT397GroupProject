@@ -17,9 +17,9 @@ public:
 		this->texture = new Texture(textureFile, textureType);
 	}
 
-	void loadFromFaultFormation(float iterations, float minHeight, float maxHeight, float filter, const char* textureFile, GLenum textureType)
+	void loadFromFaultFormation(float iterations, float scale ,float minHeight, float maxHeight, float filter, const char* textureFile, GLenum textureType)
 	{
-		this->terrain = new Terrain(iterations, minHeight, maxHeight, filter);
+		this->terrain = new Terrain(iterations, scale, minHeight, maxHeight, filter);
 		this->texture = new Texture(textureFile, textureType);
 	}
 
