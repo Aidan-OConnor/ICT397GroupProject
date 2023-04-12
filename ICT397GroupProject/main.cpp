@@ -73,7 +73,7 @@ int main()
     camera.updatePosition(camPos);
 
     Landscape landscape, water;
-    landscape.loadFromHeightmap("Terrains/test3.jpeg", 2, "Images/Ground2.jpg", GL_TEXTURE_2D);
+    landscape.loadFromHeightmap("Terrains/test3.jpeg", 4, "Images/Ground2.jpg", GL_TEXTURE_2D);
     water.loadFromFaultFormation(1000, (float)landscape.getTerrain().getWidth(), (float)landscape.getTerrain().getHeight(), -5, 5, 0.5, "Images/Water1.jpg", GL_TEXTURE_2D);
 
     Model ourModel("Models/Boat/boat.obj");
@@ -133,12 +133,12 @@ int main()
 
     std::vector<std::string> faces
     {
-        "Images/Skybox/left.jpg",
-        "Images/Skybox/right.jpg",
-        "Images/Skybox/top.jpg",
-        "Images/Skybox/bottom.jpg",
-        "Images/Skybox/front.jpg",
-        "Images/Skybox/back.jpg",
+        "Images/Skybox/left.png",
+        "Images/Skybox/right.png",
+        "Images/Skybox/top.png",
+        "Images/Skybox/bottom.png",
+        "Images/Skybox/front.png",
+        "Images/Skybox/back.png",
     };
 
     unsigned int cubemapTexture = loadCubemap(faces);
