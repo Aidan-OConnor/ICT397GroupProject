@@ -109,7 +109,9 @@
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="fragment.shader" />
     <None Include="Test.lua" />
+    <None Include="vertex.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Landscape.h" />

@@ -42,7 +42,7 @@ Terrain::Terrain(const char* fileName, float scale)
     initVAO();
 }
 
-Terrain::Terrain(float iterations, float scale,float minHeight, float maxHeight, float filter)
+Terrain::Terrain(float iterations, float scale, float minHeight, float maxHeight, float filter)
 {
     const int faultWidth = 400;
     const int faultHeight = 400;
