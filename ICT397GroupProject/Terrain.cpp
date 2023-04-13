@@ -44,7 +44,7 @@ Terrain::Terrain(const char* fileName, float scale)
     initVAO();
 }
 
-Terrain::Terrain(float iterations, float fWidth, float fHeight, float minHeight, float maxHeight, float filter)
+Terrain::Terrain(float iterations, float fWidth, float fHeight, float widthScale, float heightScale, float minHeight, float maxHeight, float filter)
 {
     float** faultHeights = new float*[fWidth];
 
@@ -60,9 +60,9 @@ Terrain::Terrain(float iterations, float fWidth, float fHeight, float minHeight,
         for (int j = 0; j < fHeight; j++) {
             glm::vec3 tempVert;
 
-            tempVert.x = ((-fHeight / 2.0f + fHeight * i / (float)fHeight));
+            tempVert.x = ((-fHeight / 2.0f + fHeight * i / (float)fHeight) * widthScale);
             tempVert.y = faultHeights[i][j];
-            tempVert.z = ((-fWidth / 2.0f + fWidth * j / (float)fWidth));
+            tempVert.z = ((-fWidth / 2.0f + fWidth * j / (float)fWidth) * heightScale);
 
             vertices.push_back(tempVert);
         }
@@ -276,7 +276,7 @@ void Terrain::normaliseHeights(float maxHeight, float minHeight)
     }
 }
 
-void Terrain::generateFaultFormation(float iterations, float fWidth, float fHeight, float minHeight, float maxHeight, float filter)
+void Terrain::generateFaultFormation(float iterations, float fWidth, float fHeight, float widthScale, float heightScale, float minHeight, float maxHeight, float filter)
 {
     float** faultHeights = new float* [fWidth];
 
@@ -292,9 +292,9 @@ void Terrain::generateFaultFormation(float iterations, float fWidth, float fHeig
         for (int j = 0; j < fHeight; j++) {
             glm::vec3 tempVert;
 
-            tempVert.x = ((-fHeight / 2.0f + fHeight * i / (float)fHeight));
+            tempVert.x = ((-fHeight / 2.0f + fHeight * i / (float)fHeight) * widthScale);
             tempVert.y = faultHeights[i][j];
-            tempVert.z = ((-fWidth / 2.0f + fWidth * j / (float)fWidth));
+            tempVert.z = ((-fWidth / 2.0f + fWidth * j / (float)fWidth) * heightScale);
 
             vertices.push_back(tempVert);
         }

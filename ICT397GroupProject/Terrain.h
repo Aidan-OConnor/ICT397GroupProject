@@ -33,11 +33,11 @@ public:
 
     Terrain(const char* fileName, float scale);
 
-    Terrain(float iterations, float fWidth, float fHeight,float minHeight, float maxHeight, float filter);
+    Terrain(float iterations, float fWidth, float fHeight, float widthScale, float heightScale, float minHeight, float maxHeight, float filter);
 
     void loadHeightMap(const char* fileName, float scale);
 
-    void generateFaultFormation(float iterations, float fWidth, float fHeight, float minHeight, float maxHeight, float filter);
+    void generateFaultFormation(float iterations, float fWidth, float fHeight, float widthScale, float heightScale, float minHeight, float maxHeight, float filter);
 
     void renderTerrain(bool renderType);
 

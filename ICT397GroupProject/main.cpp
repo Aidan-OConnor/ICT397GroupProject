@@ -74,7 +74,7 @@ int main()
 
     Landscape landscape, water;
     landscape.loadFromHeightmap("Terrains/test3.jpeg", 4, "Images/Ground2.jpg", GL_TEXTURE_2D);
-    water.loadFromFaultFormation(1000, (float)landscape.getTerrain().getWidth(), (float)landscape.getTerrain().getHeight(), -5, 5, 0.5, "Images/Water1.jpg", GL_TEXTURE_2D);
+    water.loadFromFaultFormation(1000, 256, 256, (float)landscape.getTerrain().getWidth()/256, (float)landscape.getTerrain().getHeight()/256, -5, 5, 0.5, "Images/Water1.jpg", GL_TEXTURE_2D);
 
     Model ourModel("Models/Boat/boat.obj");
 
@@ -161,7 +161,7 @@ int main()
 
         shader.use();
 
-        glm::mat4 projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
         shader.setMat4("projection", projection);
 
         glm::mat4 view = glm::lookAt(camera.getCameraPos(), camera.getCameraPos() + camera.getCameraFront(), camera.getCameraUp());
