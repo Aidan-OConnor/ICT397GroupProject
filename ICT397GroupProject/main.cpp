@@ -69,12 +69,12 @@ int main()
     Shader shader("vertex.shader", "fragment.shader");
     Shader skyboxShader("skyboxVertex.shader", "skyboxFragment.shader");
 
-    glm::vec3 camPos = { 0.0f, 50.0f, 0.0f };
+    glm::vec3 camPos = { 0.0f, 250.0f, 0.0f };
     camera.updatePosition(camPos);
 
-    Landscape landscape, water;
-    landscape.loadFromHeightmap("Terrains/test3.jpeg", 4, "Images/Ground2.jpg", GL_TEXTURE_2D);
-    water.loadFromFaultFormation(1000, 256, 256, (float)landscape.getTerrain().getWidth()/256, (float)landscape.getTerrain().getHeight()/256, -5, 5, 0.5, "Images/Water1.jpg", GL_TEXTURE_2D);
+    Landscape landscape, water, landscape2;
+    landscape.loadFromHeightmap("Terrains/volcanoisland.png", 1, "Images/Ground2.jpg", GL_TEXTURE_2D);
+    water.loadFromFaultFormation(1000, 256, 256, (float)landscape.getTerrain().getWidth()/128, (float)landscape.getTerrain().getHeight()/128, -5, 5, 0.5, "Images/Water1.jpg", GL_TEXTURE_2D);
 
     Model ourModel("Models/Boat/boat.obj");
 
@@ -161,14 +161,15 @@ int main()
 
         shader.use();
 
-        glm::mat4 projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
         shader.setMat4("projection", projection);
 
         glm::mat4 view = glm::lookAt(camera.getCameraPos(), camera.getCameraPos() + camera.getCameraFront(), camera.getCameraUp());
         shader.setMat4("view", view);
 
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, { 0.0f, 0.0f, 0.0f });
+        model = glm::translate(model, { 0.0f, 100.0f, 0.0f });
+        model = glm::scale(model, {0.5f, 6.0f, 0.5f});
         shader.setMat4("model", model);
                
         landscape.renderLandscape(camera.getRenderType());
@@ -185,7 +186,6 @@ int main()
         
         water.renderLandscape(camera.getRenderType());
         
-
         /*
         std::vector<glm::vec3> vertices = landscape.getTerrain().getVertices();
 
