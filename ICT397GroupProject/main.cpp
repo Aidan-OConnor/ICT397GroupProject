@@ -74,7 +74,7 @@ int main()
 
     Landscape landscape, water, landscape2;
     landscape.loadFromHeightmap("Terrains/volcanoisland.png", 1, "Images/Ground2.jpg", GL_TEXTURE_2D);
-    water.loadFromFaultFormation(1000, 256, 256, (float)landscape.getTerrain().getWidth()/128, (float)landscape.getTerrain().getHeight()/128, -5, 5, 0.5, "Images/Water1.jpg", GL_TEXTURE_2D);
+    water.loadFromFaultFormation(1000, 128, 128, (float)landscape.getTerrain().getWidth()/128, (float)landscape.getTerrain().getHeight()/128, -5, 5, 0.5, "Images/Water1.jpg", GL_TEXTURE_2D);
 
     Model ourModel("Models/Boat/boat.obj");
 
