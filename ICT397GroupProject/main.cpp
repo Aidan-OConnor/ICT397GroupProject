@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <stb_image.h>
+#include <imgui/imgui.h>
 
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
@@ -73,7 +74,7 @@ int main()
     camera.updatePosition(camPos);
 
     Landscape landscape, water, landscape2;
-    landscape.loadFromHeightmap("Terrains/volcanoisland.png", 1, "Images/Ground2.jpg", GL_TEXTURE_2D);
+    landscape.loadFromHeightmap("Terrains/VolcanoType6.png", 4, "Images/Ground2.jpg", GL_TEXTURE_2D);
     water.loadFromFaultFormation(1000, 128, 128, (float)landscape.getTerrain().getWidth()/128, (float)landscape.getTerrain().getHeight()/128, -5, 5, 0.5, "Images/Water1.jpg", GL_TEXTURE_2D);
 
     Model ourModel("Models/Boat/boat.obj");
@@ -181,7 +182,7 @@ int main()
         ourModel.Draw(shader);
 
         glm::mat4 model3 = glm::mat4(1.0f);
-        model3 = glm::translate(model3, { 0.0f, 10.0f, 0.0f });
+        model3 = glm::translate(model3, { 0.0f, 0.0f, 0.0f });
         shader.setMat4("model", model3);
         
         water.renderLandscape(camera.getRenderType());
