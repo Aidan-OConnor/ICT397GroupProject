@@ -73,7 +73,7 @@ int main()
     camera.updatePosition(camPos);
 
     Landscape landscape, water, landscape2;
-    landscape.loadFromHeightmap("Terrains/volcanoisland.png", 1, "Images/Ground2.jpg", GL_TEXTURE_2D);
+    landscape.loadFromHeightmap("Terrains/volcanotest.jpg", 8, "Images/Ground2.jpg", GL_TEXTURE_2D);
     water.loadFromFaultFormation(1000, 128, 128, (float)landscape.getTerrain().getWidth()/128, (float)landscape.getTerrain().getHeight()/128, -5, 5, 0.5, "Images/Water1.jpg", GL_TEXTURE_2D);
 
     Model ourModel("Models/Boat/boat.obj");
@@ -169,7 +169,7 @@ int main()
 
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, { 0.0f, 100.0f, 0.0f });
-        model = glm::scale(model, {0.5f, 6.0f, 0.5f});
+        //model = glm::scale(model, {0.5f, 6.0f, 0.5f});
         shader.setMat4("model", model);
                
         landscape.renderLandscape(camera.getRenderType());

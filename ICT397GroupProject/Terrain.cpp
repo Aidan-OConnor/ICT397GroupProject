@@ -8,7 +8,7 @@ Terrain::Terrain(const char* fileName, float scale)
 
     this->widthScale = scale;
 
-    float yScale = 64.0f / 256.0f, yShift = 16.0f;
+    float yScale = 4.0f, yShift = 16.0f;
     unsigned bytePerPixel = channels;
     for (int i = 0; i < height; i++)
     {
