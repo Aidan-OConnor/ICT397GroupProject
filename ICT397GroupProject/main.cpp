@@ -78,6 +78,10 @@ int main()
     water.loadFromFaultFormation(1000, 128, 128, (float)landscape.getTerrain().getWidth()/128, (float)landscape.getTerrain().getHeight()/128, -5, 5, 0.5, "Images/Water1.jpg", GL_TEXTURE_2D);
 
     Model ourModel("Models/NewBoat/boat.obj");
+    Model rock1("Models/Rocks/rock.obj");
+    Model rock2("Models/Rocks/rock2.obj");
+    Model rock3("Models/Rocks/rock3.obj");
+    Model palmTree("Models/PalmTree/palmtree.obj");
 
     float skyboxVertices[] = {       
         -1.0f,  1.0f, -1.0f,
@@ -186,6 +190,23 @@ int main()
         model = glm::scale(model, glm::vec3(12.0f, 12.0f, 12.0f));	
         modelShader.setMat4("model", model);
         ourModel.Draw(modelShader);
+        
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 5.0f));
+        modelShader.setMat4("model", model);
+        rock1.Draw(modelShader);
+
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 5.0f));
+        modelShader.setMat4("model", model);
+        rock2.Draw(modelShader);
+
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 5.0f));
+        modelShader.setMat4("model", model);
+        rock3.Draw(modelShader);
+
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 5.0f));
+        modelShader.setMat4("model", model);
+        palmTree.Draw(modelShader);
+        
 
         /*
         std::vector<glm::vec3> vertices = landscape.getTerrain().getVertices();
