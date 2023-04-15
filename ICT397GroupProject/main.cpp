@@ -4,6 +4,8 @@
 #include <GLFW/glfw3.h>
 #include <stb_image.h>
 #include <imgui/imgui.h>
+#include <imgui/imgui_impl_glfw.h>
+#include <imgui/imgui_impl_opengl3.h>
 
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
@@ -40,8 +42,8 @@ int main()
     
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "ICT397 Game Engine", NULL, NULL);
     if (window == NULL)
@@ -66,6 +68,14 @@ int main()
     }
 
     glEnable(GL_DEPTH_TEST);
+
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 150");
+    
 
     Shader shader("vertex.shader", "fragment.shader");
     Shader skyboxShader("skyboxVertex.shader", "skyboxFragment.shader");
@@ -159,6 +169,8 @@ int main()
 
         glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        
 
         shader.use();
 

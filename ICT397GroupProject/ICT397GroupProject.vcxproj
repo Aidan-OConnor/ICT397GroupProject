@@ -68,7 +68,7 @@
       <ConformanceMode>false</ConformanceMode>
       <PrecompiledHeaderFile />
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Externals\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Externals\assimp\include;imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -101,6 +101,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Externals\imgui\imgui.cpp" />
+    <ClCompile Include="..\Externals\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\Externals\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\Externals\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="..\Externals\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="..\Externals\imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\Externals\imgui\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="OurCamera.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -116,6 +123,15 @@
     <None Include="vertex.shader" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Externals\imgui\imconfig.h" />
+    <ClInclude Include="..\Externals\imgui\imgui.h" />
+    <ClInclude Include="..\Externals\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="..\Externals\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="..\Externals\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="..\Externals\imgui\imgui_internal.h" />
+    <ClInclude Include="..\Externals\imgui\imstb_rectpack.h" />
+    <ClInclude Include="..\Externals\imgui\imstb_textedit.h" />
+    <ClInclude Include="..\Externals\imgui\imstb_truetype.h" />
     <ClInclude Include="Landscape.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="model.h" />
