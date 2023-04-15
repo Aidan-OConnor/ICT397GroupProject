@@ -166,14 +166,18 @@ int main()
     waterShader.setInt("tex1", 0);
     waterShader.setInt("tileSize", 50);
 
+    bool useImGui = false;
+
     while (!glfwWindowShouldClose(window))
     {
         camera.updateDeltaTime();
-
         camera.processInput(window);
 
         glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
+            useImGui = !useImGui;
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -241,14 +245,17 @@ int main()
         glBindVertexArray(0);
         glDepthFunc(GL_LESS);
 
-        ImGui::Begin("Volcano");
-        ImGui::SliderFloat("PositionX", &translation[0], -1000, 1000);
-        ImGui::SliderFloat("PositionY", &translation[1], -1000, 1000);
-        ImGui::SliderFloat("PositionZ", &translation[2], -1000, 1000);
-        ImGui::SliderFloat("ScaleX", &scale[0], -10, 10);
-        ImGui::SliderFloat("ScaleY", &scale[1], -10, 10);
-        ImGui::SliderFloat("ScaleZ", &scale[2], -10, 10);
-        ImGui::End();
+        if (useImGui)
+        {
+            ImGui::Begin("Volcano");
+            ImGui::SliderFloat("PositionX", &translation[0], -1000, 1000);
+            ImGui::SliderFloat("PositionY", &translation[1], -1000, 1000);
+            ImGui::SliderFloat("PositionZ", &translation[2], -1000, 1000);
+            ImGui::SliderFloat("ScaleX", &scale[0], -10, 10);
+            ImGui::SliderFloat("ScaleY", &scale[1], -10, 10);
+            ImGui::SliderFloat("ScaleZ", &scale[2], -10, 10);
+            ImGui::End();
+        }
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
