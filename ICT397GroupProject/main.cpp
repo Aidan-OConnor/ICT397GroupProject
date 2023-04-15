@@ -177,6 +177,7 @@ int main()
         shader.use();
 
         static float translation[] = { 0.0f, 100.0f, 0.0f };
+        static float scale[] = { 0.5f, 6.0f, 0.5f };
 
         glm::mat4 projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
         shader.setMat4("projection", projection);
@@ -186,7 +187,7 @@ int main()
 
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, { translation[0], translation[1], translation[2]});
-        model = glm::scale(model, {0.5f, 6.0f, 0.5f});
+        model = glm::scale(model, {scale[0], scale[1], scale[2]});
         shader.setMat4("model", model);
                
         landscape.renderLandscape(camera.getRenderType());
@@ -212,13 +213,6 @@ int main()
         {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         }
-
-        ImGui::Begin("Volcano");
-        ImGui::SliderFloat3("Position", translation, -1000, 1000);
-        ImGui::End();
-
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         
         /*
         std::vector<glm::vec3> vertices = landscape.getTerrain().getVertices();
@@ -247,6 +241,14 @@ int main()
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
         glDepthFunc(GL_LESS);
+
+        ImGui::Begin("Volcano");
+        ImGui::SliderFloat3("Position", translation, -1000, 1000);
+        ImGui::SliderFloat3("Scale", scale, -10, 10);
+        ImGui::End();
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         
         glfwSwapBuffers(window);
         glfwPollEvents();
