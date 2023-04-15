@@ -121,6 +121,8 @@
     <None Include="skyboxVertex.shader" />
     <None Include="Test.lua" />
     <None Include="vertex.shader" />
+    <None Include="waterFragment.shader" />
+    <None Include="waterVertex.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Externals\imgui\imconfig.h" />

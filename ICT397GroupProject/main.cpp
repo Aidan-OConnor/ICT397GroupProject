@@ -79,6 +79,7 @@ int main()
 
     Shader shader("vertex.shader", "fragment.shader");
     Shader skyboxShader("skyboxVertex.shader", "skyboxFragment.shader");
+    Shader waterShader("waterVertex.shader", "waterFragment.shader");
 
     glm::vec3 camPos = { 0.0f, 250.0f, 0.0f };
     camera.updatePosition(camPos);
@@ -161,6 +162,10 @@ int main()
     skyboxShader.use();
     skyboxShader.setInt("skybox", 0);
 
+    waterShader.use();
+    waterShader.setInt("tex1", 0);
+    waterShader.setInt("tileSize", 50);
+
     while (!glfwWindowShouldClose(window))
     {
         camera.updateDeltaTime();
@@ -198,9 +203,13 @@ int main()
 
         ourModel.Draw(shader);
 
+        waterShader.use();
+        waterShader.setMat4("projection", projection);
+        waterShader.setMat4("view", view);
+
         glm::mat4 model3 = glm::mat4(1.0f);
         model3 = glm::translate(model3, { 0.0f, 0.0f, 0.0f });
-        shader.setMat4("model", model3);
+        waterShader.setMat4("model", model3);
         
         water.renderLandscape(camera.getRenderType());
 
@@ -243,8 +252,12 @@ int main()
         glDepthFunc(GL_LESS);
 
         ImGui::Begin("Volcano");
-        ImGui::SliderFloat3("Position", translation, -1000, 1000);
-        ImGui::SliderFloat3("Scale", scale, -10, 10);
+        ImGui::SliderFloat("PositionX", &translation[0], -1000, 1000);
+        ImGui::SliderFloat("PositionY", &translation[1], -1000, 1000);
+        ImGui::SliderFloat("PositionZ", &translation[2], -1000, 1000);
+        ImGui::SliderFloat("ScaleX", &scale[0], -10, 10);
+        ImGui::SliderFloat("ScaleY", &scale[1], -10, 10);
+        ImGui::SliderFloat("ScaleZ", &scale[2], -10, 10);
         ImGui::End();
 
         ImGui::Render();

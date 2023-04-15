@@ -67,6 +67,8 @@
     <None Include="vertex.shader" />
     <None Include="skyboxFragment.shader" />
     <None Include="skyboxVertex.shader" />
+    <None Include="waterFragment.shader" />
+    <None Include="waterVertex.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Landscape.h">
