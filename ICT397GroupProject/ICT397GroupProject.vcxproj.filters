@@ -40,6 +40,8 @@
     <None Include="vertex.shader" />
     <None Include="skyboxFragment.shader" />
     <None Include="skyboxVertex.shader" />
+    <None Include="modelFragment.shader" />
+    <None Include="modelVertex.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Landscape.h">
