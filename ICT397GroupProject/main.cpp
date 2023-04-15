@@ -37,9 +37,9 @@ int main()
     sol::state lua{};
     lua_State* L = luaL_newstate();
     luaL_openlibs(L);
-    
+
     luaL_dofile(L, "Test.lua");
-    
+
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
@@ -56,7 +56,7 @@ int main()
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
-    
+
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     glewExperimental = GL_TRUE;
@@ -75,7 +75,7 @@ int main()
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 150");
-    
+
 
     Shader shader("vertex.shader", "fragment.shader");
     Shader skyboxShader("skyboxVertex.shader", "skyboxFragment.shader");
@@ -86,11 +86,11 @@ int main()
 
     Landscape landscape, water, landscape2;
     landscape.loadFromHeightmap("Terrains/VolcanoType6.png", 4, "Images/Ground2.jpg", GL_TEXTURE_2D);
-    water.loadFromFaultFormation(1000, 128, 128, (float)landscape.getTerrain().getWidth()/128, (float)landscape.getTerrain().getHeight()/128, -5, 5, 0.5, "Images/Water1.jpg", GL_TEXTURE_2D);
+    water.loadFromFaultFormation(1000, 128, 128, (float)landscape.getTerrain().getWidth() / 128, (float)landscape.getTerrain().getHeight() / 128, -5, 5, 0.5, "Images/Water1.jpg", GL_TEXTURE_2D);
 
     Model ourModel("Models/Boat/boat.obj");
 
-    float skyboxVertices[] = {       
+    float skyboxVertices[] = {
         -1.0f,  1.0f, -1.0f,
         -1.0f, -1.0f, -1.0f,
          1.0f, -1.0f, -1.0f,
@@ -168,6 +168,28 @@ int main()
 
     bool useImGui = false;
 
+    struct imGuiType
+    {
+        const char* objectName;
+        glm::vec3 translation;
+        glm::vec3 scale;
+    };
+
+    std::vector<imGuiType> imGuiObjects;
+
+    imGuiType ImTemp;
+    ImTemp.objectName = "Volcano";
+    ImTemp.translation = {0.0f, 100.0f, 0.0f};
+    ImTemp.scale = {0.5f, 6.0f, 0.5f};
+
+    imGuiObjects.push_back(ImTemp);
+
+    ImTemp.objectName = "Water";
+    ImTemp.translation = {0.0f, 0.0f, 0.0f};
+    ImTemp.scale = {1.0f, 1.0f, 1.0f};
+
+    imGuiObjects.push_back(ImTemp);
+
     while (!glfwWindowShouldClose(window))
     {
         camera.updateDeltaTime();
@@ -197,8 +219,8 @@ int main()
         shader.setMat4("view", view);
 
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, {vTranslation[0], vTranslation[1], vTranslation[2]});
-        model = glm::scale(model, {vScale[0], vScale[1], vScale[2]});
+        model = glm::translate(model, {imGuiObjects[0].translation[0], imGuiObjects[0].translation[1], imGuiObjects[0].translation[2]});
+        model = glm::scale(model, {imGuiObjects[0].scale[0], imGuiObjects[0].scale[1], imGuiObjects[0].scale[2]});
         shader.setMat4("model", model);
                
         landscape.renderLandscape(camera.getRenderType());
@@ -214,8 +236,8 @@ int main()
         waterShader.setMat4("view", view);
 
         glm::mat4 model3 = glm::mat4(1.0f);
-        model3 = glm::translate(model3, {wTranslation[0], wTranslation[1], wTranslation[2] });
-        model3 = glm::scale(model3, { wScale[0], wScale[1] , wScale[2] });
+        model3 = glm::translate(model3, {imGuiObjects[1].translation[0], imGuiObjects[1].translation[1], imGuiObjects[1].translation[2]});
+        model3 = glm::scale(model3, {imGuiObjects[1].scale[0], imGuiObjects[1].scale[1] , imGuiObjects[1].scale[2]});
         waterShader.setMat4("model", model3);
         
         water.renderLandscape(camera.getRenderType());
@@ -250,23 +272,17 @@ int main()
 
         if (useImGui)
         {
-            ImGui::Begin("Volcano");
-            ImGui::SliderFloat("PositionX", &vTranslation[0], -1000, 1000);
-            ImGui::SliderFloat("PositionY", &vTranslation[1], -1000, 1000);
-            ImGui::SliderFloat("PositionZ", &vTranslation[2], -1000, 1000);
-            ImGui::SliderFloat("ScaleX", &vScale[0], -10, 10);
-            ImGui::SliderFloat("ScaleY", &vScale[1], -10, 10);
-            ImGui::SliderFloat("ScaleZ", &vScale[2], -10, 10);
-            ImGui::End();
-
-            ImGui::Begin("Water");
-            ImGui::SliderFloat("PositionX", &wTranslation[0], -1000, 1000);
-            ImGui::SliderFloat("PositionY", &wTranslation[1], -1000, 1000);
-            ImGui::SliderFloat("PositionZ", &wTranslation[2], -1000, 1000);
-            ImGui::SliderFloat("ScaleX", &wScale[0], -10, 10);
-            ImGui::SliderFloat("ScaleY", &wScale[1], -10, 10);
-            ImGui::SliderFloat("ScaleZ", &wScale[2], -10, 10);
-            ImGui::End();
+            for (int i = 0; i < imGuiObjects.size(); i++)
+            {
+                ImGui::Begin(imGuiObjects[i].objectName);
+                ImGui::SliderFloat("PositionX", &imGuiObjects[i].translation[0], -1000, 1000);
+                ImGui::SliderFloat("PositionY", &imGuiObjects[i].translation[1], -1000, 1000);
+                ImGui::SliderFloat("PositionZ", &imGuiObjects[i].translation[2], -1000, 1000);
+                ImGui::SliderFloat("ScaleX", &imGuiObjects[i].scale[0], -10, 10);
+                ImGui::SliderFloat("ScaleY", &imGuiObjects[i].scale[1], -10, 10);
+                ImGui::SliderFloat("ScaleZ", &imGuiObjects[i].scale[2], -10, 10);
+                ImGui::End();
+            }
         }
 
         ImGui::Render();
