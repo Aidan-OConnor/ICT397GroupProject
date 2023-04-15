@@ -185,8 +185,10 @@ int main()
 
         shader.use();
 
-        static float translation[] = { 0.0f, 100.0f, 0.0f };
-        static float scale[] = { 0.5f, 6.0f, 0.5f };
+        static float vTranslation[] = { 0.0f, 100.0f, 0.0f };
+        static float vScale[] = { 0.5f, 6.0f, 0.5f };
+        static float wTranslation[] = { 0.0f, 0.0f, 0.0f };
+        static float wScale[] = { 1.0f, 1.0f, 1.0f };
 
         glm::mat4 projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
         shader.setMat4("projection", projection);
@@ -195,8 +197,8 @@ int main()
         shader.setMat4("view", view);
 
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, { translation[0], translation[1], translation[2]});
-        model = glm::scale(model, {scale[0], scale[1], scale[2]});
+        model = glm::translate(model, {vTranslation[0], vTranslation[1], vTranslation[2]});
+        model = glm::scale(model, {vScale[0], vScale[1], vScale[2]});
         shader.setMat4("model", model);
                
         landscape.renderLandscape(camera.getRenderType());
@@ -212,7 +214,8 @@ int main()
         waterShader.setMat4("view", view);
 
         glm::mat4 model3 = glm::mat4(1.0f);
-        model3 = glm::translate(model3, { 0.0f, 0.0f, 0.0f });
+        model3 = glm::translate(model3, {wTranslation[0], wTranslation[1], wTranslation[2] });
+        model3 = glm::scale(model3, { wScale[0], wScale[1] , wScale[2] });
         waterShader.setMat4("model", model3);
         
         water.renderLandscape(camera.getRenderType());
@@ -248,12 +251,21 @@ int main()
         if (useImGui)
         {
             ImGui::Begin("Volcano");
-            ImGui::SliderFloat("PositionX", &translation[0], -1000, 1000);
-            ImGui::SliderFloat("PositionY", &translation[1], -1000, 1000);
-            ImGui::SliderFloat("PositionZ", &translation[2], -1000, 1000);
-            ImGui::SliderFloat("ScaleX", &scale[0], -10, 10);
-            ImGui::SliderFloat("ScaleY", &scale[1], -10, 10);
-            ImGui::SliderFloat("ScaleZ", &scale[2], -10, 10);
+            ImGui::SliderFloat("PositionX", &vTranslation[0], -1000, 1000);
+            ImGui::SliderFloat("PositionY", &vTranslation[1], -1000, 1000);
+            ImGui::SliderFloat("PositionZ", &vTranslation[2], -1000, 1000);
+            ImGui::SliderFloat("ScaleX", &vScale[0], -10, 10);
+            ImGui::SliderFloat("ScaleY", &vScale[1], -10, 10);
+            ImGui::SliderFloat("ScaleZ", &vScale[2], -10, 10);
+            ImGui::End();
+
+            ImGui::Begin("Water");
+            ImGui::SliderFloat("PositionX", &wTranslation[0], -1000, 1000);
+            ImGui::SliderFloat("PositionY", &wTranslation[1], -1000, 1000);
+            ImGui::SliderFloat("PositionZ", &wTranslation[2], -1000, 1000);
+            ImGui::SliderFloat("ScaleX", &wScale[0], -10, 10);
+            ImGui::SliderFloat("ScaleY", &wScale[1], -10, 10);
+            ImGui::SliderFloat("ScaleZ", &wScale[2], -10, 10);
             ImGui::End();
         }
 
