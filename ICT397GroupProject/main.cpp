@@ -170,9 +170,13 @@ int main()
         glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
 
         shader.use();
+
+        static float translation[] = { 0.0f, 100.0f, 0.0f };
 
         glm::mat4 projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
         shader.setMat4("projection", projection);
@@ -181,7 +185,7 @@ int main()
         shader.setMat4("view", view);
 
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, { 0.0f, 100.0f, 0.0f });
+        model = glm::translate(model, { translation[0], translation[1], translation[2]});
         model = glm::scale(model, {0.5f, 6.0f, 0.5f});
         shader.setMat4("model", model);
                
@@ -198,6 +202,23 @@ int main()
         shader.setMat4("model", model3);
         
         water.renderLandscape(camera.getRenderType());
+
+        if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS)
+        {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS)
+        {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
+
+        ImGui::Begin("Volcano");
+        ImGui::SliderFloat3("Position", translation, -1000, 1000);
+        ImGui::End();
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         
         /*
         std::vector<glm::vec3> vertices = landscape.getTerrain().getVertices();
@@ -230,6 +251,10 @@ int main()
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 
     glfwTerminate();
     return 2;
