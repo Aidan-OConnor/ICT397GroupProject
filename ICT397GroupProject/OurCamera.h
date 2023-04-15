@@ -28,6 +28,7 @@ private:
     float prevFrame;
 
     bool renderTriangle;
+    bool mouseControls;
 
 public:
     OurCamera();

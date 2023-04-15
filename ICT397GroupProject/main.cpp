@@ -212,16 +212,6 @@ int main()
         waterShader.setMat4("model", model3);
         
         water.renderLandscape(camera.getRenderType());
-
-        if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS)
-        {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-        }
-
-        if (glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS)
-        {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        }
         
         /*
         std::vector<glm::vec3> vertices = landscape.getTerrain().getVertices();
