@@ -272,17 +272,21 @@ int main()
 
         if (useImGui)
         {
+            ImGui::Begin("ObjectData");
             for (int i = 0; i < imGuiObjects.size(); i++)
             {
-                ImGui::Begin(imGuiObjects[i].objectName);
-                ImGui::SliderFloat("PositionX", &imGuiObjects[i].translation[0], -1000, 1000);
-                ImGui::SliderFloat("PositionY", &imGuiObjects[i].translation[1], -1000, 1000);
-                ImGui::SliderFloat("PositionZ", &imGuiObjects[i].translation[2], -1000, 1000);
-                ImGui::SliderFloat("ScaleX", &imGuiObjects[i].scale[0], -10, 10);
-                ImGui::SliderFloat("ScaleY", &imGuiObjects[i].scale[1], -10, 10);
-                ImGui::SliderFloat("ScaleZ", &imGuiObjects[i].scale[2], -10, 10);
-                ImGui::End();
+                if (ImGui::TreeNode(imGuiObjects[i].objectName))
+                {
+                    ImGui::SliderFloat("PositionX", &imGuiObjects[i].translation[0], -1000, 1000);
+                    ImGui::SliderFloat("PositionY", &imGuiObjects[i].translation[1], -1000, 1000);
+                    ImGui::SliderFloat("PositionZ", &imGuiObjects[i].translation[2], -1000, 1000);
+                    ImGui::SliderFloat("ScaleX", &imGuiObjects[i].scale[0], -10, 10);
+                    ImGui::SliderFloat("ScaleY", &imGuiObjects[i].scale[1], -10, 10);
+                    ImGui::SliderFloat("ScaleZ", &imGuiObjects[i].scale[2], -10, 10);
+                    ImGui::TreePop();
+                }
             }
+            ImGui::End();
         }
 
         ImGui::Render();
