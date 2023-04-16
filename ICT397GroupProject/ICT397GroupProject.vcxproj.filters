@@ -71,6 +71,8 @@
     <None Include="waterVertex.shader" />
     <None Include="modelFragment.shader" />
     <None Include="modelVertex.shader" />
+    <None Include="lightingFragment.shader" />
+    <None Include="lightingVertex.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Landscape.h">

@@ -25,12 +25,15 @@
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);
 unsigned int loadCubemap(std::vector<std::string> faces);
+unsigned int loadTexture(const char* path);
 
 const unsigned int SCR_WIDTH = 1600;
 const unsigned int SCR_HEIGHT = 1200;
 
 OurCamera camera;
 float camHeight = 2.5;
+
+glm::vec3 lightPos(2.0f, 1.0f, 2.0f);
 
 int main()
 {
@@ -76,11 +79,13 @@ int main()
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 150");
 
-
     Shader shader("vertex.shader", "fragment.shader");
     Shader skyboxShader("skyboxVertex.shader", "skyboxFragment.shader");
     Shader waterShader("waterVertex.shader", "waterFragment.shader");
     Shader modelShader("modelVertex.shader", "modelFragment.shader");
+    Shader lightingShader("lightingVertex.shader", "lightingFragment.shader");
+
+    Model bruiserStance("Models/Bruiser/bruiserStance.obj");
 
     float skyboxVertices[] = {
         -1.0f,  1.0f, -1.0f,
@@ -124,8 +129,12 @@ int main()
          1.0f, -1.0f, -1.0f,
         -1.0f, -1.0f,  1.0f,
          1.0f, -1.0f,  1.0f
-    };
+    }; 
 
+    lightingShader.use();
+    lightingShader.setInt("material.diffuse", 0);
+    lightingShader.setInt("material.specular", 1);
+    
     unsigned int skyboxVAO, skyboxVBO;
     glGenVertexArrays(1, &skyboxVAO);
     glGenBuffers(1, &skyboxVBO);
@@ -181,7 +190,7 @@ int main()
         camera.updateDeltaTime();
         camera.processInput(window);
 
-        glClearColor(0.0f, 0.5f, 1.0f, 1.0f);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
@@ -202,10 +211,29 @@ int main()
         glm::mat4 model = glm::mat4(1.0f);
         shader.setMat4("model", model);
 
+        lightingShader.use();
+        lightingShader.setVec3("light.position", lightPos);
+        lightingShader.setVec3("viewPos", camera.getCameraPos());
+
+        lightingShader.setVec3("light.ambient", 0.4f, 0.4f, 0.4f);
+        lightingShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
+        lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+        lightingShader.setFloat("light.constant", 1.0f);
+        lightingShader.setFloat("light.linear", 0.045f);
+        lightingShader.setFloat("light.quadratic", 0.0075f);
+        lightingShader.setFloat("material.shininess", 32.0f);
+
+        lightingShader.setMat4("projection", projection);
+        lightingShader.setMat4("view", view);
+        model = glm::mat4(1.0f);
+        lightingShader.setMat4("model", model);
+
+        bruiserStance.Draw(modelShader);
+     
         modelShader.use();
         modelShader.setMat4("projection", projection);
         modelShader.setMat4("view", view);
-        modelShader.setMat4("model", model);
+        modelShader.setMat4("model", model);      
 
         waterShader.use();
         waterShader.setMat4("projection", projection);
@@ -431,6 +459,7 @@ int main()
 
             ImGui::End();
         }
+       
 
         if (imGuiObjects.size() != 0)
         {
@@ -458,7 +487,7 @@ int main()
                 }
                 else if (imGuiObjects[i].objectType == "Model")
                 {
-                    modelShader.use();
+                    lightingShader.use();
                     glm::mat4 model = glm::mat4(1.0f);
                     modelShader.setMat4("model", model);
                     model = glm::translate(model, { imGuiObjects[i].translation[0], imGuiObjects[i].translation[1], imGuiObjects[i].translation[2] });
@@ -468,7 +497,7 @@ int main()
                 }
             }
         }
-
+    
         glDepthFunc(GL_LEQUAL);  
         skyboxShader.use();
         view = glm::mat4(glm::mat3(glm::lookAt(camera.getCameraPos(), camera.getCameraPos() + camera.getCameraFront(), camera.getCameraUp())));
@@ -480,7 +509,7 @@ int main()
         glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
-        glDepthFunc(GL_LESS);
+        glDepthFunc(GL_LESS);      
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -533,6 +562,43 @@ unsigned int loadCubemap(std::vector<std::string> faces)
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+    return textureID;
+}
+
+unsigned int loadTexture(char const* path)
+{
+    unsigned int textureID;
+    glGenTextures(1, &textureID);
+
+    int width, height, nrComponents;
+    unsigned char* data = stbi_load(path, &width, &height, &nrComponents, 0);
+    if (data)
+    {
+        GLenum format;
+        if (nrComponents == 1)
+            format = GL_RED;
+        else if (nrComponents == 3)
+            format = GL_RGB;
+        else if (nrComponents == 4)
+            format = GL_RGBA;
+
+        glBindTexture(GL_TEXTURE_2D, textureID);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        stbi_image_free(data);
+    }
+    else
+    {
+        std::cout << "Texture failed to load at path: " << path << std::endl;
+        stbi_image_free(data);
+    }
 
     return textureID;
 }

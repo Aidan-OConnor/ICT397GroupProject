@@ -32,7 +32,7 @@ void OurCamera::processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
-    float cameraSpeed = static_cast<float>(250.0 * deltaTime);
+    float cameraSpeed = static_cast<float>(10.0 * deltaTime);
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && stamina > 0 && grounded == true) {
         cameraSpeed = cameraSpeed * 1.5;
