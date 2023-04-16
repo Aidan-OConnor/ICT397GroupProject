@@ -84,11 +84,18 @@ int main()
     glm::vec3 camPos = { 0.0f, 250.0f, 0.0f };
     camera.updatePosition(camPos);
 
-    Landscape landscape, water, landscape2;
+    /*
+    Landscape landscape, water;
     landscape.loadFromHeightmap("Terrains/VolcanoType6.png", 4, "Images/Ground2.jpg", GL_TEXTURE_2D);
     water.loadFromFaultFormation(1000, 128, 128, (float)landscape.getTerrain().getWidth() / 128, (float)landscape.getTerrain().getHeight() / 128, -5, 5, 0.5, "Images/Water1.jpg", GL_TEXTURE_2D);
 
     Model ourModel("Models/Boat/boat.obj");
+    */
+    Landscape tempLandscape;
+
+    std::vector<Landscape> terrains;
+    std::vector<Landscape> water;
+    std::vector<Model> models;
 
     float skyboxVertices[] = {
         -1.0f,  1.0f, -1.0f,
@@ -177,7 +184,7 @@ int main()
 
     std::vector<imGuiType> imGuiObjects;
 
-    imGuiType ImTemp;
+    /*
     ImTemp.objectName = "Volcano";
     ImTemp.translation = {0.0f, 100.0f, 0.0f};
     ImTemp.scale = {0.5f, 6.0f, 0.5f};
@@ -189,6 +196,7 @@ int main()
     ImTemp.scale = {1.0f, 1.0f, 1.0f};
 
     imGuiObjects.push_back(ImTemp);
+    */
 
     while (!glfwWindowShouldClose(window))
     {
@@ -207,10 +215,104 @@ int main()
 
         shader.use();
 
-        static float vTranslation[] = { 0.0f, 100.0f, 0.0f };
-        static float vScale[] = { 0.5f, 6.0f, 0.5f };
-        static float wTranslation[] = { 0.0f, 0.0f, 0.0f };
-        static float wScale[] = { 1.0f, 1.0f, 1.0f };
+        glm::mat4 projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
+        shader.setMat4("projection", projection);
+
+        glm::mat4 view = glm::lookAt(camera.getCameraPos(), camera.getCameraPos() + camera.getCameraFront(), camera.getCameraUp());
+        shader.setMat4("view", view);
+
+        glm::mat4 model = glm::mat4(1.0f);
+        shader.setMat4("model", model);
+
+        if (useImGui)
+        {
+            ImGui::Begin("Control Centre");
+
+            if (ImGui::TreeNode("Create Terrain"))
+            {
+                if (ImGui::TreeNode("Heightmap"))
+                {
+                    if (ImGui::Button("Generate", ImVec2(100, 25)))
+                    {
+                        tempLandscape.loadFromHeightmap("Terrains/VolcanoType6.png", 4, "Images/Ground2.jpg", GL_TEXTURE_2D);
+                        terrains.push_back(tempLandscape);
+
+                        imGuiType ImTemp;
+
+                        ImTemp.translation = { 0.0f, 0.0f, 0.0f };
+                        ImTemp.scale = { 1.0f, 1.0f, 1.0f };
+
+                        imGuiObjects.push_back(ImTemp);
+                    }
+                    ImGui::TreePop();
+                }
+                if (ImGui::TreeNode("Fault Formation"))
+                {
+                    ImGui::TreePop();
+                }
+                ImGui::TreePop();
+            }
+
+            if (ImGui::TreeNode("Object Data"))
+            {
+                if (imGuiObjects.size() != 0)
+                {
+                    for (int i = 0; i < imGuiObjects.size(); i++)
+                    {
+                        std::string tempName = "Terrain" + std::to_string(i);
+                        imGuiObjects[i].objectName = tempName.c_str();
+                        if (ImGui::TreeNode(imGuiObjects[i].objectName))
+                        {
+                            ImGui::DragFloat("PositionX", &imGuiObjects[i].translation[0], 0.5, -1000, 1000);
+                            ImGui::DragFloat("PositionY", &imGuiObjects[i].translation[1], 0.5, -1000, 1000);
+                            ImGui::DragFloat("PositionZ", &imGuiObjects[i].translation[2], 0.5, -1000, 1000);
+                            ImGui::InputFloat3("Position", &imGuiObjects[i].translation[0]);
+                            ImGui::DragFloat("ScaleX", &imGuiObjects[i].scale[0], 0.01, -10, 10);
+                            ImGui::DragFloat("ScaleY", &imGuiObjects[i].scale[1], 0.01, -10, 10);
+                            ImGui::DragFloat("ScaleZ", &imGuiObjects[i].scale[2], 0.01, -10, 10);
+                            ImGui::TreePop();
+                        }
+                    }
+                }
+                ImGui::TreePop();
+            }
+
+            ImGui::End();
+        }
+
+        if (terrains.size() != 0)
+        {
+            for (int i = 0; i < terrains.size(); i++)
+            {
+                glm::mat4 model = glm::mat4(1.0f);
+                shader.setMat4("model", model);
+                model = glm::translate(model, { imGuiObjects[i].translation[0], imGuiObjects[i].translation[1], imGuiObjects[i].translation[2] });
+                model = glm::scale(model, { imGuiObjects[i].scale[0], imGuiObjects[i].scale[1], imGuiObjects[i].scale[2] });
+                shader.setMat4("model", model);
+                terrains[i].renderLandscape(camera.getRenderType());
+            }
+        }
+
+        /*
+        if (useImGui)
+        {
+            ImGui::Begin("ObjectData");
+            for (int i = 0; i < imGuiObjects.size(); i++)
+            {
+                if (ImGui::TreeNode(imGuiObjects[i].objectName))
+                {
+                    ImGui::DragFloat("PositionX", &imGuiObjects[i].translation[0], 0.5, -1000, 1000);
+                    ImGui::DragFloat("PositionY", &imGuiObjects[i].translation[1], 0.5, -1000, 1000);
+                    ImGui::DragFloat("PositionZ", &imGuiObjects[i].translation[2], 0.5, -1000, 1000);
+                    ImGui::InputFloat3("Position", &imGuiObjects[i].translation[0]);
+                    ImGui::DragFloat("ScaleX", &imGuiObjects[i].scale[0], 0.01, -10, 10);
+                    ImGui::DragFloat("ScaleY", &imGuiObjects[i].scale[1], 0.01, -10, 10);
+                    ImGui::DragFloat("ScaleZ", &imGuiObjects[i].scale[2], 0.01, -10, 10);
+                    ImGui::TreePop();
+                }
+            }
+            ImGui::End();
+        }
 
         glm::mat4 projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
         shader.setMat4("projection", projection);
@@ -241,6 +343,7 @@ int main()
         waterShader.setMat4("model", model3);
         
         water.renderLandscape(camera.getRenderType());
+        */
         
         /*
         std::vector<glm::vec3> vertices = landscape.getTerrain().getVertices();
@@ -269,25 +372,6 @@ int main()
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
         glDepthFunc(GL_LESS);
-
-        if (useImGui)
-        {
-            ImGui::Begin("ObjectData");
-            for (int i = 0; i < imGuiObjects.size(); i++)
-            {
-                if (ImGui::TreeNode(imGuiObjects[i].objectName))
-                {
-                    ImGui::SliderFloat("PositionX", &imGuiObjects[i].translation[0], -1000, 1000);
-                    ImGui::SliderFloat("PositionY", &imGuiObjects[i].translation[1], -1000, 1000);
-                    ImGui::SliderFloat("PositionZ", &imGuiObjects[i].translation[2], -1000, 1000);
-                    ImGui::SliderFloat("ScaleX", &imGuiObjects[i].scale[0], -10, 10);
-                    ImGui::SliderFloat("ScaleY", &imGuiObjects[i].scale[1], -10, 10);
-                    ImGui::SliderFloat("ScaleZ", &imGuiObjects[i].scale[2], -10, 10);
-                    ImGui::TreePop();
-                }
-            }
-            ImGui::End();
-        }
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
