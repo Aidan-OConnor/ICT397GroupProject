@@ -89,7 +89,7 @@ int main()
     landscape.loadFromHeightmap("Terrains/VolcanoType6.png", 4, "Images/Ground2.jpg", GL_TEXTURE_2D);
     water.loadFromFaultFormation(1000, 128, 128, (float)landscape.getTerrain().getWidth() / 128, (float)landscape.getTerrain().getHeight() / 128, -5, 5, 0.5, "Images/Water1.jpg", GL_TEXTURE_2D);
 
-    Model ourModel("Models/Boat/boat.obj");
+    Model ourModel("Models/NewBoat/boat.obj");
     */
     Landscape tempLandscape;
 
