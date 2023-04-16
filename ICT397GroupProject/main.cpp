@@ -82,6 +82,8 @@ int main()
     Model rock2("Models/Rocks/rock2.obj");
     Model rock3("Models/Rocks/rock3.obj");
     Model palmTree("Models/PalmTree/palmtree.obj");
+    Model bruiserTpose("Models/Bruiser/bruiserTpose.obj");
+    Model bruiserStance("Models/Bruiser/bruiserStance.obj");
 
     float skyboxVertices[] = {       
         -1.0f,  1.0f, -1.0f,
@@ -206,6 +208,15 @@ int main()
         model = glm::translate(model, glm::vec3(0.0f, 0.0f, 5.0f));
         modelShader.setMat4("model", model);
         palmTree.Draw(modelShader);
+
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 5.0f));
+        model = glm::scale(model, glm::vec3(4.0f, 4.0f, 4.0f));
+        modelShader.setMat4("model", model);
+        bruiserTpose.Draw(modelShader);
+
+        model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
+        modelShader.setMat4("model", model);
+        bruiserStance.Draw(modelShader);
         
 
         /*
