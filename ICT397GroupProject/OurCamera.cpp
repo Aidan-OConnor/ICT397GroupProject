@@ -5,7 +5,7 @@
 
 OurCamera::OurCamera()
 {
-    this->cameraPos = glm::vec3(0.0f, 2.5f, 0.0f);
+    this->cameraPos = glm::vec3(0.0f, 0.0f, 0.0f);
     this->foot = this->cameraPos;
     this->foot.y -= 2.5;
     this->cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
