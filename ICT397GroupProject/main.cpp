@@ -66,7 +66,7 @@ int main()
         std::cout << "ERROR::MAIN.CPP::GLEW_INIT_FAILED" << "\n";
         glfwTerminate();
     }
-
+    
     glEnable(GL_DEPTH_TEST);
 
     IMGUI_CHECKVERSION();
@@ -80,6 +80,9 @@ int main()
     Shader shader("vertex.shader", "fragment.shader");
     Shader skyboxShader("skyboxVertex.shader", "skyboxFragment.shader");
     Shader waterShader("waterVertex.shader", "waterFragment.shader");
+    Shader modelShader("modelVertex.shader", "modelFragment.shader");
+
+    Model bruiserStance("Models/Bruiser/bruiserStance.obj");
 
     glm::vec3 camPos = { 0.0f, 250.0f, 0.0f };
     camera.updatePosition(camPos);
@@ -152,8 +155,8 @@ int main()
 
     std::vector<std::string> faces
     {
-        "Images/Skybox/left.png",
         "Images/Skybox/right.png",
+        "Images/Skybox/left.png",
         "Images/Skybox/top.png",
         "Images/Skybox/bottom.png",
         "Images/Skybox/front.png",
@@ -221,8 +224,16 @@ int main()
         glm::mat4 view = glm::lookAt(camera.getCameraPos(), camera.getCameraPos() + camera.getCameraFront(), camera.getCameraUp());
         shader.setMat4("view", view);
 
+        // Test loading bruiser model
+        modelShader.use();
+        modelShader.setMat4("projection", projection);
+        modelShader.setMat4("view", view);
         glm::mat4 model = glm::mat4(1.0f);
         shader.setMat4("model", model);
+        model = glm::scale(model, glm::vec3(12.0f, 12.0f, 12.0f));
+        model = glm::translate(model, glm::vec3(0.0f, 20.0f, -1.0f));
+        modelShader.setMat4("model", model);
+        bruiserStance.Draw(modelShader);
 
         if (useImGui)
         {
