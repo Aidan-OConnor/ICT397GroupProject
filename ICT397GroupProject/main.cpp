@@ -33,7 +33,7 @@ const unsigned int SCR_HEIGHT = 1200;
 OurCamera camera;
 float camHeight = 2.5;
 
-glm::vec3 lightPos(0.0f, 50.0f, 0.0f);
+glm::vec3 lightPos(200.0f, 50.0f, 200.0f);
 
 int main()
 {
@@ -217,8 +217,8 @@ int main()
         lightingShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
         lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
         lightingShader.setFloat("light.constant", 0.5f);
-        lightingShader.setFloat("light.linear", 0.00014f);
-        lightingShader.setFloat("light.quadratic", 0.0000007f);
+        lightingShader.setFloat("light.linear", 0.000014f);
+        lightingShader.setFloat("light.quadratic", 0.00000007f);
         lightingShader.setFloat("material.shininess", 32.0f);
 
         lightingShader.setMat4("projection", projection);
