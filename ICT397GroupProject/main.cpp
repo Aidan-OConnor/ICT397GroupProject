@@ -33,7 +33,7 @@ const unsigned int SCR_HEIGHT = 1200;
 OurCamera camera;
 float camHeight = 2.5;
 
-glm::vec3 lightPos(2.0f, 1.0f, 2.0f);
+glm::vec3 lightPos(0.0f, 50.0f, 0.0f);
 
 int main()
 {
@@ -84,8 +84,6 @@ int main()
     Shader waterShader("waterVertex.shader", "waterFragment.shader");
     Shader modelShader("modelVertex.shader", "modelFragment.shader");
     Shader lightingShader("lightingVertex.shader", "lightingFragment.shader");
-
-    Model bruiserStance("Models/Bruiser/bruiserStance.obj");
 
     float skyboxVertices[] = {
         -1.0f,  1.0f, -1.0f,
@@ -215,20 +213,18 @@ int main()
         lightingShader.setVec3("light.position", lightPos);
         lightingShader.setVec3("viewPos", camera.getCameraPos());
 
-        lightingShader.setVec3("light.ambient", 0.4f, 0.4f, 0.4f);
+        lightingShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
         lightingShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
         lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-        lightingShader.setFloat("light.constant", 1.0f);
-        lightingShader.setFloat("light.linear", 0.045f);
-        lightingShader.setFloat("light.quadratic", 0.0075f);
+        lightingShader.setFloat("light.constant", 0.5f);
+        lightingShader.setFloat("light.linear", 0.00014f);
+        lightingShader.setFloat("light.quadratic", 0.0000007f);
         lightingShader.setFloat("material.shininess", 32.0f);
 
         lightingShader.setMat4("projection", projection);
         lightingShader.setMat4("view", view);
         model = glm::mat4(1.0f);
         lightingShader.setMat4("model", model);
-
-        bruiserStance.Draw(modelShader);
      
         modelShader.use();
         modelShader.setMat4("projection", projection);
@@ -489,11 +485,10 @@ int main()
                 {
                     lightingShader.use();
                     glm::mat4 model = glm::mat4(1.0f);
-                    modelShader.setMat4("model", model);
                     model = glm::translate(model, { imGuiObjects[i].translation[0], imGuiObjects[i].translation[1], imGuiObjects[i].translation[2] });
                     model = glm::scale(model, { imGuiObjects[i].scale[0], imGuiObjects[i].scale[1], imGuiObjects[i].scale[2] });
-                    modelShader.setMat4("model", model);
-                    imGuiObjects[i].model->Draw(modelShader);
+                    lightingShader.setMat4("model", model);
+                    imGuiObjects[i].model->Draw(lightingShader);
                 }
             }
         }
