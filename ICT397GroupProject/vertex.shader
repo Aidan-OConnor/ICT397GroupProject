@@ -16,8 +16,6 @@ uniform int tileSize;
 void main()
 {
 	gl_Position = projection * view * model * vec4(aPos, 1.0f);
-	//TexCoord = vec2(aTexCoord.x, aTexCoord.y);
 	TexCoord = vec2(aPos.x/tileSize, aPos.z/tileSize);
 	height = aPos.y;
-	//vertexColor = vec4(aPos.y/maxHeight);
 }

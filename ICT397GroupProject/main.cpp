@@ -156,6 +156,8 @@ int main()
 
     shader.use();
     shader.setInt("tex1", 0);
+    shader.setInt("tex2", 1);
+    shader.setInt("tex3", 2);
     shader.setInt("tileSize", 50);
 
     skyboxShader.use();
@@ -249,7 +251,8 @@ int main()
                         imGuiType ImTemp;
 
                         ImTemp.objectType = "Terrain";
-                        ImTemp.terrain.loadFromHeightmap("Terrains/VolcanoType6.png", 4, "Images/Ground2.jpg", GL_TEXTURE_2D);
+                        ImTemp.terrain.loadFromHeightmap("Terrains/VolcanoType6.png", 1, "Images/Ground3.jpg", GL_TEXTURE_2D);
+                        ImTemp.terrain.addTextures("Images/Ground2.jpg", GL_TEXTURE_2D, "Images/Grass.jpg", GL_TEXTURE_2D);
                         ImTemp.translation = { 0.0f, 0.0f, 0.0f };
                         ImTemp.scale = { 1.0f, 1.0f, 1.0f };
 
@@ -270,7 +273,8 @@ int main()
                     {
                         imGuiType ImTemp;
                         ImTemp.objectType = "Terrain";
-                        ImTemp.terrain.loadFromFaultFormation(iterations, width, length, 1, 1, minHeight, maxHeight, filter, "Images/Ground2.jpg", GL_TEXTURE_2D);
+                        ImTemp.terrain.loadFromFaultFormation(iterations, width, length, 1, 1, minHeight, maxHeight, filter, "Images/Ground3.jpg", GL_TEXTURE_2D);
+                        ImTemp.terrain.addTextures("Images/Ground2.jpg", GL_TEXTURE_2D, "Images/Grass.jpg", GL_TEXTURE_2D);
                         ImTemp.translation = { 0.0f, 0.0f, 0.0f };
                         ImTemp.scale = { 1.0f, 1.0f, 1.0f };
 
