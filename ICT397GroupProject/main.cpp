@@ -169,7 +169,7 @@ int main()
     std::vector<objectData> luaMap;
     std::string tempName;
 
-    objectData& tempObject = lua["heightmap"];
+    objectData& tempObject = lua.get<objectData>("heightmap");
     luaMap.push_back(tempObject);
 
     std::cout << luaMap[0].objectType << std::endl;
