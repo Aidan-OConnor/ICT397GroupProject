@@ -154,8 +154,6 @@ int main()
     sol::state lua;
     lua.open_libraries(sol::lib::base);
 
-    lua.script_file("MapData.lua");
-
     lua.new_usertype<objectData>("objectData", sol::constructors<void()>(),
         "filepath", &objectData::filepath, "texturepath", &objectData::texturePath, "objectType", &objectData::objectType,
         "iterations", &objectData::iterations, "width", &objectData::width,
@@ -166,18 +164,22 @@ int main()
         "rx", &objectData::rx, "ry", &objectData::ry, "tz", &objectData::rz
     );
 
+    lua.script_file("MapData.lua");
+
     std::vector<objectData> luaMap;
-    objectData tempObject;
     std::string tempName;
-    tempObject = lua["heightmap"];
+
+    objectData& tempObject = lua["heightmap"];
     luaMap.push_back(tempObject);
-    tempObject = lua["waterFormation"];
+
+    objectData& tempObject1 = lua["waterFormation"];
+    luaMap.push_back(tempObject1);
 
     for (int i = 0; i < 30; i++)
     {
-        tempName = "Model" + std::to_string(i-1);
+        tempName = "model" + std::to_string(i+1);
         const char* modelName = tempName.c_str();
-        tempObject = lua[modelName];
+        objectData& tempObject2 = lua[modelName];
         luaMap.push_back(tempObject);
     }
 
@@ -216,8 +218,12 @@ int main()
         if (i == 0)
         {
             Landscape tempTerrain;
+            std::cout << "Here1" << std::endl;
+            std::cout << luaMap[i].texturePath << std::endl;
             tempTerrain.loadFromHeightmap(luaMap[i].filepath, 1, luaMap[i].texturePath, GL_TEXTURE_2D);
+            std::cout << "Here2" << std::endl;
             tempTerrain.addTextures("Images/Ground2.jpg", GL_TEXTURE_2D, "Images/Grass.jpg", GL_TEXTURE_2D);
+            std::cout << "Here3" << std::endl;
             tempGuiData.setTerrain(tempTerrain);
         }
         else if (i == 1)
@@ -232,6 +238,10 @@ int main()
         {
             tempGuiData.setModel(luaMap[i].filepath);
         }
+
+        std::cout << "Here2" << std::endl;
+
+        std::cout << luaMap[i].filepath << std::endl;
 
         glm::vec3 tempVec;
 
@@ -252,6 +262,8 @@ int main()
 
         convertedData.push_back(tempGuiData);
     }
+
+    std::cout << "Here2" << std::endl;
 
     imGuiData.setGuiData(convertedData);
 

@@ -1,4 +1,35 @@
-local heightmap = objectData:new()
+heightmap = objectData.new()
+waterFormation = objectData.new()
+model1 = objectData.new()
+model2 = objectData.new()
+model3 = objectData.new()
+model4 = objectData.new()
+model5 = objectData.new()
+model6 = objectData.new()
+model7= objectData.new()
+model8 = objectData.new()
+model9 = objectData.new()
+model10 = objectData.new()
+model11 = objectData.new()
+model12 = objectData.new()
+model13 = objectData.new()
+model14 = objectData.new()
+model15 = objectData.new()
+model16 = objectData.new()
+model17 = objectData.new()
+model18 = objectData.new()
+model19 = objectData.new()
+model20 = objectData.new()
+model21 = objectData.new()
+model22 = objectData.new()
+model23 = objectData.new()
+model24 = objectData.new()
+model25 = objectData.new()
+model26 = objectData.new()
+model27 = objectData.new()
+model28 = objectData.new()
+model29 = objectData.new()
+model30 = objectData.new()
 
 heightmap.objectType = "Terrain"
 heightmap.filepath = "Terrains/VolcanoType11.png"
@@ -12,8 +43,6 @@ heightmap.sz = 2
 heightmap.rx = 0
 heightmap.ry = 0
 heightmap.rz = 0
-
-local waterFormation = objectData:new()
 
 waterFormation.objectType = "Water"
 waterFormation.iterations = 1000
@@ -33,8 +62,6 @@ waterFormation.rx = 0
 waterFormation.ry = 0
 waterFormation.rz = 0
 
-local model1 = objectData:new()
-
 model1.objectType = "Model"
 model1.filepath = "Models/Bruiser/bruiserTpose.obj"
 model1.tx = 22.5
@@ -46,8 +73,6 @@ model1.sz = 3
 model1.rx = 0
 model1.ry = 179.26
 model1.rz = 0
-
-local model2 = objectData:new()
 
 model2.objectType = "Model"
 model2.filepath = "Models/Bruiser/bruiserTpose.obj"
@@ -61,8 +86,6 @@ model2.rx = 0
 model2.ry = 0.71
 model2.rz = 0
 
-local model3 = objectData:new()
-
 model3.objectType = "Model"
 model3.filepath = "Models/Bruiser/bruiserTpose.obj"
 model3.tx = -184
@@ -74,8 +97,6 @@ model3.sz = 3
 model3.rx = 0
 model3.ry = 1.32
 model3.rz = 0
-
-local model4 = objectData:new()
 
 model4.objectType = "Model"
 model4.filepath = "Models/Bruiser/bruiserTpose.obj"
@@ -89,8 +110,6 @@ model4.rx = 0
 model4.ry = -0.71
 model4.rz = 0
 
-local model5 = objectData:new()
-
 model5.objectType = "Model"
 model5.filepath = "Models/Bruiser/bruiserTpose.obj"
 model5.tx = 401
@@ -102,8 +121,6 @@ model5.sz = 3
 model5.rx = 0
 model5.ry = -0.86
 model5.rz = 0
-
-local model6 = objectData:new()
 
 model6.objectType = "Model"
 model6.filepath = "Models/Bruiser/bruiserTpose.obj"
@@ -117,8 +134,6 @@ model6.rx = 0
 model6.ry = 0
 model6.rz = 0
 
-local model7 = objectData:new()
-
 model7.objectType = "Model"
 model7.filepath = "Models/Bruiser/bruiserTpose.obj"
 model7.tx = 0
@@ -130,8 +145,6 @@ model7.sz = 3
 model7.rx = 0
 model7.ry = 178.89
 model7.rz = 0
-
-local model8 = objectData:new()
 
 model8.objectType = "Model"
 model8.filepath = "Models/Bruiser/bruiserStance.obj"
@@ -145,8 +158,6 @@ model8.rx = 0
 model8.ry = -1.59
 model8.rz = 0
 
-local model9 = objectData:new()
-
 model9.objectType = "Model"
 model9.filepath = "Models/Bruiser/bruiserStance.obj"
 model9.tx = 194
@@ -158,8 +169,6 @@ model9.sz = 3
 model9.rx = 0
 model9.ry = 2.11
 model9.rz = 0
-
-local model10 = objectData:new()
 
 model10.objectType = "Model"
 model10.filepath = "Models/Bruiser/bruiserStance.obj"
@@ -173,8 +182,6 @@ model10.rx = 0
 model10.ry = 1.11
 model10.rz = 0
 
-local model11 = objectData:new()
-
 model11.objectType = "Model"
 model11.filepath = "Models/Bruiser/bruiserStance.obj"
 model11.tx = -434
@@ -186,8 +193,6 @@ model11.sz = 3
 model11.rx = 0
 model11.ry = 1.79
 model11.rz = 0
-
-local model12 = objectData:new()
 
 model12.objectType = "Model"
 model12.filepath = "Models/Bruiser/bruiserStance.obj"
@@ -201,8 +206,6 @@ model12.rx = 0
 model12.ry = 1.87
 model12.rz = 0
 
-local model13 = objectData:new()
-
 model13.objectType = "Model"
 model13.filepath = "Models/Bruiser/bruiserStance.obj"
 model13.tx = -303
@@ -214,8 +217,6 @@ model13.sz = 3
 model13.rx = 0
 model13.ry = -1.19
 model13.rz = 0
-
-local model14 = objectData:new()
 
 model14.objectType = "Model"
 model14.filepath = "Models/Bruiser/bruiserStance.obj"
@@ -229,8 +230,6 @@ model14.rx = 0
 model14.ry = 0
 model14.rz = 0
 
-local model15 = objectData:new()
-
 model15.objectType = "Model"
 model15.filepath = "Models/Bruiser/bruiserStance.obj"
 model15.tx = 409.5
@@ -242,8 +241,6 @@ model15.sz = 3
 model15.rx = 0
 model15.ry = -2.31
 model15.rz = 0
-
-local model16 = objectData:new()
 
 model16.objectType = "Model"
 model16.filepath = "Models/NewBoat/boat.obj"
@@ -257,8 +254,6 @@ model16.rx = 0
 model16.ry = 3.05
 model16.rz = 0
 
-local model17 = objectData:new()
-
 model17.objectType = "Model"
 model17.filepath = "Models/Rocks/rock.obj"
 model17.tx = 263.5
@@ -270,8 +265,6 @@ model17.sz = 1
 model17.rx = 0
 model17.ry = 0
 model17.rz = 0
-
-local model18 = objectData:new()
 
 model18.objectType = "Model"
 model18.filepath = "Models/Rocks/rock.obj"
@@ -285,8 +278,6 @@ model18.rx = 0
 model18.ry = 0
 model18.rz = 0
 
-local model19 = objectData:new()
-
 model19.objectType = "Model"
 model19.filepath = "Models/Rocks/rock.obj"
 model19.tx = -423.5
@@ -298,8 +289,6 @@ model19.sz = 1
 model19.rx = 0
 model19.ry = 0
 model19.rz = 0
-
-local model20 = objectData:new()
 
 model20.objectType = "Model"
 model20.filepath = "Models/Rocks/rock2.obj"
@@ -313,8 +302,6 @@ model20.rx = 0
 model20.ry = 0
 model20.rz = 0
 
-local model21 = objectData:new()
-
 model21.objectType = "Model"
 model21.filepath = "Models/Rocks/rock2.obj"
 model21.tx = -11
@@ -326,8 +313,6 @@ model21.sz = 1
 model21.rx = 0
 model21.ry = 0
 model21.rz = 0
-
-local model22 = objectData:new()
 
 model22.objectType = "Model"
 model22.filepath = "Models/Rocks/rock2.obj"
@@ -341,8 +326,6 @@ model22.rx = 0
 model22.ry = 0
 model22.rz = 0
 
-local model23 = objectData:new()
-
 model23.objectType = "Model"
 model23.filepath = "Models/Rocks/rock3.obj"
 model23.tx = 101
@@ -354,8 +337,6 @@ model23.sz = 1
 model23.rx = 0
 model23.ry = 0
 model23.rz = 0
-
-local model24 = objectData:new()
 
 model24.objectType = "Model"
 model24.filepath = "Models/Rocks/rock3.obj"
@@ -369,8 +350,6 @@ model24.rx = 0
 model24.ry = 0
 model24.rz = 0
 
-local model25 = objectData:new()
-
 model25.objectType = "Model"
 model25.filepath = "Models/Rocks/rock3.obj"
 model25.tx = -410.5
@@ -382,8 +361,6 @@ model25.sz = 1
 model25.rx = 0
 model25.ry = 0
 model25.rz = 0
-
-local model26 = objectData:new()
 
 model26.objectType = "Model"
 model26.filepath = "Models/PalmTree/palmtree.obj"
@@ -397,8 +374,6 @@ model26.rx = 0
 model26.ry = 0
 model26.rz = 0
 
-local model27 = objectData:new()
-
 model27.objectType = "Model"
 model27.filepath = "Models/PalmTree/palmtree.obj"
 model27.tx = 145.5
@@ -410,8 +385,6 @@ model27.sz = 1
 model27.rx = 0
 model27.ry = 0
 model27.rz = 0
-
-local model28 = objectData:new()
 
 model28.objectType = "Model"
 model28.filepath = "Models/PalmTree/palmtree.obj"
@@ -425,8 +398,6 @@ model28.rx = 0
 model28.ry = 0
 model28.rz = 0
 
-local model29 = objectData:new()
-
 model29.objectType = "Model"
 model29.filepath = "Models/PalmTree/palmtree.obj"
 model29.tx = -413
@@ -438,8 +409,6 @@ model29.sz = 1
 model29.rx = 0
 model29.ry = 0
 model29.rz = 0
-
-local model30 = objectData:new()
 
 model30.objectType = "Model"
 model30.filepath = "Models/PalmTree/palmtree.obj"
