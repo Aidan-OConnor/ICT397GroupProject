@@ -126,5 +126,8 @@
     <ClInclude Include="..\Externals\imgui\imgui_impl_opengl3_loader.h">
       <Filter>Header Files\imgui</Filter>
     </ClInclude>
+    <ClInclude Include="ImGuiData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

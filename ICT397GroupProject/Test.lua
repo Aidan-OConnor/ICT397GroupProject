@@ -1,1 +1,1 @@
-print("Lua test successful")
+print("Lua/Sol test successful")

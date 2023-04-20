@@ -21,11 +21,13 @@
 #include "Terrain.h"
 #include "Landscape.h"
 #include "model.h"
+#include "ImGuiData.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);
 unsigned int loadCubemap(std::vector<std::string> faces);
 unsigned int loadTexture(const char* path);
+void initShaders(OurCamera& camera, Shader& shader, Shader& lightingShader, Shader& modelShader, Shader& waterShader, Shader& skyboxShader);
 
 const unsigned int SCR_WIDTH = 1600;
 const unsigned int SCR_HEIGHT = 1200;
@@ -37,11 +39,10 @@ glm::vec3 lightPos(200.0f, 50.0f, 200.0f);
 
 int main()
 {
-    sol::state lua{};
-    lua_State* L = luaL_newstate();
-    luaL_openlibs(L);
+    sol::state lua;
+    lua.open_libraries(sol::lib::base);
 
-    luaL_dofile(L, "Test.lua");
+    lua.script_file("Test.lua");
 
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -169,21 +170,7 @@ int main()
 
     bool useImGui = false;
 
-    Landscape tempLandscape;
-    float iterations, width, length, minHeight, maxHeight, filter;
-    iterations = width = length = minHeight = maxHeight = filter = 0;
-
-    struct imGuiType
-    {
-        std::string objectType;
-        Landscape terrain, water;
-        Model* model;
-        const char* objectName;
-        glm::vec3 translation;
-        glm::vec3 scale;
-    };
-
-    std::vector<imGuiType> imGuiObjects;
+    ImGuiData imGuiData;
 
     while (!glfwWindowShouldClose(window))
     {
@@ -200,309 +187,16 @@ int main()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        shader.use();
-
-        glm::mat4 projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
-        shader.setMat4("projection", projection);
-
-        glm::mat4 view = glm::lookAt(camera.getCameraPos(), camera.getCameraPos() + camera.getCameraFront(), camera.getCameraUp());
-        shader.setMat4("view", view);
-
-        glm::mat4 model = glm::mat4(1.0f);
-        shader.setMat4("model", model);
-
-        lightingShader.use();
-        lightingShader.setVec3("light.position", lightPos);
-        lightingShader.setVec3("viewPos", camera.getCameraPos());
-
-        lightingShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
-        lightingShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
-        lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-        lightingShader.setFloat("light.constant", 0.5f);
-        lightingShader.setFloat("light.linear", 0.000014f);
-        lightingShader.setFloat("light.quadratic", 0.00000007f);
-        lightingShader.setFloat("material.shininess", 32.0f);
-
-        lightingShader.setMat4("projection", projection);
-        lightingShader.setMat4("view", view);
-        model = glm::mat4(1.0f);
-        lightingShader.setMat4("model", model);
-     
-        modelShader.use();
-        modelShader.setMat4("projection", projection);
-        modelShader.setMat4("view", view);
-        modelShader.setMat4("model", model);      
-
-        waterShader.use();
-        waterShader.setMat4("projection", projection);
-        waterShader.setMat4("view", view);
-        waterShader.setMat4("model", model);
+        initShaders(camera, shader, lightingShader, modelShader, waterShader, skyboxShader);
 
         if (useImGui)
         {
-            ImGui::Begin("Control Centre");
-
-            if (ImGui::TreeNode("Create Terrain"))
-            {
-                if (ImGui::TreeNode("Heightmap"))
-                {
-                    if (ImGui::Button("Generate", ImVec2(100, 25)))
-                    {
-                        imGuiType ImTemp;
-
-                        ImTemp.objectType = "Terrain";
-                        ImTemp.terrain.loadFromHeightmap("Terrains/VolcanoType6.png", 1, "Images/Ground3.jpg", GL_TEXTURE_2D);
-                        ImTemp.terrain.addTextures("Images/Ground2.jpg", GL_TEXTURE_2D, "Images/Grass.jpg", GL_TEXTURE_2D);
-                        ImTemp.translation = { 0.0f, 0.0f, 0.0f };
-                        ImTemp.scale = { 1.0f, 1.0f, 1.0f };
-
-                        imGuiObjects.push_back(ImTemp);
-                    }
-                    ImGui::TreePop();
-                }
-                if (ImGui::TreeNode("Fault Formation"))
-                {
-                    ImGui::InputFloat("Iterations", &iterations);
-                    ImGui::InputFloat("Width", &width);
-                    ImGui::InputFloat("Length", &length);
-                    ImGui::InputFloat("Minimim height", &minHeight);
-                    ImGui::InputFloat("Maximum height ", &maxHeight);
-                    ImGui::InputFloat("Filter", &filter);
-
-                    if (ImGui::Button("Generate", ImVec2(100, 25)))
-                    {
-                        imGuiType ImTemp;
-                        ImTemp.objectType = "Terrain";
-                        ImTemp.terrain.loadFromFaultFormation(iterations, width, length, 1, 1, minHeight, maxHeight, filter, "Images/Ground3.jpg", GL_TEXTURE_2D);
-                        ImTemp.terrain.addTextures("Images/Ground2.jpg", GL_TEXTURE_2D, "Images/Grass.jpg", GL_TEXTURE_2D);
-                        ImTemp.translation = { 0.0f, 0.0f, 0.0f };
-                        ImTemp.scale = { 1.0f, 1.0f, 1.0f };
-
-                        imGuiObjects.push_back(ImTemp);
-
-                        iterations = width = length = minHeight = maxHeight = filter = 0;
-                    }
-                    ImGui::TreePop();
-                }
-                ImGui::TreePop();
-            }
-
-            if (ImGui::TreeNode("Create Water"))
-            {
-                if (ImGui::TreeNode("Fault Formation"))
-                {
-                    ImGui::InputFloat("Iterations", &iterations);
-                    ImGui::InputFloat("Width", &width);
-                    ImGui::InputFloat("Length", &length);
-                    ImGui::InputFloat("Minimim height", &minHeight);
-                    ImGui::InputFloat("Maximum height ", &maxHeight);
-                    ImGui::InputFloat("Filter", &filter);
-
-                    if (ImGui::Button("Generate", ImVec2(100, 25)))
-                    {
-                        imGuiType ImTemp;
-                        ImTemp.objectType = "Water";
-                        ImTemp.terrain.loadFromFaultFormation(iterations, width, length, 1, 1, minHeight, maxHeight, filter, "Images/Water1.jpg", GL_TEXTURE_2D);
-                        ImTemp.translation = { 0.0f, 0.0f, 0.0f };
-                        ImTemp.scale = { 1.0f, 1.0f, 1.0f };
-
-                        imGuiObjects.push_back(ImTemp);
-
-                        iterations = width = length = minHeight = maxHeight = filter = 0;
-                    }
-                    ImGui::TreePop();
-                }
-                ImGui::TreePop();
-            }
-
-            if (ImGui::TreeNode("Load Model"))
-            {
-                if (ImGui::TreeNode("Bruiser T-Pose"))
-                {
-                    if (ImGui::Button("Load", ImVec2(100, 25)))
-                    {
-                        imGuiType ImTemp;
-                        ImTemp.objectType = "Model";
-                        ImTemp.model = new Model("Models/Bruiser/bruiserTpose.obj");
-                        ImTemp.translation = { 0.0f, 0.0f, 0.0f };
-                        ImTemp.scale = { 1.0f, 1.0f, 1.0f };
-
-                        imGuiObjects.push_back(ImTemp);
-                    }
-                    ImGui::TreePop();
-                }
-                if (ImGui::TreeNode("Bruiser Stance"))
-                {
-                    if (ImGui::Button("Load", ImVec2(100, 25)))
-                    {
-                        imGuiType ImTemp;
-                        ImTemp.objectType = "Model";
-                        ImTemp.model = new Model("Models/Bruiser/bruiserStance.obj");
-                        ImTemp.translation = { 0.0f, 0.0f, 0.0f };
-                        ImTemp.scale = { 1.0f, 1.0f, 1.0f };
-
-                        imGuiObjects.push_back(ImTemp);
-                    }
-                    ImGui::TreePop();
-                }
-                if (ImGui::TreeNode("Boat"))
-                {
-                    if (ImGui::Button("Load", ImVec2(100, 25)))
-                    {
-                        imGuiType ImTemp;
-                        ImTemp.objectType = "Model";
-                        ImTemp.model = new Model("Models/NewBoat/boat.obj");
-                        ImTemp.translation = { 0.0f, 0.0f, 0.0f };
-                        ImTemp.scale = { 1.0f, 1.0f, 1.0f };
-
-                        imGuiObjects.push_back(ImTemp);
-                    }
-                    ImGui::TreePop();
-                }
-                if (ImGui::TreeNode("Palm Tree"))
-                {
-                    if (ImGui::Button("Load", ImVec2(100, 25)))
-                    {
-                        imGuiType ImTemp;
-                        ImTemp.objectType = "Model";
-                        ImTemp.model = new Model("Models/PalmTree/palmtree.obj");
-                        ImTemp.translation = { 0.0f, 0.0f, 0.0f };
-                        ImTemp.scale = { 1.0f, 1.0f, 1.0f };
-
-                        imGuiObjects.push_back(ImTemp);
-                    }
-                    ImGui::TreePop();
-                }
-                if (ImGui::TreeNode("Rock1"))
-                {
-                    if (ImGui::Button("Load", ImVec2(100, 25)))
-                    {
-                        imGuiType ImTemp;
-                        ImTemp.objectType = "Model";
-                        ImTemp.model = new Model("Models/Rocks/rock.obj");
-                        ImTemp.translation = { 0.0f, 0.0f, 0.0f };
-                        ImTemp.scale = { 1.0f, 1.0f, 1.0f };
-
-                        imGuiObjects.push_back(ImTemp);
-                    }
-                    ImGui::TreePop();
-                }
-                if (ImGui::TreeNode("Rock2"))
-                {
-                    if (ImGui::Button("Load", ImVec2(100, 25)))
-                    {
-                        imGuiType ImTemp;
-                        ImTemp.objectType = "Model";
-                        ImTemp.model = new Model("Models/Rocks/rock2.obj");
-                        ImTemp.translation = { 0.0f, 0.0f, 0.0f };
-                        ImTemp.scale = { 1.0f, 1.0f, 1.0f };
-
-                        imGuiObjects.push_back(ImTemp);
-                    }
-                    ImGui::TreePop();
-                }
-                if (ImGui::TreeNode("Rock3"))
-                {
-                    if (ImGui::Button("Load", ImVec2(100, 25)))
-                    {
-                        imGuiType ImTemp;
-                        ImTemp.objectType = "Model";
-                        ImTemp.model = new Model("Models/Rocks/rock3.obj");
-                        ImTemp.translation = { 0.0f, 0.0f, 0.0f };
-                        ImTemp.scale = { 1.0f, 1.0f, 1.0f };
-
-                        imGuiObjects.push_back(ImTemp);
-                    }
-                    ImGui::TreePop();
-                }
-                ImGui::TreePop();
-            }
-
-            if (ImGui::TreeNode("Object Data"))
-            {
-                if (imGuiObjects.size() != 0)
-                {
-                    for (int i = 0; i < imGuiObjects.size(); i++)
-                    {
-                        std::string tempName;
-                        if (imGuiObjects[i].objectType == "Terrain")
-                        {
-                            tempName = "Terrain" + std::to_string(i);
-                        }
-                        else if (imGuiObjects[i].objectType == "Water")
-                        {
-                            tempName = "Water" + std::to_string(i);
-                        }
-                        else if (imGuiObjects[i].objectType == "Model")
-                        {
-                            tempName = "Model" + std::to_string(i);
-                        }
-
-                        imGuiObjects[i].objectName = tempName.c_str();
-
-                        if (ImGui::TreeNode(imGuiObjects[i].objectName))
-                        {
-                            ImGui::DragFloat("PositionX", &imGuiObjects[i].translation[0], 0.5, -1000, 1000);
-                            ImGui::DragFloat("PositionY", &imGuiObjects[i].translation[1], 0.5, -1000, 1000);
-                            ImGui::DragFloat("PositionZ", &imGuiObjects[i].translation[2], 0.5, -1000, 1000);
-                            ImGui::InputFloat3("Position", &imGuiObjects[i].translation[0]);
-                            ImGui::DragFloat("ScaleX", &imGuiObjects[i].scale[0], 0.005, -50, 50);
-                            ImGui::DragFloat("ScaleY", &imGuiObjects[i].scale[1], 0.005, -50, 50);
-                            ImGui::DragFloat("ScaleZ", &imGuiObjects[i].scale[2], 0.005, -50, 50);
-                            ImGui::InputFloat3("Scale", &imGuiObjects[i].scale[0]);
-                            ImGui::TreePop();
-                        }
-                    }
-                }
-                ImGui::TreePop();
-            }
-
-            ImGui::End();
+            imGuiData.RenderUI();
         }
-       
 
-        if (imGuiObjects.size() != 0)
-        {
-            for (int i = 0; i < imGuiObjects.size(); i++)
-            {
-                if (imGuiObjects[i].objectType == "Terrain")
-                {
-                    shader.use();
-                    glm::mat4 model = glm::mat4(1.0f);
-                    shader.setMat4("model", model);
-                    model = glm::translate(model, { imGuiObjects[i].translation[0], imGuiObjects[i].translation[1], imGuiObjects[i].translation[2] });
-                    model = glm::scale(model, { imGuiObjects[i].scale[0], imGuiObjects[i].scale[1], imGuiObjects[i].scale[2] });
-                    shader.setMat4("model", model);
-                    imGuiObjects[i].terrain.renderLandscape(camera.getRenderType());
-                }
-                else if (imGuiObjects[i].objectType == "Water")
-                {
-                    waterShader.use();
-                    glm::mat4 model = glm::mat4(1.0f);
-                    waterShader.setMat4("model", model);
-                    model = glm::translate(model, { imGuiObjects[i].translation[0], imGuiObjects[i].translation[1], imGuiObjects[i].translation[2] });
-                    model = glm::scale(model, { imGuiObjects[i].scale[0], imGuiObjects[i].scale[1], imGuiObjects[i].scale[2] });
-                    waterShader.setMat4("model", model);
-                    imGuiObjects[i].terrain.renderLandscape(camera.getRenderType());
-                }
-                else if (imGuiObjects[i].objectType == "Model")
-                {
-                    lightingShader.use();
-                    glm::mat4 model = glm::mat4(1.0f);
-                    model = glm::translate(model, { imGuiObjects[i].translation[0], imGuiObjects[i].translation[1], imGuiObjects[i].translation[2] });
-                    model = glm::scale(model, { imGuiObjects[i].scale[0], imGuiObjects[i].scale[1], imGuiObjects[i].scale[2] });
-                    lightingShader.setMat4("model", model);
-                    imGuiObjects[i].model->Draw(lightingShader);
-                }
-            }
-        }
-    
-        glDepthFunc(GL_LEQUAL);  
+        imGuiData.RenderObjects(shader, waterShader, lightingShader, camera);
+
         skyboxShader.use();
-        view = glm::mat4(glm::mat3(glm::lookAt(camera.getCameraPos(), camera.getCameraPos() + camera.getCameraFront(), camera.getCameraUp())));
-        skyboxShader.setMat4("view", view);
-        skyboxShader.setMat4("projection", projection);
-
         glBindVertexArray(skyboxVAO);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
@@ -600,4 +294,51 @@ unsigned int loadTexture(char const* path)
     }
 
     return textureID;
+}
+
+void initShaders(OurCamera& camera, Shader& shader, Shader& lightingShader, Shader& modelShader, Shader& waterShader, Shader& skyboxShader)
+{
+    shader.use();
+
+    glm::mat4 projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
+    shader.setMat4("projection", projection);
+
+    glm::mat4 view = glm::lookAt(camera.getCameraPos(), camera.getCameraPos() + camera.getCameraFront(), camera.getCameraUp());
+    shader.setMat4("view", view);
+
+    glm::mat4 model = glm::mat4(1.0f);
+    shader.setMat4("model", model);
+
+    lightingShader.use();
+    lightingShader.setVec3("light.position", lightPos);
+    lightingShader.setVec3("viewPos", camera.getCameraPos());
+
+    lightingShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
+    lightingShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
+    lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+    lightingShader.setFloat("light.constant", 0.5f);
+    lightingShader.setFloat("light.linear", 0.000014f);
+    lightingShader.setFloat("light.quadratic", 0.00000007f);
+    lightingShader.setFloat("material.shininess", 32.0f);
+
+    lightingShader.setMat4("projection", projection);
+    lightingShader.setMat4("view", view);
+    model = glm::mat4(1.0f);
+    lightingShader.setMat4("model", model);
+
+    modelShader.use();
+    modelShader.setMat4("projection", projection);
+    modelShader.setMat4("view", view);
+    modelShader.setMat4("model", model);
+
+    waterShader.use();
+    waterShader.setMat4("projection", projection);
+    waterShader.setMat4("view", view);
+    waterShader.setMat4("model", model);
+
+    glDepthFunc(GL_LEQUAL);
+    skyboxShader.use();
+    view = glm::mat4(glm::mat3(glm::lookAt(camera.getCameraPos(), camera.getCameraPos() + camera.getCameraFront(), camera.getCameraUp())));
+    skyboxShader.setMat4("view", view);
+    skyboxShader.setMat4("projection", projection);
 }
