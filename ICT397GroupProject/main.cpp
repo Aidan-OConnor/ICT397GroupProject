@@ -37,6 +37,19 @@ float camHeight = 2.5;
 
 glm::vec3 lightPos(200.0f, 50.0f, 200.0f);
 
+struct objectData
+{
+    const char* filepath;
+    const char* texturePath;
+    const char* objectType;
+    float iterations, width, length, minHeight, maxHeight, filter;
+    float tx, ty, tz;
+    float sx, sy, sz;
+    float rx, ry, rz;
+
+    objectData() {};
+};
+
 int main()
 {
     glfwInit();
@@ -143,18 +156,7 @@ int main()
 
     lua.script_file("MapData.lua");
 
-    struct objectData
-    {
-        const char* filepath;
-        const char* texturePath;
-        const char* objectType;
-        float iterations, width, length, minHeight, maxHeight, filter;
-        float tx, ty, tz;
-        float sx, sy, sz;
-        float rx, ry, rz;
-    };
-
-    lua.new_usertype<objectData>("objectData",
+    lua.new_usertype<objectData>("objectData", sol::constructors<void()>(),
         "filepath", &objectData::filepath, "texturepath", &objectData::texturePath, "objectType", &objectData::objectType,
         "iterations", &objectData::iterations, "width", &objectData::width,
         "length", &objectData::length, "minHeight", &objectData::minHeight,
