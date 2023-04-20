@@ -168,8 +168,10 @@ int main()
     bool useImGui = false;
 
     Landscape tempLandscape;
+    Terrain temp;
     float iterations, width, length, minHeight, maxHeight, filter;
     iterations = width = length = minHeight = maxHeight = filter = 0;
+    int heightScale = 1;
 
     struct imGuiType
     {
@@ -470,6 +472,8 @@ int main()
                     model = glm::scale(model, { imGuiObjects[i].scale[0], imGuiObjects[i].scale[1], imGuiObjects[i].scale[2] });
                     shader.setMat4("model", model);
                     imGuiObjects[i].terrain.renderLandscape(camera.getRenderType());
+                    temp = imGuiObjects[i].terrain.getTerrain();
+                    heightScale = imGuiObjects[i].scale[1];
                 }
                 else if (imGuiObjects[i].objectType == "Water")
                 {
@@ -492,7 +496,18 @@ int main()
                 }
             }
         }
-    
+        
+        std::vector<glm::vec3> test = temp.getVertices();
+        glm::vec3 camPos = camera.getCameraPos();
+        int currentX = camPos.x;
+        int currentZ = camPos.z;
+        int currentY = temp.getHeightAtPos(test, currentX, currentZ, heightScale);
+        std::cout << currentY << std::endl;
+        if (currentY != 0) {
+            camera.setCameraY(currentY);
+            camera.setLevel(currentY);
+        }
+        
         glDepthFunc(GL_LEQUAL);  
         skyboxShader.use();
         view = glm::mat4(glm::mat3(glm::lookAt(camera.getCameraPos(), camera.getCameraPos() + camera.getCameraFront(), camera.getCameraUp())));
