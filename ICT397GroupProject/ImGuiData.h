@@ -327,4 +327,9 @@ public:
     {
         this->rotation = rotation;
     }
+
+    void setObjectType(std::string type)
+    {
+        objectType = type;
+    }
 };

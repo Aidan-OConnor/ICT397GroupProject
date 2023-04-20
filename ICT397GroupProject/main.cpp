@@ -228,6 +228,7 @@ int main()
             tempTerrain.loadFromHeightmap(luaMap[i].filepath, 1, luaMap[i].texturePath, GL_TEXTURE_2D);
             tempTerrain.addTextures("Images/Ground2.jpg", GL_TEXTURE_2D, "Images/Grass.jpg", GL_TEXTURE_2D);
             tempGuiData.setTerrain(tempTerrain);
+            tempGuiData.setObjectType(luaMap[i].objectType);
         }
         else if (i == 1)
         {
@@ -241,10 +242,13 @@ int main()
                 luaMap[i].texturePath, GL_TEXTURE_2D);
             std::cout << "Here1" << std::endl;
             tempGuiData.setTerrain(tempTerrain);
+            tempGuiData.setObjectType("Water");
         }
         else
         {
-            tempGuiData.setModel(luaMap[i].filepath);
+            // tempGuiData.setModel(luaMap[i].filepath); // This file path is incorrectly set as the volcano file path for all models
+            tempGuiData.setModel("Models/Bruiser/bruiserStance.obj");
+            tempGuiData.setObjectType("Model"); // The object type also needs to be set so the program knows what to render. Without this new method, the object type was blank
         }
 
         glm::vec3 tempVec;
