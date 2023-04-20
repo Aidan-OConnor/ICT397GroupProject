@@ -119,6 +119,7 @@
     <None Include="fragment.shader" />
     <None Include="lightingFragment.shader" />
     <None Include="lightingVertex.shader" />
+    <None Include="MapData.lua" />
     <None Include="modelFragment.shader" />
     <None Include="modelVertex.shader" />
     <None Include="skyboxFragment.shader" />

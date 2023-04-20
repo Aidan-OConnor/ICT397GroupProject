@@ -39,6 +39,12 @@ public:
 		this->terrain->renderTerrain(renderType);
 	}
 
+	void renderWater(bool renderType)
+	{
+		this->texture->bind(0);
+		this->terrain->renderTerrain(renderType);
+	}
+
 	Terrain getTerrain()
 	{
 		return *this->terrain;

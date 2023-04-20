@@ -39,11 +39,6 @@ glm::vec3 lightPos(200.0f, 50.0f, 200.0f);
 
 int main()
 {
-    sol::state lua;
-    lua.open_libraries(sol::lib::base);
-
-    lua.script_file("Test.lua");
-
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
@@ -143,6 +138,47 @@ int main()
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
+    sol::state lua;
+    lua.open_libraries(sol::lib::base);
+
+    lua.script_file("MapData.lua");
+
+    struct objectData
+    {
+        const char* filepath;
+        const char* texturePath;
+        const char* objectType;
+        float iterations, width, length, minHeight, maxHeight, filter;
+        float tx, ty, tz;
+        float sx, sy, sz;
+        float rx, ry, rz;
+    };
+
+    lua.new_usertype<objectData>("objectData",
+        "filepath", &objectData::filepath, "texturepath", &objectData::texturePath, "objectType", &objectData::objectType,
+        "iterations", &objectData::iterations, "width", &objectData::width,
+        "length", &objectData::length, "minHeight", &objectData::minHeight,
+        "maxHeight", &objectData::maxHeight, "filter", &objectData::filter,
+        "tx", &objectData::tx, "ty", &objectData::ty, "tz", &objectData::tz,
+        "sx", &objectData::sx, "sy", &objectData::sy, "sz", &objectData::sz,
+        "rx", &objectData::rx, "ry", &objectData::ry, "tz", &objectData::rz
+    );
+
+    std::vector<objectData> luaMap;
+    objectData tempObject;
+    std::string tempName;
+    tempObject = lua["heightmap"];
+    luaMap.push_back(tempObject);
+    tempObject = lua["waterFormation"];
+
+    for (int i = 0; i < 30; i++)
+    {
+        tempName = "Model" + std::to_string(i-1);
+        const char* modelName = tempName.c_str();
+        tempObject = lua[modelName];
+        luaMap.push_back(tempObject);
+    }
+
     std::vector<std::string> faces
     {
         "Images/Skybox/right.png",
@@ -170,7 +206,52 @@ int main()
 
     bool useImGui = false;
 
-    ImGuiData imGuiData;
+    std::vector<ImGuiData> convertedData;
+    ImGuiData imGuiData, tempGuiData;
+
+    for (int i = 0; i < luaMap.size(); i++)
+    {
+        if (i == 0)
+        {
+            Landscape tempTerrain;
+            tempTerrain.loadFromHeightmap(luaMap[i].filepath, 1, luaMap[i].texturePath, GL_TEXTURE_2D);
+            tempTerrain.addTextures("Images/Ground2.jpg", GL_TEXTURE_2D, "Images/Grass.jpg", GL_TEXTURE_2D);
+            tempGuiData.setTerrain(tempTerrain);
+        }
+        else if (i == 1)
+        {
+            Landscape tempTerrain;
+            tempTerrain.loadFromFaultFormation(luaMap[i].iterations, luaMap[i].width, luaMap[i].length, 
+                1, 1, luaMap[i].minHeight, luaMap[i].maxHeight, luaMap[i].filter,
+                luaMap[i].texturePath, GL_TEXTURE_2D);
+            tempGuiData.setTerrain(tempTerrain);
+        }
+        else
+        {
+            tempGuiData.setModel(luaMap[i].filepath);
+        }
+
+        glm::vec3 tempVec;
+
+        tempVec.x = luaMap[i].tx;
+        tempVec.y = luaMap[i].ty;
+        tempVec.z = luaMap[i].tz;
+        tempGuiData.setTranslation(tempVec);
+
+        tempVec.x = luaMap[i].sx;
+        tempVec.y = luaMap[i].sy;
+        tempVec.z = luaMap[i].sz;
+        tempGuiData.setScale(tempVec);
+
+        tempVec.x = luaMap[i].rx;
+        tempVec.y = luaMap[i].ry;
+        tempVec.z = luaMap[i].rz;
+        tempGuiData.setRotation(tempVec);
+
+        convertedData.push_back(tempGuiData);
+    }
+
+    imGuiData.setGuiData(convertedData);
 
     while (!glfwWindowShouldClose(window))
     {

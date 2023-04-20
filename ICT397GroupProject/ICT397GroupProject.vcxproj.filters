@@ -73,6 +73,7 @@
     <None Include="modelVertex.shader" />
     <None Include="lightingFragment.shader" />
     <None Include="lightingVertex.shader" />
+    <None Include="MapData.lua" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Landscape.h">

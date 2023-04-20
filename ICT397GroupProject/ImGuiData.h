@@ -32,7 +32,7 @@ public:
                     ImGuiData ImTemp;
 
                     ImTemp.objectType = "Terrain";
-                    ImTemp.terrain.loadFromHeightmap("Terrains/VolcanoType6.png", 1, "Images/Ground3.jpg", GL_TEXTURE_2D);
+                    ImTemp.terrain.loadFromHeightmap("Terrains/VolcanoType11.png", 1, "Images/Ground3.jpg", GL_TEXTURE_2D);
                     ImTemp.terrain.addTextures("Images/Ground2.jpg", GL_TEXTURE_2D, "Images/Grass.jpg", GL_TEXTURE_2D);
                     ImTemp.translation = { 0.0f, 0.0f, 0.0f };
                     ImTemp.scale = { 1.0f, 1.0f, 1.0f };
@@ -275,7 +275,7 @@ public:
                     model = glm::rotate(model, imGuiObjects[i].rotation[1], glm::vec3(0, 1, 0));
                     model = glm::rotate(model, imGuiObjects[i].rotation[2], glm::vec3(0, 0, 1));
                     waterShader.setMat4("model", model);
-                    imGuiObjects[i].terrain.renderLandscape(camera.getRenderType());
+                    imGuiObjects[i].terrain.renderWater(camera.getRenderType());
                 }
                 else if (imGuiObjects[i].objectType == "Model")
                 {
@@ -293,4 +293,38 @@ public:
         }
     }
 
+    void setGuiData(std::vector<ImGuiData> dataVec)
+    {
+        this->imGuiObjects = dataVec;
+    }
+
+    void setTerrain(Landscape landscape)
+    {
+        this->terrain = landscape;
+    }
+
+    void setWater(Landscape landscape)
+    {
+        this->water = landscape;
+    }
+
+    void setModel(const char* modelPath)
+    {
+        this->model = new Model(modelPath);
+    }
+
+    void setTranslation(glm::vec3 translate)
+    {
+        this->translation = translate;
+    }
+
+    void setScale(glm::vec3 scale)
+    {
+        this->scale = scale;
+    }
+
+    void setRotation(glm::vec3 rotate)
+    {
+        this->rotation = rotation;
+    }
 };
