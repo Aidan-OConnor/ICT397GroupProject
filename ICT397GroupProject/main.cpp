@@ -161,7 +161,7 @@ int main()
         "maxHeight", &objectData::maxHeight, "filter", &objectData::filter,
         "tx", &objectData::tx, "ty", &objectData::ty, "tz", &objectData::tz,
         "sx", &objectData::sx, "sy", &objectData::sy, "sz", &objectData::sz,
-        "rx", &objectData::rx, "ry", &objectData::ry, "tz", &objectData::rz
+        "rx", &objectData::rx, "ry", &objectData::ry, "rz", &objectData::rz
     );
 
     lua.script_file("MapData.lua");
