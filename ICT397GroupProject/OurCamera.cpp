@@ -25,6 +25,7 @@ OurCamera::OurCamera()
     this->grounded = false;
     this->renderTriangle = true;
     this->mouseControls = true;
+    this->level = 0;
 }
 
 void OurCamera::processInput(GLFWwindow* window)
@@ -32,7 +33,7 @@ void OurCamera::processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
-    float cameraSpeed = static_cast<float>(10.0 * deltaTime);
+    float cameraSpeed = static_cast<float>(100.0 * deltaTime);
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && stamina > 0 && grounded == true) {
         cameraSpeed = cameraSpeed * 1.5;
@@ -173,4 +174,14 @@ void OurCamera::setHeight(float height)
 bool OurCamera::getRenderType()
 {
     return renderTriangle;
+}
+
+void OurCamera::setCameraY(float newValue)
+{
+    cameraPos.y = newValue;
+}
+
+void OurCamera::setLevel(int value)
+{
+    this->level = value;
 }

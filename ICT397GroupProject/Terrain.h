@@ -46,4 +46,6 @@ public:
     int getWidth();
 
     int getHeight();
+    
+    int getHeightAtPos(std::vector<glm::vec3> temp, int x, int z, int heightScale);
 };
