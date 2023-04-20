@@ -155,7 +155,7 @@ int main()
     lua.open_libraries(sol::lib::base);
 
     lua.new_usertype<objectData>("objectData", sol::constructors<void()>(),
-        "filepath", &objectData::filepath, "texturepath", &objectData::texturePath, "objectType", &objectData::objectType,
+        "filepath", &objectData::filepath, "texturePath", &objectData::texturePath, "objectType", &objectData::objectType,
         "iterations", &objectData::iterations, "width", &objectData::width,
         "length", &objectData::length, "minHeight", &objectData::minHeight,
         "maxHeight", &objectData::maxHeight, "filter", &objectData::filter,
@@ -218,30 +218,25 @@ int main()
         if (i == 0)
         {
             Landscape tempTerrain;
-            std::cout << "Here1" << std::endl;
-            std::cout << luaMap[i].texturePath << std::endl;
             tempTerrain.loadFromHeightmap(luaMap[i].filepath, 1, luaMap[i].texturePath, GL_TEXTURE_2D);
-            std::cout << "Here2" << std::endl;
             tempTerrain.addTextures("Images/Ground2.jpg", GL_TEXTURE_2D, "Images/Grass.jpg", GL_TEXTURE_2D);
-            std::cout << "Here3" << std::endl;
             tempGuiData.setTerrain(tempTerrain);
         }
         else if (i == 1)
         {
+            std::cout << "Here" << std::endl;
             Landscape tempTerrain;
+            std::cout << "Here0" << std::endl;
             tempTerrain.loadFromFaultFormation(luaMap[i].iterations, luaMap[i].width, luaMap[i].length, 
                 1, 1, luaMap[i].minHeight, luaMap[i].maxHeight, luaMap[i].filter,
                 luaMap[i].texturePath, GL_TEXTURE_2D);
+            std::cout << "Here1" << std::endl;
             tempGuiData.setTerrain(tempTerrain);
         }
         else
         {
             tempGuiData.setModel(luaMap[i].filepath);
         }
-
-        std::cout << "Here2" << std::endl;
-
-        std::cout << luaMap[i].filepath << std::endl;
 
         glm::vec3 tempVec;
 
@@ -262,8 +257,6 @@ int main()
 
         convertedData.push_back(tempGuiData);
     }
-
-    std::cout << "Here2" << std::endl;
 
     imGuiData.setGuiData(convertedData);
 
