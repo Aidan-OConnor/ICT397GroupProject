@@ -172,8 +172,15 @@ int main()
     objectData& tempObject = lua["heightmap"];
     luaMap.push_back(tempObject);
 
+    std::cout << luaMap[0].objectType << std::endl;
+
     objectData& tempObject1 = lua["waterFormation"];
     luaMap.push_back(tempObject1);
+
+    std::cout << luaMap[1].objectType << std::endl;
+
+    std::cout << luaMap[1].iterations << ", " << luaMap[1].width << ", " << luaMap[1].length << ", "
+        << luaMap[1].minHeight << ", " << luaMap[1].maxHeight << ", " << luaMap[1].filter << std::endl;
 
     for (int i = 0; i < 30; i++)
     {
@@ -227,6 +234,8 @@ int main()
             std::cout << "Here" << std::endl;
             Landscape tempTerrain;
             std::cout << "Here0" << std::endl;
+            std::cout << luaMap[i].iterations << ", " << luaMap[i].width << ", " << luaMap[i].length << ", "
+                << luaMap[i].minHeight << ", " << luaMap[i].maxHeight << ", " << luaMap[i].filter << std::endl;
             tempTerrain.loadFromFaultFormation(luaMap[i].iterations, luaMap[i].width, luaMap[i].length, 
                 1, 1, luaMap[i].minHeight, luaMap[i].maxHeight, luaMap[i].filter,
                 luaMap[i].texturePath, GL_TEXTURE_2D);
