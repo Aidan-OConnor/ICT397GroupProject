@@ -26,10 +26,12 @@ private:
     float lastY;
     float deltaTime;
     float prevFrame;
+    float cameraSpeed;
     int level;
 
     bool renderTriangle;
     bool mouseControls;
+    bool collision;
 
 public:
     OurCamera();
@@ -63,4 +65,8 @@ public:
     void setCameraY(float newValue);
 
     void setLevel(int value);
+
+    bool collisionCheck(int x, int z);
+
+    void setCameraSpeed(int speed);
 };

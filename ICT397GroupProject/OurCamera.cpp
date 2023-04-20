@@ -26,22 +26,19 @@ OurCamera::OurCamera()
     this->renderTriangle = true;
     this->mouseControls = true;
     this->level = 0;
+    this->collision = false;
+    this->cameraSpeed;
 }
 
 void OurCamera::processInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+    
+    cameraSpeed = static_cast<float>(50.0 * deltaTime);
 
-    float cameraSpeed = static_cast<float>(100.0 * deltaTime);
-
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && stamina > 0 && grounded == true) {
-        cameraSpeed = cameraSpeed * 1.5;
-        stamina -= 0.5;
-    }
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-        cameraPos += cameraSpeed * cameraFront;
-        cameraSpeed = static_cast<float>(15.0 * deltaTime);
+        cameraPos += cameraSpeed * cameraFront;       
     }
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
         cameraPos -= cameraSpeed * cameraFront;
@@ -49,12 +46,6 @@ void OurCamera::processInput(GLFWwindow* window)
         cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_SPACE) != GLFW_PRESS && grounded == true)
-        cameraPos.y = foot.y + 2.5;
-
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_SPACE) != GLFW_PRESS && grounded == true)
-        cameraPos.y = foot.y + 2.5;
 
     if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
         renderTriangle = !renderTriangle;
@@ -184,4 +175,25 @@ void OurCamera::setCameraY(float newValue)
 void OurCamera::setLevel(int value)
 {
     this->level = value;
+}
+
+bool OurCamera::collisionCheck(int x, int z)
+{    
+    int camX = cameraPos.x;
+    int camZ = cameraPos.z;
+    
+    if(camX == x && camZ == z)
+    {
+        return true;
+    }
+
+    if (camX != x && camZ != z)
+    {
+        return false;
+    }
+}
+
+void OurCamera::setCameraSpeed(int speed)
+{
+    this->cameraSpeed = speed;
 }

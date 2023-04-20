@@ -176,7 +176,7 @@ int main()
     {
         camera.updateDeltaTime();
         camera.processInput(window);
-
+        
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -202,7 +202,7 @@ int main()
         int currentZ = camPos.z;
         int currentY = imGuiData.temp.getHeightAtPos(test, currentX, currentZ, imGuiData.getHeightScale());
         if (currentY != 0) {
-            camera.setCameraY(currentY);
+            camera.setCameraY(currentY + imGuiData.getTranslationY());
             camera.setLevel(currentY);
         }
 

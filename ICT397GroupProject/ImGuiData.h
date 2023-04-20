@@ -15,7 +15,13 @@ private:
 public:
     Terrain temp;
     int heightScale = 1;
-    
+    int translationX;
+    int translationY;
+    int translationZ;
+    int modelPosX = 1000;
+    int modelPosY = 1000;
+    int modelPosZ = 1000;
+
     ImGuiData()
     {
         this->iterations = this->width = this->length = 
@@ -268,6 +274,9 @@ public:
                     imGuiObjects[i].terrain.renderLandscape(camera.getRenderType());
                     temp = imGuiObjects[i].terrain.getTerrain();
                     heightScale = imGuiObjects[i].scale[1];
+                    translationY = imGuiObjects[i].translation[1];
+                    translationX = imGuiObjects[i].translation[0];
+                    translationZ = imGuiObjects[i].translation[2];
                 }
                 else if (imGuiObjects[i].objectType == "Water")
                 {
@@ -293,6 +302,9 @@ public:
                     model = glm::rotate(model, imGuiObjects[i].rotation[2], glm::vec3(0, 0, 1));
                     lightingShader.setMat4("model", model);
                     imGuiObjects[i].model->Draw(lightingShader);
+                    modelPosX = imGuiObjects[i].translation[0];
+                    modelPosY = imGuiObjects[i].translation[1];
+                    modelPosZ = imGuiObjects[i].translation[2];
                 }
             }
         }
@@ -301,5 +313,35 @@ public:
     int getHeightScale()
     {
         return heightScale;
+    }
+
+    int getTranslationX()
+    {
+        return translation.x;
+    }
+
+    int getTranslationY()
+    {
+        return translationY;
+    }
+    
+    int getTranslationZ()
+    {
+        return translation.z;
+    }
+    
+    int getModelPosX()
+    {
+        return modelPosX;
+    }
+
+    int getModelPosY()
+    {
+        return modelPosX;
+    }
+
+    int getModelPosZ()
+    {
+        return modelPosX;
     }
 };
