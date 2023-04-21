@@ -21,7 +21,6 @@ OurCamera::OurCamera()
     this->deltaTime = 0.0f;
     this->prevFrame = 0.0f;
 
-    this->dt = 0.0f;
     this->grounded = false;
     this->renderTriangle = true;
     this->mouseControls = true;
@@ -164,11 +163,6 @@ float OurCamera::getDeltaTime()
 void OurCamera::setGrounded(bool grounded)
 {
     this->grounded = grounded;
-}
-
-void OurCamera::setHeight(float height)
-{
-    this->cameraPos.y = height;
 }
 
 bool OurCamera::getRenderType()

@@ -25,16 +25,34 @@ unsigned int TextureFromFile(const char* path, const std::string& directory, boo
 class Model
 {
 public:
-	std::vector<MeshTexture> textures_loaded;
-	std::vector<Mesh> meshes;
-	std::string directory;
-	bool gammaCorrection;
+	std::vector<MeshTexture> textures_loaded; /// Vector of loaded textures
+	std::vector<Mesh> meshes; /// Vector of mesh objects
+	std::string directory; /// String for the directory where the model is located
+	bool gammaCorrection; /// Boolean for gamma correction of the model
 
+   /*
+    * @brief Constructor for a model object
+    *
+    * Constructor for the creation of a model object,
+    * sets the values using the given variables, as well
+    * as a call to the loadModel function
+    * 
+    * @param path, gamma
+    * @return void
+    */
 	Model(std::string const& path, bool gamma = false) : gammaCorrection(gamma)
 	{
 		loadModel(path);
 	}
 
+    /*
+     * @brief Draws the model
+     *
+     * Draws the model, given a particular shader
+     *
+     * @param shader
+     * @return void
+     */
 	void Draw(Shader& shader)
 	{
 		for (unsigned int i = 0; i < meshes.size(); i++)
@@ -42,6 +60,15 @@ public:
 	}
 
 private:
+    /*
+     * @brief Loads the model
+     *
+     * Loads the data of a model, given a particular 
+     * filepath to a model
+     *
+     * @param path
+     * @return void
+     */
     void loadModel(std::string const& path)
     {
        
@@ -60,6 +87,15 @@ private:
         processNode(scene->mRootNode, scene);
     }
 
+    /*
+     * @brief Processes the nodes of a mesh
+     *
+     * Processes the nodes of a mesh by looping
+     * through a mesh and pushing back data
+     *
+     * @param node, scene
+     * @return void
+     */
     void processNode(aiNode* node, const aiScene* scene)
     {
         for (unsigned int i = 0; i < node->mNumMeshes; i++)
@@ -74,6 +110,15 @@ private:
 
     }
 
+    /*
+     * @brief Processes a mesh
+     *
+     * Processes a mesh by assigning the
+     * vertices, indices and textures
+     *
+     * @param mesh, scene
+     * @return Mesh
+     */
     Mesh processMesh(aiMesh* mesh, const aiScene* scene)
     {
         std::vector<Vertex> vertices;
@@ -149,6 +194,15 @@ private:
         return Mesh(vertices, indices, textures);
     }
 
+    /*
+     * @brief Loads the material textures of a model
+     *
+     * Loads textures for a model by looping and pushing 
+     * back texture data
+     * 
+     * @param mat, type, typename
+     * @return std::vector<MeshTexture>
+     */
     std::vector<MeshTexture> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName)
     {
         std::vector<MeshTexture> textures;
@@ -181,6 +235,16 @@ private:
     }
 };
 
+    /*
+     * @brief Loads a texture from a file
+     *
+     * Loads textures for a model from a given 
+     * filepath and directory, binds and wraps 
+     * the texture
+     *
+     * @param path, directory, gamme
+     * @return unsigned int
+     */
 unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma)
 {
     std::string filename = std::string(path);

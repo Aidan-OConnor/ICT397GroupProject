@@ -13,6 +13,29 @@
 
 #define MAX_BONE_INFLUENCE 4
 
+/** @struct Vertex
+ *  @brief This structure is used to store data of the vertices of a mesh
+ *  @var Vertex::Position
+ *  Coordinates of a vertex
+ *
+ *	@var Vertex::Normal
+ *  Normals of a vertex
+ *
+ *  @var Vertex::TexCoords
+ *  Texture coordinates of a vertex
+ * 
+ *  @var Vertex::Tangent
+ *  Tangent of a vertex
+ * 
+ *	@var Vertex::Bitangent
+ *  Bitangent of a vertex
+ * 
+ *  @var Vertex::m_BoneIDs
+ *  Identification for possible bones of a vertex
+ * 
+ *	@var Vertex::m_Weights
+ *  Weights of a possible bones of a vertex
+ */
 struct Vertex {
 	glm::vec3 Position;
 	glm::vec3 Normal;
@@ -24,20 +47,50 @@ struct Vertex {
 	float m_Weights[MAX_BONE_INFLUENCE];
 };
 
-
-struct MeshTexture {
+/** @struct MeshTexture
+ *  @brief This structure is used to store data of texture of a mesh
+ *  @var MeshTexture::id
+ *  Identification of the texture
+ *  
+ *	@var MeshTexture::type
+ *  Type of the texture
+ * 
+ *  @var MeshTexture::path
+ *  Path to the texture
+ */
+ struct MeshTexture {
 	unsigned int id;
 	std::string type;
 	std::string path;
 };
 
+     /*
+	 * @class mesh
+	 * @brief Stores data for meshes
+	 *
+	 * @author Lochlyn Edward
+	 * @version 01
+	 * @date 10/04/2023 Lochlyn Edward, created
+	 *
+	 * @bug No known bugs
+	 */
+
 class Mesh {
 public:
-	std::vector<Vertex> vertices;
-	std::vector<unsigned int> indices;
-	std::vector<MeshTexture> textures;
-	unsigned int VAO;
+	std::vector<Vertex> vertices; /// Vector for storing vertices of the mesh
+	std::vector<unsigned int> indices; /// Vector for storing indices of the mesh
+	std::vector<MeshTexture> textures; /// Vector for storing texture data of the mesh
+	unsigned int VAO; /// Integer for vertex array object
 
+	/*
+	* @brief Mesh constructor
+	*
+	* Creates a mesh object using the given values for vertices,
+	* indices and textures
+	*
+	* @param vertices, indices, textures
+	* @return void
+	*/
 	Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<MeshTexture> textures)
 	{
 		this->vertices = vertices;
@@ -47,6 +100,15 @@ public:
 		setupMesh();
 	}
 
+	/*
+	* @brief Draws the textures onto the mesh
+	*
+	* Uses a specified shader to apply textures
+	* to a mesh
+	*
+	* @param shader
+	* @return void
+	*/
 	void Draw(Shader& shader)
 	{
 		unsigned int diffuseNr = 1;
@@ -80,8 +142,16 @@ public:
 		glActiveTexture(GL_TEXTURE0);
 	}
 private:
-	unsigned int VBO, EBO;
+	unsigned int VBO, EBO; /// Integers for vertex buffer objects and element buffer objects
 
+	/*
+	* @brief Sets up the mesh object
+	*
+	* Performs all of the required setup for a 
+	* mesh object. Called from the mesh constructor
+	*
+	* @return void
+	*/
 	void setupMesh()
 	{
 		glGenVertexArrays(1, &VAO);
