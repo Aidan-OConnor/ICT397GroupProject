@@ -172,22 +172,15 @@ int main()
     objectData& tempObject = lua["heightmap"];
     luaMap.push_back(tempObject);
 
-    std::cout << luaMap[0].objectType << std::endl;
-
     objectData& tempObject1 = lua["waterFormation"];
     luaMap.push_back(tempObject1);
-
-    std::cout << luaMap[1].objectType << std::endl;
-
-    std::cout << luaMap[1].iterations << ", " << luaMap[1].width << ", " << luaMap[1].length << ", "
-        << luaMap[1].minHeight << ", " << luaMap[1].maxHeight << ", " << luaMap[1].filter << std::endl;
 
     for (int i = 0; i < 30; i++)
     {
         tempName = "model" + std::to_string(i+1);
         const char* modelName = tempName.c_str();
         objectData& tempObject2 = lua[modelName];
-        luaMap.push_back(tempObject);
+        luaMap.push_back(tempObject2);
     }
 
     std::vector<std::string> faces
@@ -232,23 +225,17 @@ int main()
         }
         else if (i == 1)
         {
-            std::cout << "Here" << std::endl;
             Landscape tempTerrain;
-            std::cout << "Here0" << std::endl;
-            std::cout << luaMap[i].iterations << ", " << luaMap[i].width << ", " << luaMap[i].length << ", "
-                << luaMap[i].minHeight << ", " << luaMap[i].maxHeight << ", " << luaMap[i].filter << std::endl;
             tempTerrain.loadFromFaultFormation(luaMap[i].iterations, luaMap[i].width, luaMap[i].length, 
                 1, 1, luaMap[i].minHeight, luaMap[i].maxHeight, luaMap[i].filter,
                 luaMap[i].texturePath, GL_TEXTURE_2D);
-            std::cout << "Here1" << std::endl;
             tempGuiData.setTerrain(tempTerrain);
-            tempGuiData.setObjectType("Water");
+            tempGuiData.setObjectType(luaMap[i].objectType);
         }
         else
         {
-            // tempGuiData.setModel(luaMap[i].filepath); // This file path is incorrectly set as the volcano file path for all models
-            tempGuiData.setModel("Models/Bruiser/bruiserStance.obj");
-            tempGuiData.setObjectType("Model"); // The object type also needs to be set so the program knows what to render. Without this new method, the object type was blank
+            tempGuiData.setModel(luaMap[i].filepath);
+            tempGuiData.setObjectType(luaMap[i].objectType);
         }
 
         glm::vec3 tempVec;
