@@ -355,3 +355,15 @@ int Terrain::getHeight()
 {
     return(this->height*this->widthScale);
 }
+
+int Terrain::getHeightAtPos(std::vector<glm::vec3> temp, int x, int z, int heightScale)
+{
+    for (int i = 0; i < temp.size(); i++) {
+        if (((temp[i].x) * 2) == x && ((temp[i].z) * 2) == z)
+        {
+            return (temp[i].y + 4) * heightScale;
+        }
+    }
+
+    return 0;
+}

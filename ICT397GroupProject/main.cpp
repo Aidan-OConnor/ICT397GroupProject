@@ -284,6 +284,19 @@ int main()
 
         imGuiData.RenderObjects(shader, waterShader, lightingShader, camera);
 
+        std::vector<glm::vec3> test = imGuiData.temp.getVertices();
+        glm::vec3 camPos = camera.getCameraPos();
+        int currentX = camPos.x;
+        int currentZ = camPos.z;
+        int currentY = imGuiData.temp.getHeightAtPos(test, currentX, currentZ, imGuiData.getHeightScale());
+        if (currentY != 0) {
+            camera.setCameraY(currentY);
+            camera.setLevel(currentY);
+        }
+        else {
+            camera.setLevel(currentY + 4);
+        }
+
         skyboxShader.use();
         glBindVertexArray(skyboxVAO);
         glActiveTexture(GL_TEXTURE0);

@@ -13,6 +13,9 @@ private:
     glm::vec3 translation, scale, rotation;
     std::vector<ImGuiData> imGuiObjects;
 public:
+    Terrain temp;
+    int heightScale = 1;
+
     ImGuiData()
     {
         this->iterations = this->width = this->length = 
@@ -263,6 +266,8 @@ public:
                     model = glm::rotate(model, imGuiObjects[i].rotation[2], glm::vec3(0, 0, 1));
                     shader.setMat4("model", model);
                     imGuiObjects[i].terrain.renderLandscape(camera.getRenderType());
+                    temp = imGuiObjects[i].terrain.getTerrain();
+                    heightScale = imGuiObjects[i].scale[1];
                 }
                 else if (imGuiObjects[i].objectType == "Water")
                 {
@@ -331,5 +336,10 @@ public:
     void setObjectType(std::string type)
     {
         objectType = type;
+    }
+
+    int getHeightScale()
+    {
+        return heightScale;
     }
 };

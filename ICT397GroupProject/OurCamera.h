@@ -26,6 +26,7 @@ private:
     float lastY;
     float deltaTime;
     float prevFrame;
+    int level;
 
     bool renderTriangle;
     bool mouseControls;
@@ -58,4 +59,8 @@ public:
     void setHeight(float height);
 
     bool getRenderType();
+
+    void setCameraY(float newValue);
+    
+    void setLevel(int value);
 };
