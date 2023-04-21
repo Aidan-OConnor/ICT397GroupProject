@@ -130,5 +130,11 @@
     <ClInclude Include="ImGuiData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="LuaData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LanEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

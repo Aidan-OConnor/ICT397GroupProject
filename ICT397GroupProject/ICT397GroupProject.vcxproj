@@ -141,6 +141,7 @@
     <ClInclude Include="..\Externals\imgui\imstb_truetype.h" />
     <ClInclude Include="ImGuiData.h" />
     <ClInclude Include="Landscape.h" />
+    <ClInclude Include="LanEngine.h" />
     <ClInclude Include="LuaData.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="model.h" />
