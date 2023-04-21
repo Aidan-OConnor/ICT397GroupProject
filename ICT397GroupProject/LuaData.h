@@ -2,6 +2,21 @@
 #include <sol/sol.hpp>
 #include "ImGuiData.h"
 
+/*
+ * @class LuaData
+ * @brief Contains data loaded from Lua
+ *
+ * LuaData stores the data loaded in from a Lua script
+ * to be converted into objects to be rendered for the scene
+ *
+ * @author Aidan O'Connor
+ * @version 01
+ * @date 21/4/2023 Aidan O'Connor, finished
+ *
+ * @bug No bugs have currently been found
+ */
+
+/// User defined data to store Lua Data
 struct objectData
 {
     const char* filepath;
@@ -18,11 +33,24 @@ struct objectData
 class LuaData
 {
 private:
+    /// Stores a sol state to embed Lua to C++
 	sol::state lua;
+    /// Stores all of the data loaded in from Lua
     std::vector<objectData> luaMap;
+    /// Stores a tempory string
     std::string tempName;
+    /// Stores temporary object data to be pushed back into a vector
     ImGuiData tempGuiData;
 public:
+    /*
+     * @brief Loads in and stores data from Lua
+     *
+     * This function loads in map data from a Lua script
+     * and stores it in a more useable data type
+     *
+     * @param convertedData
+     * @return void
+     */
     void loadData(std::vector<ImGuiData>& convertedData)
     {
         sol::state lua;

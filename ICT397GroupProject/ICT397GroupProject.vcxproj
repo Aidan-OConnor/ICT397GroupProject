@@ -108,6 +108,7 @@
     <ClCompile Include="..\Externals\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="..\Externals\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\Externals\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Landscape.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="OurCamera.cpp" />
     <ClCompile Include="Shader.cpp" />
