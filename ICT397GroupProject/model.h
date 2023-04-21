@@ -22,6 +22,21 @@
 
 unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma = false);
 
+/**
+     * @class Model
+     * @brief  Manages all data and functions for models
+     *
+     * Stores all of the data required and methods
+     * required to render a model within the scene,
+     * including textures
+     *
+     * @author Lochlyn Edward
+     * @version 01
+     * @date 10/04/2023
+     *
+     *
+     * @bug No known bugs
+     */
 class Model
 {
 public:
