@@ -164,31 +164,102 @@ int main()
         "rx", &objectData::rx, "ry", &objectData::ry, "tz", &objectData::rz
     );
 
-    lua.script_file("MapData.lua");
-
     std::vector<objectData> luaMap;
-    std::string tempName;
+    std::string tempName, tempLocation;
+    ImGuiData imGuiData, tempGuiData;
+    std::vector<ImGuiData> convertedData;
 
+    lua.script_file("model0.lua");
     objectData& tempObject = lua["heightmap"];
     luaMap.push_back(tempObject);
 
-    std::cout << luaMap[0].objectType << std::endl;
+    Landscape tempTerrain;
+    tempTerrain.loadFromHeightmap(luaMap[0].filepath, 1, luaMap[0].texturePath, GL_TEXTURE_2D);
+    tempTerrain.addTextures("Images/Ground2.jpg", GL_TEXTURE_2D, "Images/Grass.jpg", GL_TEXTURE_2D);
+    tempGuiData.setTerrain(tempTerrain);
 
+    glm::vec3 tempVec;
+
+    tempGuiData.setObjectType(luaMap[0].objectType);
+
+    tempVec.x = luaMap[0].tx;
+    tempVec.y = luaMap[0].ty;
+    tempVec.z = luaMap[0].tz;
+    tempGuiData.setTranslation(tempVec);
+
+    tempVec.x = luaMap[0].sx;
+    tempVec.y = luaMap[0].sy;
+    tempVec.z = luaMap[0].sz;
+    tempGuiData.setScale(tempVec);
+
+    tempVec.x = luaMap[0].rx;
+    tempVec.y = luaMap[0].ry;
+    tempVec.z = luaMap[0].rz;
+    tempGuiData.setRotation(tempVec);
+
+    convertedData.push_back(tempGuiData);
+
+    lua.script_file("model1.lua");
     objectData& tempObject1 = lua["waterFormation"];
     luaMap.push_back(tempObject1);
 
-    std::cout << luaMap[1].objectType << std::endl;
+    tempTerrain.loadFromFaultFormation(luaMap[1].iterations, luaMap[1].width, luaMap[1].length,
+        1, 1, luaMap[1].minHeight, luaMap[1].maxHeight, luaMap[1].filter,
+        luaMap[1].texturePath, GL_TEXTURE_2D);
+    tempGuiData.setTerrain(tempTerrain);
 
-    std::cout << luaMap[1].iterations << ", " << luaMap[1].width << ", " << luaMap[1].length << ", "
-        << luaMap[1].minHeight << ", " << luaMap[1].maxHeight << ", " << luaMap[1].filter << std::endl;
+    tempGuiData.setObjectType(luaMap[1].objectType);
 
-    for (int i = 0; i < 30; i++)
+    tempVec.x = luaMap[1].tx;
+    tempVec.y = luaMap[1].ty;
+    tempVec.z = luaMap[1].tz;
+    tempGuiData.setTranslation(tempVec);
+
+    tempVec.x = luaMap[1].sx;
+    tempVec.y = luaMap[1].sy;
+    tempVec.z = luaMap[1].sz;
+    tempGuiData.setScale(tempVec);
+
+    tempVec.x = luaMap[1].rx;
+    tempVec.y = luaMap[1].ry;
+    tempVec.z = luaMap[1].rz;
+    tempGuiData.setRotation(tempVec);
+
+    convertedData.push_back(tempGuiData);
+
+    for (int i = 2; i < 32; i++)
     {
-        tempName = "model" + std::to_string(i+1);
+        tempName = "model" + std::to_string(i-1);
+        tempLocation = "model" + std::to_string(i) + ".lua";
         const char* modelName = tempName.c_str();
+        const char* modelLocation = tempLocation.c_str();
+        lua.script_file(modelLocation);
         objectData& tempObject2 = lua[modelName];
-        luaMap.push_back(tempObject);
+        luaMap.push_back(tempObject2);
+
+        tempGuiData.setModel(luaMap[i].filepath);
+
+        tempGuiData.setObjectType(luaMap[i].objectType);
+
+        tempVec.x = luaMap[i].tx;
+        tempVec.y = luaMap[i].ty;
+        tempVec.z = luaMap[i].tz;
+        tempGuiData.setTranslation(tempVec);
+
+        tempVec.x = luaMap[i].sx;
+        tempVec.y = luaMap[i].sy;
+        tempVec.z = luaMap[i].sz;
+        tempGuiData.setScale(tempVec);
+
+        tempVec.x = luaMap[i].rx;
+        tempVec.y = luaMap[i].ry;
+        tempVec.z = luaMap[i].rz;
+        tempGuiData.setRotation(tempVec);
+
+        convertedData.push_back(tempGuiData);
     }
+
+    imGuiData.setGuiData(convertedData);
 
     std::vector<std::string> faces
     {
@@ -216,58 +287,6 @@ int main()
     waterShader.setInt("tileSize", 50);
 
     bool useImGui = false;
-
-    std::vector<ImGuiData> convertedData;
-    ImGuiData imGuiData, tempGuiData;
-
-    for (int i = 0; i < luaMap.size(); i++)
-    {
-        if (i == 0)
-        {
-            Landscape tempTerrain;
-            tempTerrain.loadFromHeightmap(luaMap[i].filepath, 1, luaMap[i].texturePath, GL_TEXTURE_2D);
-            tempTerrain.addTextures("Images/Ground2.jpg", GL_TEXTURE_2D, "Images/Grass.jpg", GL_TEXTURE_2D);
-            tempGuiData.setTerrain(tempTerrain);
-        }
-        else if (i == 1)
-        {
-            std::cout << "Here" << std::endl;
-            Landscape tempTerrain;
-            std::cout << "Here0" << std::endl;
-            std::cout << luaMap[i].iterations << ", " << luaMap[i].width << ", " << luaMap[i].length << ", "
-                << luaMap[i].minHeight << ", " << luaMap[i].maxHeight << ", " << luaMap[i].filter << std::endl;
-            tempTerrain.loadFromFaultFormation(luaMap[i].iterations, luaMap[i].width, luaMap[i].length, 
-                1, 1, luaMap[i].minHeight, luaMap[i].maxHeight, luaMap[i].filter,
-                luaMap[i].texturePath, GL_TEXTURE_2D);
-            std::cout << "Here1" << std::endl;
-            tempGuiData.setTerrain(tempTerrain);
-        }
-        else
-        {
-            tempGuiData.setModel(luaMap[i].filepath);
-        }
-
-        glm::vec3 tempVec;
-
-        tempVec.x = luaMap[i].tx;
-        tempVec.y = luaMap[i].ty;
-        tempVec.z = luaMap[i].tz;
-        tempGuiData.setTranslation(tempVec);
-
-        tempVec.x = luaMap[i].sx;
-        tempVec.y = luaMap[i].sy;
-        tempVec.z = luaMap[i].sz;
-        tempGuiData.setScale(tempVec);
-
-        tempVec.x = luaMap[i].rx;
-        tempVec.y = luaMap[i].ry;
-        tempVec.z = luaMap[i].rz;
-        tempGuiData.setRotation(tempVec);
-
-        convertedData.push_back(tempGuiData);
-    }
-
-    imGuiData.setGuiData(convertedData);
 
     while (!glfwWindowShouldClose(window))
     {

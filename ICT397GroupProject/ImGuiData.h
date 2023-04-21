@@ -313,6 +313,11 @@ public:
         this->model = new Model(modelPath);
     }
 
+    void setObjectType(const char* objType)
+    {
+        this->objectType = objType;
+    }
+
     void setTranslation(glm::vec3 translate)
     {
         this->translation = translate;

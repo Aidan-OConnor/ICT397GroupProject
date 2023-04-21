@@ -1,0 +1,19 @@
+waterFormation = objectData.new()
+
+waterFormation.objectType = "Water"
+waterFormation.iterations = 1000
+waterFormation.width = 512
+waterFormation.length = 512
+waterFormation.minHeight = -5
+waterFormation.maxHeight = 5
+waterFormation.filter = 0.5
+waterFormation.texturePath = "Images/Water1.jpg"
+waterFormation.tx = 0
+waterFormation.ty = -45
+waterFormation.tz = 0
+waterFormation.sx = 10
+waterFormation.sy = 1
+waterFormation.sz = 10
+waterFormation.rx = 0
+waterFormation.ry = 0
+waterFormation.rz = 0

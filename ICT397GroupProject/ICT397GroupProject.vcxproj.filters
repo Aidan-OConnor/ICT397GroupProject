@@ -19,6 +19,9 @@
     <Filter Include="Source Files\imgui">
       <UniqueIdentifier>{c90251cf-e56e-4e19-85ad-73c2cc65f11f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scripts">
+      <UniqueIdentifier>{e19667ac-a56f-482e-beab-d9e43d22f8a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -73,7 +76,102 @@
     <None Include="modelVertex.shader" />
     <None Include="lightingFragment.shader" />
     <None Include="lightingVertex.shader" />
-    <None Include="MapData.lua" />
+    <None Include="model1.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model0.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model2.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model3.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model4.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model5.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model8.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model7.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model6.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model16.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model15.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model14.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model13.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model12.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model11.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model10.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model9.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model22.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model17.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model19.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model20.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model21.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model18.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model26.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model23.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model24.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model25.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model30.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model29.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model28.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model27.lua">
+      <Filter>Scripts</Filter>
+    </None>
+    <None Include="model31.lua">
+      <Filter>Scripts</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Landscape.h">
