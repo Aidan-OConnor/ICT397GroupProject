@@ -164,7 +164,7 @@ int run()
 
     waterShader.use();
     waterShader.setInt("tex1", 0);
-    waterShader.setInt("tileSize", 50);
+    waterShader.setInt("tileSize", 5);
 
     bool useImGui = false;
 
