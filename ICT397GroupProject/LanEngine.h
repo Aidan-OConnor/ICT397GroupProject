@@ -25,6 +25,10 @@
 #include "model.h"
 #include "ImGuiData.h"
 #include "LuaData.h"
+#include "reactphysics3d/reactphysics3d.h"
+
+// ReactPhysics3D namespace
+using namespace reactphysics3d;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);
