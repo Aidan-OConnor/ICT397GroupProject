@@ -179,6 +179,10 @@ int run()
     luaData.loadData(convertedData);
     imGuiData.setGuiData(convertedData);
 
+    // Reactphysics initialisation
+    PhysicsCommon physicsCommon;
+    PhysicsWorld* world = physicsCommon.createPhysicsWorld();
+
     while (!glfwWindowShouldClose(window))
     {
         camera.updateDeltaTime();
