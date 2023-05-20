@@ -34,26 +34,14 @@ void OurCamera::processInput(GLFWwindow* window)
 
     float cameraSpeed = static_cast<float>(40.0 * deltaTime);
 
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && stamina > 0 && grounded == true) {
-        cameraSpeed = cameraSpeed * 1.5;
-        stamina -= 0.5;
-    }
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) 
         cameraPos += cameraSpeed * cameraFront;
-        cameraSpeed = static_cast<float>(15.0 * deltaTime);
-    }
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
         cameraPos -= cameraSpeed * cameraFront;
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_SPACE) != GLFW_PRESS && grounded == true)
-        cameraPos.y = foot.y + 2.5;
-
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_SPACE) != GLFW_PRESS && grounded == true)
-        cameraPos.y = foot.y + 2.5;
 
     if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
         renderTriangle = !renderTriangle;
@@ -69,9 +57,6 @@ void OurCamera::processInput(GLFWwindow* window)
     {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
-
-    this->foot = this->cameraPos;
-    this->foot.y -= 2.5;
 
     updateDeltaTime();
 }
