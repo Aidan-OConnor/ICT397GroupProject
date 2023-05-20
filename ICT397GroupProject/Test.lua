@@ -33,6 +33,7 @@ model26 = objectData.new()
 model27 = objectData.new()
 model28 = objectData.new()
 model29 = objectData.new()
+model30 = objectData.new()
 
 terrain0.objectType = "Terrain"
 terrain0.filepath = "Terrains/VolcanoType11.png"

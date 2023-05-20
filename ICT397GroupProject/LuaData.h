@@ -16,20 +16,6 @@
  * @bug No bugs have currently been found
  */
 
-/// User defined data to store Lua Data
-struct objectData
-{
-    const char* filepath;
-    const char* texturePath;
-    const char* objectType;
-    float iterations, width, length, minHeight, maxHeight, filter;
-    float tx, ty, tz;
-    float sx, sy, sz;
-    float rx, ry, rz;
-
-    objectData() {};
-};
-
 class LuaData
 {
 private:
@@ -68,13 +54,27 @@ public:
 
         lua.script_file(fileName);
 
-        objectData& tempObject = lua["terrain0"];
-        luaMap.push_back(tempObject);
+        int numOfTerrain = lua["numTerrains"];
+        int numOfWater = lua["numWater"];
+        int numOfModel = lua["numModels"];
 
-        objectData& tempObject1 = lua["water0"];
-        luaMap.push_back(tempObject1);
+        for (int i = 0; i < numOfTerrain; i++)
+        {
+            tempName = "terrain" + std::to_string(i);
+            const char* terrainName = tempName.c_str();
+            objectData& tempObject = lua[terrainName];
+            luaMap.push_back(tempObject);
+        }
 
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < numOfWater; i++)
+        {
+            tempName = "water" + std::to_string(i);
+            const char* waterName = tempName.c_str();
+            objectData& tempObject1 = lua[waterName];
+            luaMap.push_back(tempObject1);
+        }
+
+        for (int i = 0; i < numOfModel; i++)
         {
             tempName = "model" + std::to_string(i);
             const char* modelName = tempName.c_str();

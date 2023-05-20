@@ -17,6 +17,19 @@
  * @bug No bugs have currently been found
  */
 
+struct objectData
+{
+    const char* filepath;
+    const char* texturePath;
+    const char* objectType;
+    float iterations, width, length, minHeight, maxHeight, filter;
+    float tx, ty, tz;
+    float sx, sy, sz;
+    float rx, ry, rz;
+
+    objectData() {};
+};
+
 class ImGuiData
 {
 private:
@@ -58,6 +71,10 @@ private:
     glm::vec3 rotation;
     /// Stores all of the loaded objects
     std::vector<ImGuiData> imGuiObjects;
+    /// Stores all of the data loaded in from Lua
+    std::vector<objectData> luaMap;
+    /// Stores a tempory string
+    std::string tempName;
 public:
     /// Temporary terrain for pushing data
     Terrain temp;
@@ -76,6 +93,117 @@ public:
     {
         this->iterations = this->width = this->length = 
             this->minHeight = this->maxHeight = this->filter = 0;
+    }
+
+    /*
+     * @brief Loads in and stores data from Lua
+     *
+     * This function loads in map data from a Lua script
+     * and stores it in a more useable data type
+     *
+     * @param convertedData
+     * @return void
+     */
+    void loadData(std::vector<ImGuiData>& convertedData, std::string fileName)
+    {
+        ImGuiData tempGuiData;
+        sol::state lua;
+        lua.open_libraries(sol::lib::base);
+
+        lua.new_usertype<objectData>("objectData", sol::constructors<void()>(),
+            "filepath", &objectData::filepath, "texturePath", &objectData::texturePath, "objectType", &objectData::objectType,
+            "iterations", &objectData::iterations, "width", &objectData::width,
+            "length", &objectData::length, "minHeight", &objectData::minHeight,
+            "maxHeight", &objectData::maxHeight, "filter", &objectData::filter,
+            "tx", &objectData::tx, "ty", &objectData::ty, "tz", &objectData::tz,
+            "sx", &objectData::sx, "sy", &objectData::sy, "sz", &objectData::sz,
+            "rx", &objectData::rx, "ry", &objectData::ry, "rz", &objectData::rz
+        );
+
+        lua.script_file(fileName);
+
+        int numOfTerrain = lua["numTerrains"];
+        int numOfWater = lua["numWater"];
+        int numOfModel = lua["numModels"];
+
+        for (int i = 0; i < numOfTerrain; i++)
+        {
+            tempName = "terrain" + std::to_string(i);
+            const char* terrainName = tempName.c_str();
+            objectData& tempObject = lua[terrainName];
+            luaMap.push_back(tempObject);
+        }
+
+        for (int i = 0; i < numOfWater; i++)
+        {
+            tempName = "water" + std::to_string(i);
+            const char* waterName = tempName.c_str();
+            objectData& tempObject1 = lua[waterName];
+            luaMap.push_back(tempObject1);
+        }
+
+        for (int i = 0; i < numOfModel; i++)
+        {
+            tempName = "model" + std::to_string(i);
+            const char* modelName = tempName.c_str();
+            objectData& tempObject2 = lua[modelName];
+            luaMap.push_back(tempObject2);
+        }
+
+        for (int i = 0; i < luaMap.size(); i++)
+        {
+            if (i == 0)
+            {
+                Landscape tempTerrain;
+                tempTerrain.loadFromHeightmap(luaMap[i].filepath, 1, luaMap[i].texturePath, GL_TEXTURE_2D);
+                tempTerrain.addTextures("Images/Ground2.jpg", GL_TEXTURE_2D, "Images/Grass.jpg", GL_TEXTURE_2D);
+                tempGuiData.setTerrain(tempTerrain);
+                tempGuiData.setObjectType(luaMap[i].objectType);
+                tempGuiData.setFilePath(luaMap[i].filepath);
+                tempGuiData.setTexturePath(luaMap[i].texturePath);
+            }
+            else if (i == 1)
+            {
+                Landscape tempTerrain;
+                tempTerrain.loadFromFaultFormation(luaMap[i].iterations, luaMap[i].width, luaMap[i].length,
+                    1, 1, luaMap[i].minHeight, luaMap[i].maxHeight, luaMap[i].filter,
+                    luaMap[i].texturePath, GL_TEXTURE_2D);
+                tempGuiData.setTerrain(tempTerrain);
+                tempGuiData.setObjectType(luaMap[i].objectType);
+                tempGuiData.setTexturePath(luaMap[i].texturePath);
+                tempGuiData.setNumIterations(luaMap[i].iterations);
+                tempGuiData.setWidth(luaMap[i].width);
+                tempGuiData.setLength(luaMap[i].length);
+                tempGuiData.setMinHeight(luaMap[i].minHeight);
+                tempGuiData.setMaxHeight(luaMap[i].maxHeight);
+                tempGuiData.setFilter(luaMap[i].filter);
+            }
+            else
+            {
+                tempGuiData.setModel(luaMap[i].filepath);
+                tempGuiData.setObjectType(luaMap[i].objectType);
+                tempGuiData.setFilePath(luaMap[i].filepath);
+            }
+
+            glm::vec3 tempVec;
+
+            tempVec.x = luaMap[i].tx;
+            tempVec.y = luaMap[i].ty;
+            tempVec.z = luaMap[i].tz;
+            tempGuiData.setTranslation(tempVec);
+
+            tempVec.x = luaMap[i].sx;
+            tempVec.y = luaMap[i].sy;
+            tempVec.z = luaMap[i].sz;
+            tempGuiData.setScale(tempVec);
+
+            tempVec.x = luaMap[i].rx;
+            tempVec.y = luaMap[i].ry;
+            tempVec.z = luaMap[i].rz;
+            tempGuiData.setRotation(tempVec);
+
+            convertedData.push_back(tempGuiData);
+        }
     }
 
     int getNumType(std::string modelType)
@@ -115,10 +243,12 @@ public:
 
                     ImTemp.objectType = "Terrain";
                     ImTemp.landscapeType = "Heightmap";
-                    ImTemp.terrain.loadFromHeightmap("Terrains/VolcanoType11.png", 1, "Images/Ground3.jpg", GL_TEXTURE_2D);
+                    ImTemp.terrain.loadFromHeightmap("Terrains/VolcanoType11.png", 1, "Images/sand2.jpg", GL_TEXTURE_2D);
                     ImTemp.terrain.addTextures("Images/Ground2.jpg", GL_TEXTURE_2D, "Images/Grass.jpg", GL_TEXTURE_2D);
                     ImTemp.translation = { 0.0f, 0.0f, 0.0f };
                     ImTemp.scale = { 1.0f, 1.0f, 1.0f };
+                    ImTemp.filepath = "Terrains/VolcanoType11.png";
+                    ImTemp.texturePath = "Images/sand2.jpg";
 
                     imGuiObjects.push_back(ImTemp);
                 }
@@ -138,10 +268,11 @@ public:
                     ImGuiData ImTemp;
                     ImTemp.objectType = "Terrain";
                     ImTemp.landscapeType = "Formation";
-                    ImTemp.terrain.loadFromFaultFormation(iterations, width, length, 1, 1, minHeight, maxHeight, filter, "Images/Ground3.jpg", GL_TEXTURE_2D);
+                    ImTemp.terrain.loadFromFaultFormation(iterations, width, length, 1, 1, minHeight, maxHeight, filter, "Images/sand2.jpg", GL_TEXTURE_2D);
                     ImTemp.terrain.addTextures("Images/Ground2.jpg", GL_TEXTURE_2D, "Images/Grass.jpg", GL_TEXTURE_2D);
                     ImTemp.translation = { 0.0f, 0.0f, 0.0f };
                     ImTemp.scale = { 1.0f, 1.0f, 1.0f };
+                    ImTemp.texturePath = "Images/sand2.jpg";
 
                     imGuiObjects.push_back(ImTemp);
 
@@ -171,6 +302,7 @@ public:
                     ImTemp.terrain.loadFromFaultFormation(iterations, width, length, 1, 1, minHeight, maxHeight, filter, "Images/Water1.jpg", GL_TEXTURE_2D);
                     ImTemp.translation = { 0.0f, 0.0f, 0.0f };
                     ImTemp.scale = { 1.0f, 1.0f, 1.0f };
+                    ImTemp.texturePath = "Images/Water1.jpg";
 
                     imGuiObjects.push_back(ImTemp);
 
@@ -192,6 +324,7 @@ public:
                     ImTemp.model = new Model("Models/Bruiser/bruiserTpose.obj");
                     ImTemp.translation = { 0.0f, 0.0f, 0.0f };
                     ImTemp.scale = { 1.0f, 1.0f, 1.0f };
+                    ImTemp.filepath = "Models/Bruiser/bruiserTpose.obj";
 
                     imGuiObjects.push_back(ImTemp);
                 }
@@ -206,6 +339,7 @@ public:
                     ImTemp.model = new Model("Models/Bruiser/bruiserStance.obj");
                     ImTemp.translation = { 0.0f, 0.0f, 0.0f };
                     ImTemp.scale = { 1.0f, 1.0f, 1.0f };
+                    ImTemp.filepath = "Models/Bruiser/bruiserStance.obj";
 
                     imGuiObjects.push_back(ImTemp);
                 }
@@ -220,6 +354,7 @@ public:
                     ImTemp.model = new Model("Models/NewBoat/boat.obj");
                     ImTemp.translation = { 0.0f, 0.0f, 0.0f };
                     ImTemp.scale = { 1.0f, 1.0f, 1.0f };
+                    ImTemp.filepath = "Models/NewBoat/boat.obj";
 
                     imGuiObjects.push_back(ImTemp);
                 }
@@ -234,6 +369,7 @@ public:
                     ImTemp.model = new Model("Models/PalmTree/palmtree.obj");
                     ImTemp.translation = { 0.0f, 0.0f, 0.0f };
                     ImTemp.scale = { 1.0f, 1.0f, 1.0f };
+                    ImTemp.filepath = "Models/PalmTree/palmtree.obj";
 
                     imGuiObjects.push_back(ImTemp);
                 }
@@ -248,6 +384,7 @@ public:
                     ImTemp.model = new Model("Models/Rocks/rock.obj");
                     ImTemp.translation = { 0.0f, 0.0f, 0.0f };
                     ImTemp.scale = { 1.0f, 1.0f, 1.0f };
+                    ImTemp.filepath = "Models/Rocks/rock.obj";
 
                     imGuiObjects.push_back(ImTemp);
                 }
@@ -262,6 +399,7 @@ public:
                     ImTemp.model = new Model("Models/Rocks/rock2.obj");
                     ImTemp.translation = { 0.0f, 0.0f, 0.0f };
                     ImTemp.scale = { 1.0f, 1.0f, 1.0f };
+                    ImTemp.filepath = "Models/Rocks/rock2.obj";
 
                     imGuiObjects.push_back(ImTemp);
                 }
@@ -276,6 +414,7 @@ public:
                     ImTemp.model = new Model("Models/Rocks/rock3.obj");
                     ImTemp.translation = { 0.0f, 0.0f, 0.0f };
                     ImTemp.scale = { 1.0f, 1.0f, 1.0f };
+                    ImTemp.filepath = "Models/Rocks/rock3.obj";
 
                     imGuiObjects.push_back(ImTemp);
                 }
@@ -428,16 +567,8 @@ public:
             }
             if (ImGui::Button("Load", ImVec2(100, 25)))
             {
-                sol::state lua;
-                lua.open_libraries(sol::lib::base);
-
-                lua.script_file("Test.lua");
-
-                int numOfTerrain = lua["numTerrains"];
-                int numOfWater = lua["numWater"];
-                int numOfModel = lua["numModels"];
-
-                std::cout << numOfTerrain << ", " << numOfWater << ", " << numOfModel << std::endl;
+                imGuiObjects.clear();
+                loadData(imGuiObjects, "Test.lua");
             }
             ImGui::TreePop();
         }
