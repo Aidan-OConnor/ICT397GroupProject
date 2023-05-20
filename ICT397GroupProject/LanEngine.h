@@ -176,7 +176,7 @@ int run()
     ImGuiData imGuiData;
     LuaData luaData;
 
-    luaData.loadData(convertedData);
+    luaData.loadData(convertedData, "MapData.lua");
     imGuiData.setGuiData(convertedData);
 
     // Reactphysics initialisation

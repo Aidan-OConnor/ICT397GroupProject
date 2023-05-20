@@ -72,6 +72,21 @@ public:
             this->minHeight = this->maxHeight = this->filter = 0;
     }
 
+    int getNumType(std::string modelType)
+    {
+        int numOfType = 0;
+
+        for (int i = 0; i < imGuiObjects.size(); i++)
+        {
+            if (imGuiObjects[i].objectType == modelType)
+            {
+                numOfType++;
+            }
+        }
+
+        return numOfType;
+    }
+
     /*
      * @brief Renders the UI
      *
@@ -307,11 +322,29 @@ public:
         {
             if (ImGui::Button("Save", ImVec2(100, 25)))
             {
-                std::cout << "Hello World!" << std::endl;
+                int numOfTerrain = getNumType("Terrain");
+                int numOfWater = getNumType("Water");
+                int numOfModel = getNumType("Model");
+
+                std::ofstream luaMap;
+                luaMap.open("Test.lua");
+                luaMap << "numTerrains = " << numOfTerrain << "\n";
+                luaMap << "numWater = " << numOfWater << "\n";
+                luaMap << "numModels = " << numOfModel << "\n";
+                luaMap.close();
             }
             if (ImGui::Button("Load", ImVec2(100, 25)))
             {
-                std::cout << "Hello World!1" << std::endl;
+                sol::state lua;
+                lua.open_libraries(sol::lib::base);
+
+                lua.script_file("Test.lua");
+
+                int numOfTerrain = lua["numTerrains"];
+                int numOfWater = lua["numWater"];
+                int numOfModel = lua["numModels"];
+
+                std::cout << numOfTerrain << ", " << numOfWater << ", " << numOfModel << std::endl;
             }
             ImGui::TreePop();
         }

@@ -51,7 +51,7 @@ public:
      * @param convertedData
      * @return void
      */
-    void loadData(std::vector<ImGuiData>& convertedData)
+    void loadData(std::vector<ImGuiData>& convertedData, std::string fileName)
     {
         sol::state lua;
         lua.open_libraries(sol::lib::base);
@@ -66,7 +66,7 @@ public:
             "rx", &objectData::rx, "ry", &objectData::ry, "rz", &objectData::rz
         );
 
-        lua.script_file("MapData.lua");
+        lua.script_file(fileName);
 
         objectData& tempObject = lua["heightmap"];
         luaMap.push_back(tempObject);
