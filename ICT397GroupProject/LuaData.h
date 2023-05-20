@@ -91,6 +91,8 @@ public:
                 tempTerrain.addTextures("Images/Ground2.jpg", GL_TEXTURE_2D, "Images/Grass.jpg", GL_TEXTURE_2D);
                 tempGuiData.setTerrain(tempTerrain);
                 tempGuiData.setObjectType(luaMap[i].objectType);
+                tempGuiData.setFilePath(luaMap[i].filepath);
+                tempGuiData.setTexturePath(luaMap[i].texturePath);
             }
             else if (i == 1)
             {
@@ -100,11 +102,13 @@ public:
                     luaMap[i].texturePath, GL_TEXTURE_2D);
                 tempGuiData.setTerrain(tempTerrain);
                 tempGuiData.setObjectType(luaMap[i].objectType);
+                tempGuiData.setTexturePath(luaMap[i].texturePath);
             }
             else
             {
                 tempGuiData.setModel(luaMap[i].filepath);
                 tempGuiData.setObjectType(luaMap[i].objectType);
+                tempGuiData.setFilePath(luaMap[i].filepath);
             }
 
             glm::vec3 tempVec;
