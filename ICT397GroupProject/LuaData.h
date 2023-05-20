@@ -68,15 +68,15 @@ public:
 
         lua.script_file(fileName);
 
-        objectData& tempObject = lua["heightmap"];
+        objectData& tempObject = lua["terrain0"];
         luaMap.push_back(tempObject);
 
-        objectData& tempObject1 = lua["waterFormation"];
+        objectData& tempObject1 = lua["water0"];
         luaMap.push_back(tempObject1);
 
         for (int i = 0; i < 30; i++)
         {
-            tempName = "model" + std::to_string(i + 1);
+            tempName = "model" + std::to_string(i);
             const char* modelName = tempName.c_str();
             objectData& tempObject2 = lua[modelName];
             luaMap.push_back(tempObject2);
@@ -103,6 +103,12 @@ public:
                 tempGuiData.setTerrain(tempTerrain);
                 tempGuiData.setObjectType(luaMap[i].objectType);
                 tempGuiData.setTexturePath(luaMap[i].texturePath);
+                tempGuiData.setNumIterations(luaMap[i].iterations);
+                tempGuiData.setWidth(luaMap[i].width);
+                tempGuiData.setLength(luaMap[i].length);
+                tempGuiData.setMinHeight(luaMap[i].minHeight);
+                tempGuiData.setMaxHeight(luaMap[i].maxHeight);
+                tempGuiData.setFilter(luaMap[i].filter);
             }
             else
             {

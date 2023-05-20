@@ -33,9 +33,9 @@ private:
     /// Stores the filter for a fault formation
     float filter;
     /// Stores the data types file path as a const char *
-    const char* filepath;
+    std::string filepath;
     /// Stores the data types texture path as a const char *
-    const char* texturePath;
+    std::string texturePath;
     /// Stores the objects type in a string
     std::string objectType;
     /// Stores the landscape type in a string
@@ -370,9 +370,9 @@ public:
                     if (imGuiObjects[i].objectType == "Terrain")
                     {
                         luaMap << "\n";
-                        luaMap << "terrain" << tCount << ".objectType = " << imGuiObjects[i].objectType << "\n";
-                        luaMap << "terrain" << tCount << ".filepath = " << imGuiObjects[i].filepath << "\n";
-                        luaMap << "terrain" << tCount << ".texturePath = " << imGuiObjects[i].texturePath << "\n";
+                        luaMap << "terrain" << tCount << ".objectType = \"" << imGuiObjects[i].objectType << "\"\n";
+                        luaMap << "terrain" << tCount << ".filepath = \"" << imGuiObjects[i].filepath << "\"\n";
+                        luaMap << "terrain" << tCount << ".texturePath = \"" << imGuiObjects[i].texturePath << "\"\n";
                         luaMap << "terrain" << tCount << ".tx = " << imGuiObjects[i].translation.x << "\n";
                         luaMap << "terrain" << tCount << ".ty = " << imGuiObjects[i].translation.y << "\n";
                         luaMap << "terrain" << tCount << ".tz = " << imGuiObjects[i].translation.z << "\n";
@@ -387,14 +387,14 @@ public:
                     else if (imGuiObjects[i].objectType == "Water")
                     {
                         luaMap << "\n";
-                        luaMap << "water" << wCount << ".objectType = " << imGuiObjects[i].objectType << "\n";
+                        luaMap << "water" << wCount << ".objectType = \"" << imGuiObjects[i].objectType << "\"\n";
                         luaMap << "water" << wCount << ".iterations = " << imGuiObjects[i].iterations << "\n";
                         luaMap << "water" << wCount << ".width = " << imGuiObjects[i].width << "\n";
                         luaMap << "water" << wCount << ".length = " << imGuiObjects[i].length << "\n";
                         luaMap << "water" << wCount << ".minHeight = " << imGuiObjects[i].minHeight << "\n";
                         luaMap << "water" << wCount << ".maxHeight = " << imGuiObjects[i].maxHeight << "\n";
                         luaMap << "water" << wCount << ".filter = " << imGuiObjects[i].filter << "\n";
-                        luaMap << "water" << wCount << ".texturePath = " << imGuiObjects[i].texturePath << "\n";
+                        luaMap << "water" << wCount << ".texturePath = \"" << imGuiObjects[i].texturePath << "\"\n";
                         luaMap << "water" << wCount << ".tx = " << imGuiObjects[i].translation.x << "\n";
                         luaMap << "water" << wCount << ".ty = " << imGuiObjects[i].translation.y << "\n";
                         luaMap << "water" << wCount << ".tz = " << imGuiObjects[i].translation.z << "\n";
@@ -409,8 +409,8 @@ public:
                     else
                     {
                         luaMap << "\n";
-                        luaMap << "model" << mCount << ".objectType = " << imGuiObjects[i].objectType << "\n";
-                        luaMap << "model" << mCount << ".filepath = " << imGuiObjects[i].filepath << "\n";
+                        luaMap << "model" << mCount << ".objectType = \"" << imGuiObjects[i].objectType << "\"\n";
+                        luaMap << "model" << mCount << ".filepath = \"" << imGuiObjects[i].filepath << "\"\n";
                         luaMap << "model" << mCount << ".tx = " << imGuiObjects[i].translation.x << "\n";
                         luaMap << "model" << mCount << ".ty = " << imGuiObjects[i].translation.y << "\n";
                         luaMap << "model" << mCount << ".tz = " << imGuiObjects[i].translation.z << "\n";
@@ -644,6 +644,90 @@ public:
     void setTexturePath(const char* texturepath)
     {
         texturePath = texturepath;
+    }
+
+    /*
+     * @brief Sets the number of iterations
+     *
+     * This functions sets the number of iterations
+     * of a landscape stored in ImGuiData
+     *
+     * @param numIterations
+     * @return void
+     */
+    void setNumIterations(float numIterations)
+    {
+        iterations = numIterations;
+    }
+
+    /*
+     * @brief Sets the terrain width
+     *
+     * This functions sets the width
+     * of a landscape stored in ImGuiData
+     *
+     * @param Width
+     * @return void
+     */
+    void setWidth(float Width)
+    {
+        width = Width;
+    }
+
+    /*
+     * @brief Sets the terrain length
+     *
+     * This functions sets the length
+     * of a landscape stored in ImGuiData
+     *
+     * @param Length
+     * @return void
+     */
+    void setLength(float Length)
+    {
+        length = Length;
+    }
+
+    /*
+     * @brief Sets the terrain minHeight
+     *
+     * This functions sets the minimum height
+     * of a landscape stored in ImGuiData
+     *
+     * @param MinHeight
+     * @return void
+     */
+    void setMinHeight(float MinHeight)
+    {
+        minHeight = MinHeight;
+    }
+
+    /*
+     * @brief Sets the terrain maxHeight
+     *
+     * This functions sets the maximum height
+     * of a landscape stored in ImGuiData
+     *
+     * @param MaxHeight
+     * @return void
+     */
+    void setMaxHeight(float MaxHeight)
+    {
+        maxHeight = MaxHeight;
+    }
+
+    /*
+     * @brief Sets the terrain filter
+     *
+     * This functions sets the filter
+     * of a landscape stored in ImGuiData
+     *
+     * @param Filter
+     * @return void
+     */
+    void setFilter(float Filter)
+    {
+        filter = Filter;
     }
 
     /*
