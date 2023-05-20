@@ -303,6 +303,19 @@ public:
             ImGui::TreePop();
         }
 
+        if (ImGui::TreeNode("Save/Load Map"))
+        {
+            if (ImGui::Button("Save", ImVec2(100, 25)))
+            {
+                std::cout << "Hello World!" << std::endl;
+            }
+            if (ImGui::Button("Load", ImVec2(100, 25)))
+            {
+                std::cout << "Hello World!1" << std::endl;
+            }
+            ImGui::TreePop();
+        }
+
         ImGui::End();
     }
 
