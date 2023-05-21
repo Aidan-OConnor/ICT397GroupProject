@@ -35,7 +35,7 @@ model28 = objectData.new()
 model29 = objectData.new()
 
 terrain0.objectType = "Terrain"
-terrain0.filepath = "Terrains/VolcanoType14.png"
+terrain0.filepath = "Terrains/VolcanoType15.png"
 terrain0.texturePath = "Images/sand2.jpg"
 terrain0.tx = 0
 terrain0.ty = 0
