@@ -107,6 +107,7 @@ public:
     void loadData(std::vector<ImGuiData>& convertedData, std::string fileName)
     {
         ImGuiData tempGuiData;
+        luaMap.clear();
         sol::state lua;
         lua.open_libraries(sol::lib::base);
 
@@ -152,7 +153,9 @@ public:
 
         for (int i = 0; i < luaMap.size(); i++)
         {
-            if (i == 0)
+            std::string objectType = luaMap[i].objectType;
+
+            if (objectType == "Terrain")
             {
                 Landscape tempTerrain;
                 tempTerrain.loadFromHeightmap(luaMap[i].filepath, 1, luaMap[i].texturePath, GL_TEXTURE_2D);
@@ -162,7 +165,7 @@ public:
                 tempGuiData.setFilePath(luaMap[i].filepath);
                 tempGuiData.setTexturePath(luaMap[i].texturePath);
             }
-            else if (i == 1)
+            else if (objectType == "Water")
             {
                 Landscape tempTerrain;
                 tempTerrain.loadFromFaultFormation(luaMap[i].iterations, luaMap[i].width, luaMap[i].length,
@@ -237,7 +240,7 @@ public:
         {
             if (ImGui::TreeNode("Heightmap"))
             {
-                if (ImGui::Button("Generate", ImVec2(100, 25)))
+                if (ImGui::Button("Volcano", ImVec2(100, 25)))
                 {
                     ImGuiData ImTemp;
 
@@ -248,6 +251,36 @@ public:
                     ImTemp.translation = { 0.0f, 0.0f, 0.0f };
                     ImTemp.scale = { 1.0f, 1.0f, 1.0f };
                     ImTemp.filepath = "Terrains/VolcanoType11.png";
+                    ImTemp.texturePath = "Images/sand2.jpg";
+
+                    imGuiObjects.push_back(ImTemp);
+                }
+                if (ImGui::Button("Island1", ImVec2(100, 25)))
+                {
+                    ImGuiData ImTemp;
+
+                    ImTemp.objectType = "Terrain";
+                    ImTemp.landscapeType = "Heightmap";
+                    ImTemp.terrain.loadFromHeightmap("Terrains/Island1.png", 1, "Images/sand2.jpg", GL_TEXTURE_2D);
+                    ImTemp.terrain.addTextures("Images/Ground2.jpg", GL_TEXTURE_2D, "Images/Grass.jpg", GL_TEXTURE_2D);
+                    ImTemp.translation = { 0.0f, 0.0f, 0.0f };
+                    ImTemp.scale = { 1.0f, 1.0f, 1.0f };
+                    ImTemp.filepath = "Terrains/Island1.png";
+                    ImTemp.texturePath = "Images/sand2.jpg";
+
+                    imGuiObjects.push_back(ImTemp);
+                }
+                if (ImGui::Button("Island2", ImVec2(100, 25)))
+                {
+                    ImGuiData ImTemp;
+
+                    ImTemp.objectType = "Terrain";
+                    ImTemp.landscapeType = "Heightmap";
+                    ImTemp.terrain.loadFromHeightmap("Terrains/Island2.png", 1, "Images/sand2.jpg", GL_TEXTURE_2D);
+                    ImTemp.terrain.addTextures("Images/Ground2.jpg", GL_TEXTURE_2D, "Images/Grass.jpg", GL_TEXTURE_2D);
+                    ImTemp.translation = { 0.0f, 0.0f, 0.0f };
+                    ImTemp.scale = { 1.0f, 1.0f, 1.0f };
+                    ImTemp.filepath = "Terrains/Island2.png";
                     ImTemp.texturePath = "Images/sand2.jpg";
 
                     imGuiObjects.push_back(ImTemp);

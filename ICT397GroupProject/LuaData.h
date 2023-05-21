@@ -84,7 +84,9 @@ public:
 
         for (int i = 0; i < luaMap.size(); i++)
         {
-            if (i == 0)
+            std::string objectType = luaMap[i].objectType;
+
+            if (objectType == "Terrain")
             {
                 Landscape tempTerrain;
                 tempTerrain.loadFromHeightmap(luaMap[i].filepath, 1, luaMap[i].texturePath, GL_TEXTURE_2D);
@@ -94,7 +96,7 @@ public:
                 tempGuiData.setFilePath(luaMap[i].filepath);
                 tempGuiData.setTexturePath(luaMap[i].texturePath);
             }
-            else if (i == 1)
+            else if (objectType == "Water")
             {
                 Landscape tempTerrain;
                 tempTerrain.loadFromFaultFormation(luaMap[i].iterations, luaMap[i].width, luaMap[i].length,
