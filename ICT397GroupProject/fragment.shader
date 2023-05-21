@@ -10,7 +10,7 @@ uniform sampler2D tex2;
 uniform sampler2D tex3;
 
 uniform float t1Height = -10;
-uniform float t2Height = 20;
+uniform float t2Height = 10;
 uniform float t3Height = 50;
 
 vec4 blendedTex;

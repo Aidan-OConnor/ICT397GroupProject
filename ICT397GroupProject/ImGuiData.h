@@ -377,9 +377,9 @@ public:
                         if (ImGui::Button("Delete", ImVec2(100, 25)))
                             imGuiObjects.erase(imGuiObjects.begin() + i);
 
-                        ImGui::DragFloat("PositionX", &imGuiObjects[i].translation[0], 0.5, -1000, 1000);
-                        ImGui::DragFloat("PositionY", &imGuiObjects[i].translation[1], 0.5, -1000, 1000);
-                        ImGui::DragFloat("PositionZ", &imGuiObjects[i].translation[2], 0.5, -1000, 1000);
+                        ImGui::DragFloat("PositionX", &imGuiObjects[i].translation[0], 0.5, -10000, 10000);
+                        ImGui::DragFloat("PositionY", &imGuiObjects[i].translation[1], 0.5, -10000, 10000);
+                        ImGui::DragFloat("PositionZ", &imGuiObjects[i].translation[2], 0.5, -10000, 10000);
                         ImGui::InputFloat3("Position", &imGuiObjects[i].translation[0]);
                         ImGui::DragFloat("ScaleX", &imGuiObjects[i].scale[0], 0.005, -50, 50);
                         ImGui::DragFloat("ScaleY", &imGuiObjects[i].scale[1], 0.005, -50, 50);
