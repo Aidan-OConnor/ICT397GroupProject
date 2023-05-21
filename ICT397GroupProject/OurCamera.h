@@ -202,5 +202,7 @@ public:
     */
     void setLevel(int value);
 
-    void OurCamera::swapMouseControls();
+    void swapRenderType();
+
+    void swapMouseControls();
 };
