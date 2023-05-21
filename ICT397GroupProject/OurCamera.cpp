@@ -58,9 +58,6 @@ void OurCamera::processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
         renderTriangle = !renderTriangle;
 
-    if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
-        mouseControls = !mouseControls;
-
     if (mouseControls)
     {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -178,4 +175,9 @@ void OurCamera::setCameraY(float newValue)
 void OurCamera::setLevel(int value)
 {
     this->level = value;
+}
+
+void OurCamera::swapMouseControls()
+{
+    mouseControls = !mouseControls;
 }

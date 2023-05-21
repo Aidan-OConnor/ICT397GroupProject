@@ -201,4 +201,6 @@ public:
     * @return void
     */
     void setLevel(int value);
+
+    void OurCamera::swapMouseControls();
 };

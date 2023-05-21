@@ -31,16 +31,16 @@ using namespace reactphysics3d;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 unsigned int loadCubemap(std::vector<std::string> faces);
 unsigned int loadTexture(const char* path);
 void initShaders(OurCamera& camera, Shader& shader, Shader& lightingShader, Shader& modelShader, Shader& waterShader, Shader& skyboxShader);
 
 const unsigned int SCR_WIDTH = 1600;
 const unsigned int SCR_HEIGHT = 1200;
-
 OurCamera camera;
 float camHeight = 2.5;
-
+bool useImGui = false;
 glm::vec3 lightPos(200.0f, 50.0f, 200.0f);
 
 int run()
@@ -61,6 +61,7 @@ int run()
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetKeyCallback(window, key_callback);
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -169,8 +170,6 @@ int run()
     waterShader.setInt("tex1", 0);
     waterShader.setInt("tileSize", 5);
 
-    bool useImGui = false;
-
     std::vector<ImGuiData> convertedData;
     ImGuiData imGuiData;
 
@@ -188,9 +187,6 @@ int run()
 
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
-            useImGui = !useImGui;
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -249,6 +245,15 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
     camera.updateMouse(xposIn, yposIn);
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
+    {
+        useImGui = !useImGui;
+        camera.swapMouseControls();
+    }
 }
 
 unsigned int loadCubemap(std::vector<std::string> faces)
