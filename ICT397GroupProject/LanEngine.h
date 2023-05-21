@@ -24,7 +24,6 @@
 #include "Landscape.h"
 #include "model.h"
 #include "ImGuiData.h"
-#include "LuaData.h"
 #include "reactphysics3d/reactphysics3d.h"
 
 // ReactPhysics3D namespace
@@ -174,9 +173,8 @@ int run()
 
     std::vector<ImGuiData> convertedData;
     ImGuiData imGuiData;
-    LuaData luaData;
 
-    luaData.loadData(convertedData, "Test.lua");
+    imGuiData.loadData(convertedData, "Test.lua");
     imGuiData.setGuiData(convertedData);
 
     // Reactphysics initialisation
@@ -202,7 +200,7 @@ int run()
 
         if (useImGui)
         {
-            imGuiData.RenderUI();
+            imGuiData.RenderUI(camera);
         }
 
         imGuiData.RenderObjects(shader, waterShader, lightingShader, camera);
@@ -219,7 +217,7 @@ int run()
         //else {
         //    camera.setLevel(currentY + 4);
         //}
-        //
+
         skyboxShader.use();
         glBindVertexArray(skyboxVAO);
         glActiveTexture(GL_TEXTURE0);

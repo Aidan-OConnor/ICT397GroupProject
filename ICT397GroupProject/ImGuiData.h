@@ -1,6 +1,9 @@
 #pragma once
+#include <sol/sol.hpp>
+
 #include "Landscape.h"
 #include "model.h"
+#include "OurCamera.h"
 
 /*
  * @class ImGuiData
@@ -232,7 +235,7 @@ public:
      *
      * @return void
      */
-    void RenderUI()
+    void RenderUI(OurCamera& camera)
     {
         ImGui::Begin("Control Centre");
 
@@ -480,6 +483,14 @@ public:
 
                     if (ImGui::TreeNode(imGuiObjects[i].objectName))
                     {
+                        if (ImGui::Button("Focus", ImVec2(100, 25)))
+                            camera.updatePosition(imGuiObjects[i].translation);
+
+                        ImGui::SameLine();
+
+                        if (ImGui::Button("Delete", ImVec2(100, 25)))
+                            imGuiObjects.erase(imGuiObjects.begin() + i);
+
                         ImGui::DragFloat("PositionX", &imGuiObjects[i].translation[0], 0.5, -1000, 1000);
                         ImGui::DragFloat("PositionY", &imGuiObjects[i].translation[1], 0.5, -1000, 1000);
                         ImGui::DragFloat("PositionZ", &imGuiObjects[i].translation[2], 0.5, -1000, 1000);
@@ -492,6 +503,7 @@ public:
                         ImGui::DragFloat("RotationY", &imGuiObjects[i].rotation[1], 0.01, -360, 360);
                         ImGui::DragFloat("RotationZ", &imGuiObjects[i].rotation[2], 0.01, -360, 360);
                         ImGui::InputFloat3("Rotation", &imGuiObjects[i].rotation[0]);
+
                         ImGui::TreePop();
                     }
                 }
