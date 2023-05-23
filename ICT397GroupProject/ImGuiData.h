@@ -144,6 +144,7 @@ public:
 
                     imGuiObjects.push_back(ImTemp);
                 }
+                ImGui::SameLine();
                 if (ImGui::Button("Island1", ImVec2(100, 25)))
                 {
                     ImGuiData ImTemp;
@@ -159,6 +160,7 @@ public:
 
                     imGuiObjects.push_back(ImTemp);
                 }
+                ImGui::SameLine();
                 if (ImGui::Button("Island2", ImVec2(100, 25)))
                 {
                     ImGuiData ImTemp;
@@ -170,6 +172,100 @@ public:
                     ImTemp.translation = { 0.0f, 0.0f, 0.0f };
                     ImTemp.scale = { 1.0f, 1.0f, 1.0f };
                     ImTemp.filepath = "Terrains/Island2.png";
+                    ImTemp.texturePath = "Images/sand2.jpg";
+
+                    imGuiObjects.push_back(ImTemp);
+                }
+                if (ImGui::Button("Island3", ImVec2(100, 25)))
+                {
+                    ImGuiData ImTemp;
+
+                    ImTemp.objectType = "Terrain";
+                    ImTemp.landscapeType = "Heightmap";
+                    ImTemp.terrain.loadFromHeightmap("Terrains/Island3.png", 1, "Images/sand2.jpg", GL_TEXTURE_2D);
+                    ImTemp.terrain.addTextures("Images/Ground2.jpg", GL_TEXTURE_2D, "Images/Grass.jpg", GL_TEXTURE_2D);
+                    ImTemp.translation = { 0.0f, 0.0f, 0.0f };
+                    ImTemp.scale = { 1.0f, 1.0f, 1.0f };
+                    ImTemp.filepath = "Terrains/Island3.png";
+                    ImTemp.texturePath = "Images/sand2.jpg";
+
+                    imGuiObjects.push_back(ImTemp);
+                }
+                ImGui::SameLine();
+                if (ImGui::Button("Island4", ImVec2(100, 25)))
+                {
+                    ImGuiData ImTemp;
+
+                    ImTemp.objectType = "Terrain";
+                    ImTemp.landscapeType = "Heightmap";
+                    ImTemp.terrain.loadFromHeightmap("Terrains/Island4.png", 1, "Images/sand2.jpg", GL_TEXTURE_2D);
+                    ImTemp.terrain.addTextures("Images/Ground2.jpg", GL_TEXTURE_2D, "Images/Grass.jpg", GL_TEXTURE_2D);
+                    ImTemp.translation = { 0.0f, 0.0f, 0.0f };
+                    ImTemp.scale = { 1.0f, 1.0f, 1.0f };
+                    ImTemp.filepath = "Terrains/Island4.png";
+                    ImTemp.texturePath = "Images/sand2.jpg";
+
+                    imGuiObjects.push_back(ImTemp);
+                }
+                ImGui::SameLine();
+                if (ImGui::Button("Island5", ImVec2(100, 25)))
+                {
+                    ImGuiData ImTemp;
+
+                    ImTemp.objectType = "Terrain";
+                    ImTemp.landscapeType = "Heightmap";
+                    ImTemp.terrain.loadFromHeightmap("Terrains/Island5.png", 1, "Images/sand2.jpg", GL_TEXTURE_2D);
+                    ImTemp.terrain.addTextures("Images/Ground2.jpg", GL_TEXTURE_2D, "Images/Grass.jpg", GL_TEXTURE_2D);
+                    ImTemp.translation = { 0.0f, 0.0f, 0.0f };
+                    ImTemp.scale = { 1.0f, 1.0f, 1.0f };
+                    ImTemp.filepath = "Terrains/Island5.png";
+                    ImTemp.texturePath = "Images/sand2.jpg";
+
+                    imGuiObjects.push_back(ImTemp);
+                }
+                if (ImGui::Button("Island6", ImVec2(100, 25)))
+                {
+                    ImGuiData ImTemp;
+
+                    ImTemp.objectType = "Terrain";
+                    ImTemp.landscapeType = "Heightmap";
+                    ImTemp.terrain.loadFromHeightmap("Terrains/Island6.png", 1, "Images/sand2.jpg", GL_TEXTURE_2D);
+                    ImTemp.terrain.addTextures("Images/Ground2.jpg", GL_TEXTURE_2D, "Images/Grass.jpg", GL_TEXTURE_2D);
+                    ImTemp.translation = { 0.0f, 0.0f, 0.0f };
+                    ImTemp.scale = { 1.0f, 1.0f, 1.0f };
+                    ImTemp.filepath = "Terrains/Island6.png";
+                    ImTemp.texturePath = "Images/sand2.jpg";
+
+                    imGuiObjects.push_back(ImTemp);
+                }
+                ImGui::SameLine();
+                if (ImGui::Button("Island7", ImVec2(100, 25)))
+                {
+                    ImGuiData ImTemp;
+
+                    ImTemp.objectType = "Terrain";
+                    ImTemp.landscapeType = "Heightmap";
+                    ImTemp.terrain.loadFromHeightmap("Terrains/Island7.png", 1, "Images/sand2.jpg", GL_TEXTURE_2D);
+                    ImTemp.terrain.addTextures("Images/Ground2.jpg", GL_TEXTURE_2D, "Images/Grass.jpg", GL_TEXTURE_2D);
+                    ImTemp.translation = { 0.0f, 0.0f, 0.0f };
+                    ImTemp.scale = { 1.0f, 1.0f, 1.0f };
+                    ImTemp.filepath = "Terrains/Island7.png";
+                    ImTemp.texturePath = "Images/sand2.jpg";
+
+                    imGuiObjects.push_back(ImTemp);
+                }
+                ImGui::SameLine();
+                if (ImGui::Button("Island8", ImVec2(100, 25)))
+                {
+                    ImGuiData ImTemp;
+
+                    ImTemp.objectType = "Terrain";
+                    ImTemp.landscapeType = "Heightmap";
+                    ImTemp.terrain.loadFromHeightmap("Terrains/Island8.png", 1, "Images/sand2.jpg", GL_TEXTURE_2D);
+                    ImTemp.terrain.addTextures("Images/Ground2.jpg", GL_TEXTURE_2D, "Images/Grass.jpg", GL_TEXTURE_2D);
+                    ImTemp.translation = { 0.0f, 0.0f, 0.0f };
+                    ImTemp.scale = { 1.0f, 1.0f, 1.0f };
+                    ImTemp.filepath = "Terrains/Island8.png";
                     ImTemp.texturePath = "Images/sand2.jpg";
 
                     imGuiObjects.push_back(ImTemp);
