@@ -97,11 +97,11 @@ int run()
     shader.setInt("tex1", 0);
     shader.setInt("tex2", 1);
     shader.setInt("tex3", 2);
-    shader.setInt("tileSize", 50);
+    shader.setInt("tileSize", 10);
 
     waterShader.use();
     waterShader.setInt("tex1", 0);
-    waterShader.setInt("tileSize", 5);
+    waterShader.setInt("tileSize", 2.5);
 
     std::vector<ImGuiData> convertedData;
     ImGuiData imGuiData;
