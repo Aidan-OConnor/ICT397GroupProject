@@ -35,8 +35,8 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void initShaders(Camera& camera, Shader& shader, Shader& lightingShader, Shader& modelShader, Shader& waterShader);
 
-const unsigned int SCR_WIDTH = 1600;
-const unsigned int SCR_HEIGHT = 1200;
+const unsigned int SCR_WIDTH = 1920;
+const unsigned int SCR_HEIGHT = 1080;
 Camera camera;
 float camHeight = 2.5;
 bool useImGui = false;
@@ -49,6 +49,10 @@ int run()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+    //Windowed
+    //GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "ICT397 Game Engine", NULL, NULL);
+
+    //Fullscreen
     GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "ICT397 Game Engine", glfwGetPrimaryMonitor(), nullptr);
     if (window == NULL)
     {
@@ -147,7 +151,7 @@ int run()
         //    camera.setLevel(currentY + 4);
         //}
 
-        glm::mat4 projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 5000.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
         glm::mat4 view = glm::mat4(glm::mat3(glm::lookAt(camera.getCameraPos(), camera.getCameraPos() + camera.getCameraFront(), camera.getCameraUp())));
         skybox.Draw(view, projection);
 
@@ -195,7 +199,7 @@ void initShaders(Camera& camera, Shader& shader, Shader& lightingShader, Shader&
 {
     shader.use();
 
-    glm::mat4 projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 10000.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 25000.0f);
     shader.setMat4("projection", projection);
 
     glm::mat4 view = glm::lookAt(camera.getCameraPos(), camera.getCameraPos() + camera.getCameraFront(), camera.getCameraUp());
