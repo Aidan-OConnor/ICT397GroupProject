@@ -27,8 +27,6 @@
 #include "ImGuiData.h"
 #include "reactphysics3d/reactphysics3d.h"
 
-// ReactPhysics3D namespace
-using namespace reactphysics3d;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);
@@ -41,6 +39,9 @@ Camera camera;
 float camHeight = 2.5;
 bool useImGui = false;
 glm::vec3 lightPos(200.0f, 50.0f, 200.0f);
+
+rp3d::PhysicsCommon physicsCommon;
+rp3d::PhysicsWorld* physicsWorld;
 
 int run()
 {
@@ -113,10 +114,36 @@ int run()
 
     imGuiData.loadData(convertedData, "Test.lua");
     imGuiData.setGuiData(convertedData);
+    std::vector<Terrain> terrains;
+    terrains = imGuiData.getTerrains();
+
+    std::vector<float> terrainHeights(terrains[0].getSize() * terrains[0].getSize(), 0.0f);
 
     // Reactphysics initialisation
-    PhysicsCommon physicsCommon;
-    PhysicsWorld* world = physicsCommon.createPhysicsWorld();
+    physicsWorld = physicsCommon.createPhysicsWorld();
+
+    // Create the terrain collider
+    rp3d::HeightFieldShape* terrainShape = nullptr;
+
+    // Build the heightfield data
+    rp3d::HeightFieldShape::HeightDataType* heightData = new rp3d::HeightFieldShape::HeightDataType[terrains[0].getSize() * terrains[0].getSize()];
+    for (int i = 0; i < terrains[0].getSize(); ++i) {
+        for (int j = 0; j < terrains[0].getSize(); ++j) {
+            int index = i * terrains[0].getSize() + j;
+            heightData[index] = terrains[0].getHeight();
+        }
+    }
+
+    // Create the terrain shape
+    terrainShape = physicsCommon.createHeightFieldShape(terrains[0].getSize(), terrains[0].getSize(), 1, heightData);
+    delete[] heightData;
+
+    rp3d::RigidBody* rigidBody = physicsWorld->createRigidBody(rp3d::Transform::identity());
+    if (terrainShape) {
+        rp3d::Collider* collider = rigidBody->addCollider(terrainShape, rp3d::Transform::identity());
+        collider->getMaterial().setBounciness(0.0f);  // Adjust as needed
+        collider->getMaterial().setFrictionCoefficient(0.5f);  // Adjust as needed
+    }
 
     while (!glfwWindowShouldClose(window))
     {
@@ -136,6 +163,8 @@ int run()
         {
             imGuiData.RenderUI(camera);
         }
+
+        world->update(camera.getDeltaTime());
 
         imGuiData.RenderObjects(shader, waterShader, lightingShader, camera);
 

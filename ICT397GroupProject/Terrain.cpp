@@ -351,6 +351,11 @@ int Terrain::getWidth()
     return(this->width*this->widthScale);
 }
 
+int Terrain::getSize()
+{
+    return(this->width);
+}
+
 int Terrain::getHeight()
 {
     return(this->height*this->widthScale);

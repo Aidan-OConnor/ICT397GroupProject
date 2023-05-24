@@ -213,6 +213,8 @@ public:
     * @return height
     */
     int getHeight();
+
+    int getSize();
     
     /*
     * @brief Returns the height of a on object
