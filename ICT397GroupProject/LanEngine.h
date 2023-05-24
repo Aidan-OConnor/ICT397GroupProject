@@ -102,7 +102,7 @@ int run()
     shader.setInt("tex1", 0);
     shader.setInt("tex2", 1);
     shader.setInt("tex3", 2);
-    shader.setInt("tileSize", 20);
+    shader.setInt("tileSize", 17);
 
     waterShader.use();
     waterShader.setInt("tex1", 0);
