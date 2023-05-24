@@ -7,7 +7,7 @@
 #include <iostream>
 
     /**
-     * @class OurCamera
+     * @class Camera
      * @brief Manages the first person camera and movement of the scene
      *
      * @author Aidan O'Connor
@@ -23,7 +23,7 @@
      * @bug No known bugs
      */
 
-class OurCamera
+class Camera
 {
 private:
     glm::vec3 cameraPos; /// Vector for position of the camera
@@ -49,7 +49,7 @@ private:
 
 public:
     /*
-    * @brief Default OurCamera constructor
+    * @brief Default Camera constructor
     *
     * Default constructor to create a camera object. 
     * Sets the variables of the camera object to 
@@ -57,7 +57,7 @@ public:
     *
     * @return void
     */
-    OurCamera();
+    Camera();
 
      /*
      * @brief Processes key input

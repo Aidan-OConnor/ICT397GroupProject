@@ -1,9 +1,9 @@
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 
-#include "OurCamera.h"
+#include "Camera.h"
 
-OurCamera::OurCamera()
+Camera::Camera()
 {
     this->cameraPos = glm::vec3(-50.0f, 0.0f, 0.0f);
     this->foot = this->cameraPos;
@@ -27,12 +27,12 @@ OurCamera::OurCamera()
     this->level = 0;
 }
 
-void OurCamera::processInput(GLFWwindow* window)
+void Camera::processInput(GLFWwindow* window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
-    float cameraSpeed = static_cast<float>(150.0 * deltaTime);
+    float cameraSpeed = static_cast<float>(500.0 * deltaTime);
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         cameraPos += cameraSpeed * cameraFront;
@@ -58,7 +58,7 @@ void OurCamera::processInput(GLFWwindow* window)
     updateDeltaTime();
 }
 
-void OurCamera::updateMouse(double xposIn, double yposIn)
+void Camera::updateMouse(double xposIn, double yposIn)
 {
     if (mouseControls)
     {
@@ -98,76 +98,76 @@ void OurCamera::updateMouse(double xposIn, double yposIn)
     
 }
 
-void OurCamera::updatePosition(glm::vec3 position)
+void Camera::updatePosition(glm::vec3 position)
 {
     this->spawnPoint = position;
     this->cameraPos = position;
 }
 
-void OurCamera::updateDeltaTime()
+void Camera::updateDeltaTime()
 {
     float currentFrame = static_cast<float>(glfwGetTime());
     deltaTime = currentFrame - prevFrame;
     prevFrame = currentFrame;
 }
 
-void OurCamera::resetCamera() {
+void Camera::resetCamera() {
     cameraPos = spawnPoint;
     velocity = 15.0;
     gravity = 0.05;
 }
 
-glm::vec3 OurCamera::getCameraPos()
+glm::vec3 Camera::getCameraPos()
 {
     return(cameraPos);
 }
 
-glm::vec3 OurCamera::getFoot()
+glm::vec3 Camera::getFoot()
 {
     return(foot);
 }
 
-glm::vec3 OurCamera::getCameraFront()
+glm::vec3 Camera::getCameraFront()
 {
     return(cameraFront);
 }
 
-glm::vec3 OurCamera::getCameraUp()
+glm::vec3 Camera::getCameraUp()
 {
     return(cameraUp);
 }
 
-float OurCamera::getDeltaTime()
+float Camera::getDeltaTime()
 {
     return this->deltaTime;
 }
 
-void OurCamera::setGrounded(bool grounded)
+void Camera::setGrounded(bool grounded)
 {
     this->grounded = grounded;
 }
 
-bool OurCamera::getRenderType()
+bool Camera::getRenderType()
 {
     return renderTriangle;
 }
 
-void OurCamera::setCameraY(float newValue)
+void Camera::setCameraY(float newValue)
 {
     cameraPos.y = newValue;
 }
 
-void OurCamera::setLevel(int value)
+void Camera::setLevel(int value)
 {
     this->level = value;
 }
 
-void OurCamera::swapRenderType()
+void Camera::swapRenderType()
 {
     renderTriangle = !renderTriangle;
 }
 
-void OurCamera::swapMouseControls()
+void Camera::swapMouseControls()
 {
     mouseControls = !mouseControls;
 }

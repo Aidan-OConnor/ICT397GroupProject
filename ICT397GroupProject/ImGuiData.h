@@ -3,7 +3,7 @@
 
 #include "Landscape.h"
 #include "model.h"
-#include "OurCamera.h"
+#include "Camera.h"
 
 /*
  * @class ImGuiData
@@ -121,7 +121,7 @@ public:
      *
      * @return void
      */
-    void RenderUI(OurCamera& camera)
+    void RenderUI(Camera& camera)
     {
         ImGui::Begin("Control Centre");
 
@@ -266,6 +266,21 @@ public:
                     ImTemp.translation = { 0.0f, 0.0f, 0.0f };
                     ImTemp.scale = { 1.0f, 1.0f, 1.0f };
                     ImTemp.filepath = "Terrains/Island8.png";
+                    ImTemp.texturePath = "Images/sand2.jpg";
+
+                    imGuiObjects.push_back(ImTemp);
+                }
+                if (ImGui::Button("Border1", ImVec2(100, 25)))
+                {
+                    ImGuiData ImTemp;
+
+                    ImTemp.objectType = "Terrain";
+                    ImTemp.landscapeType = "Heightmap";
+                    ImTemp.terrain.loadFromHeightmap("Terrains/Border1.png", 1, "Images/sand2.jpg", GL_TEXTURE_2D);
+                    ImTemp.terrain.addTextures("Images/Ground2.jpg", GL_TEXTURE_2D, "Images/Grass.jpg", GL_TEXTURE_2D);
+                    ImTemp.translation = { 0.0f, 0.0f, 0.0f };
+                    ImTemp.scale = { 1.0f, 1.0f, 1.0f };
+                    ImTemp.filepath = "Terrains/Border1.png";
                     ImTemp.texturePath = "Images/sand2.jpg";
 
                     imGuiObjects.push_back(ImTemp);
@@ -616,7 +631,7 @@ public:
      * @param shader, waterShader, lightingShader, camera
      * @return void
      */
-    void RenderObjects(Shader shader, Shader waterShader, Shader lightingShader, OurCamera camera)
+    void RenderObjects(Shader shader, Shader waterShader, Shader lightingShader, Camera camera)
     {
         if (imGuiObjects.size() != 0)
         {
@@ -627,11 +642,11 @@ public:
                     shader.use();
                     glm::mat4 model = glm::mat4(1.0f);
                     shader.setMat4("model", model);
-                    model = glm::translate(model, { imGuiObjects[i].translation[0], imGuiObjects[i].translation[1], imGuiObjects[i].translation[2] });
-                    model = glm::scale(model, { imGuiObjects[i].scale[0], imGuiObjects[i].scale[1], imGuiObjects[i].scale[2] });
                     model = glm::rotate(model, imGuiObjects[i].rotation[0], glm::vec3(1, 0, 0));
                     model = glm::rotate(model, imGuiObjects[i].rotation[1], glm::vec3(0, 1, 0));
                     model = glm::rotate(model, imGuiObjects[i].rotation[2], glm::vec3(0, 0, 1));
+                    model = glm::translate(model, { imGuiObjects[i].translation[0], imGuiObjects[i].translation[1], imGuiObjects[i].translation[2]});
+                    model = glm::scale(model, { imGuiObjects[i].scale[0], imGuiObjects[i].scale[1], imGuiObjects[i].scale[2] });
                     shader.setMat4("model", model);
                     imGuiObjects[i].terrain.renderLandscape(camera.getRenderType());
                     temp = imGuiObjects[i].terrain.getTerrain();
