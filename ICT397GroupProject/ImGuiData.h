@@ -1,5 +1,6 @@
 #pragma once
 #include <sol/sol.hpp>
+#include <imgui/imgui.h>
 
 #include "Landscape.h"
 #include "model.h"
