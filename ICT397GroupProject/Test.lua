@@ -134,7 +134,7 @@ water0.rx = 0
 water0.ry = 0
 water0.rz = 0
 
-model0isPlayer = 1
+model0isPlayer = true
 model0.objectType = "Model"
 model0.filepath = "Models/NewBoat/boat.obj"
 model0.tx = 0

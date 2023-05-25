@@ -24,7 +24,7 @@ Camera::Camera()
     this->grounded = false;
     this->renderTriangle = true;
     this->mouseControls = true;
-    this->firstPerson = false;
+    this->firstPerson = true;
     this->level = 0;
 }
 

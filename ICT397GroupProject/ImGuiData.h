@@ -620,7 +620,7 @@ public:
                         luaMap << "\n";
 
                         if(imGuiObjects[i].isPlayer)
-                            luaMap << "model" << mCount << "isPlayer = " << imGuiObjects[i].isPlayer << "\n";
+                            luaMap << "model" << mCount << "isPlayer = true" << "\n";
 
                         luaMap << "model" << mCount << ".objectType = \"" << imGuiObjects[i].objectType << "\"\n";
                         luaMap << "model" << mCount << ".filepath = \"" << imGuiObjects[i].filepath << "\"\n";
