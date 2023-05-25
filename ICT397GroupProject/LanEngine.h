@@ -113,14 +113,85 @@ int run()
     imGuiData.loadData(convertedData, "Test.lua");
     imGuiData.setGuiData(convertedData);
 
+    // Variables for getting time between frames
+    const float timeStep = 1.0 / 60.0;
+    std::chrono::duration<double> deltaTime;
+    std::chrono::time_point<std::chrono::system_clock> currentFrame = std::chrono::system_clock::now();
+    std::chrono::time_point<std::chrono::system_clock> prevFrame = std::chrono::system_clock::now();
+    long double accumulator = 0.0;
+
     // Reactphysics initialisation
     PhysicsCommon physicsCommon;
-    PhysicsWorld* world = physicsCommon.createPhysicsWorld();
+
+    // Settings for the world before it is created
+    PhysicsWorld::WorldSettings settings;
+    settings.gravity = Vector3(0, -9.81, 0);
+    PhysicsWorld* world = physicsCommon.createPhysicsWorld(settings);
+
+    // Camera rigidbody
+    glm::vec3 camPos = camera.getCameraPos();
+    Vector3 position = Vector3(camPos.x, camPos.y, camPos.z);
+    Quaternion orientation = Quaternion::identity();
+    Transform transform = Transform(position, orientation);
+    RigidBody* camBody = world->createRigidBody(transform);
+    camBody->setType(BodyType::DYNAMIC);
+    camBody->enableGravity(true);
+
+    // Camera collision body in the shape of a capsule
+    float radius = 5.0f;
+    float height = 10.0f;
+    CapsuleShape* capsuleShape = physicsCommon.createCapsuleShape(radius, height);
+    transform = Transform::identity();
+    Collider* collider;
+    collider = camBody->addCollider(capsuleShape, transform);
+
+    // Rigidbody for a cube at the centre of the scene, using for testing
+    position = Vector3(150, 0, 0);
+    orientation = Quaternion::identity();
+    transform = Transform(position, orientation);
+    RigidBody* wall = world->createRigidBody(transform);
+    wall->setType(BodyType::STATIC);
+
+    // Collision body for testing cube
+    BoxShape* boxShape = physicsCommon.createBoxShape(Vector3(1000, 1000, 1000));
+    transform = Transform::identity();
+    collider = wall->addCollider(boxShape, transform);
 
     while (!glfwWindowShouldClose(window))
     {
         camera.updateDeltaTime();
         camera.processInput(window);
+        
+        // Getting time between frames for physics updates
+        currentFrame = std::chrono::system_clock::now();
+        deltaTime = currentFrame - prevFrame;
+        prevFrame = currentFrame;
+        accumulator += deltaTime.count();
+        
+        // Updating position of camera rigidbody
+        camPos = camera.getCameraPos();
+        position = Vector3(camPos.x, camPos.y, camPos.z);
+        orientation = Quaternion::identity();
+        transform = Transform(position, orientation);
+        camBody->setTransform(transform);
+        
+        // DEBUG - shows current position of camera/camera collider
+        std::cout << "X: " << position.x << "Y: " << position.y << "Z: " << position.z << std::endl;
+        
+        // Update the physics world
+        while (accumulator >= timeStep)
+        {
+            world->update(timeStep);
+            accumulator -= timeStep;
+        }
+        
+        // Update the position of the camera to match the rigidbody, this will prevent the camera itself from moving through other colliders
+        transform = camBody->getTransform();
+        position = transform.getPosition();
+        camBody->setAngularVelocity(Vector3(0, 0, 0));
+        camBody->setLinearVelocity(Vector3(0, 0, 0));
+        glm::vec3 newCamPos(position.x, position.y, position.z);
+        camera.updatePosition(newCamPos);
 
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
