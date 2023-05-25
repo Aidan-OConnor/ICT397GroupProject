@@ -24,36 +24,69 @@ Camera::Camera()
     this->grounded = false;
     this->renderTriangle = true;
     this->mouseControls = true;
+    this->firstPerson = false;
     this->level = 0;
 }
 
-void Camera::processInput(GLFWwindow* window)
+void Camera::processInput(GLFWwindow* window, glm::vec3& playerPosition, glm::vec3& playerRotation)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
-    float cameraSpeed = static_cast<float>(500.0 * deltaTime);
-
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        cameraPos += cameraSpeed * cameraFront;
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        cameraPos -= cameraSpeed * cameraFront;
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-
-    if (mouseControls)
+    if (firstPerson)
     {
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        cameraSpeed = static_cast<float>(500.0 * deltaTime);
+
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+            cameraPos += cameraSpeed * cameraFront;
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+            cameraPos -= cameraSpeed * cameraFront;
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+            cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+            cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+
+        if (mouseControls)
+        {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
+        else
+        {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        }
+
+        this->foot = this->cameraPos;
+        this->foot.y -= 2.5;
     }
     else
     {
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-    }
+        float movementSpeed = 15;
+        float playerRotationSpeed = 15;
+        float distance = 0;
 
-    this->foot = this->cameraPos;
-    this->foot.y -= 2.5;
+        glm::vec3 movement(0.0f);
+        glm::vec3 rotation(0.0f);
+
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+            distance += movementSpeed * deltaTime;
+        }
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+            distance -= movementSpeed * deltaTime;
+        }
+
+        // Handle character rotation
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+            rotation += playerRotationSpeed * deltaTime * glm::vec3(0.0f, 1.0f, 0.0f);
+        }
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+            rotation -= playerRotationSpeed * deltaTime * glm::vec3(0.0f, 1.0f, 0.0f);
+        }
+
+        playerRotation += rotation;
+
+        playerPosition.x += (float)(distance * glm::sin(glm::radians(playerRotation.y)));
+        playerPosition.z += (float)(distance * -glm::cos(glm::radians(playerRotation.y)));
+    }
 
     updateDeltaTime();
 }

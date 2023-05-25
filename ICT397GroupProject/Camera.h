@@ -36,6 +36,7 @@ private:
     float velocity = 15.0; /// Float for the movement speed of the camera
     float gravity = 0.05; /// Float for gravity of the camera, affects how fast it will fall
     float stamina = 60.0; /// Float for stamina of the character, determines whether sprinting is possible
+    float cameraSpeed; ///Determines the speed at which the camera moves
     float yaw; /// Float for yaw angle, used to make the camera look around
     float pitch; /// Float for pitch of the camera, used to make the camera look around
     float lastX; /// Float for the latest X value of the mouse cursor
@@ -44,8 +45,15 @@ private:
     float prevFrame; /// Float for the previous frame, used to calculate deltaTime
     int level; /// Integer for the Y level of the camera, used to keep it on a particular Y level
 
+    float playerRotationSpeed;
+
     bool renderTriangle; /// Boolean used to determine whether the program renders the terrain in wireframe mode or not
     bool mouseControls; /// Boolean used to determine what mode of mouse control the user is in, allows for a switch between first person control and mouse cursor control
+    bool firstPerson; ///Determines whether the camera is a first person or third person controller
+
+    float m_cameraDistance;
+    float m_cameraHeight;
+    float m_cameraSensitivity;
 
 public:
     /*
@@ -70,7 +78,7 @@ public:
      * @param window
      * @return void
      */
-    void processInput(GLFWwindow* window);
+    void processInput(GLFWwindow* windowm, glm::vec3& playerPosition, glm::vec3& playerRotation);
 
     /*
     * @brief Processes mouse

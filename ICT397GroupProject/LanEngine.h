@@ -33,10 +33,10 @@ using namespace reactphysics3d;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-void initShaders(Camera& camera, Shader& shader, Shader& lightingShader, Shader& modelShader, Shader& waterShader);
+void initShaders(Camera& camera, Shader& shader, Shader& lightingShader, Shader& waterShader);
 
-const unsigned int SCR_WIDTH = 1920;
-const unsigned int SCR_HEIGHT = 1080;
+const unsigned int SCR_WIDTH = 1600;
+const unsigned int SCR_HEIGHT = 1200;
 Camera camera;
 float camHeight = 2.5;
 bool useImGui = false;
@@ -50,10 +50,10 @@ int run()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     //Windowed
-    //GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "ICT397 Game Engine", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "ICT397 Game Engine", NULL, NULL);
 
     //Fullscreen
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "ICT397 Game Engine", glfwGetPrimaryMonitor(), nullptr);
+    //GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "ICT397 Game Engine", glfwGetPrimaryMonitor(), nullptr);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -90,7 +90,7 @@ int run()
 
     Shader shader("vertex.shader", "fragment.shader");
     Shader waterShader("waterVertex.shader", "waterFragment.shader");
-    Shader modelShader("modelVertex.shader", "modelFragment.shader");
+    //Shader modelShader("modelVertex.shader", "modelFragment.shader");
     Shader lightingShader("lightingVertex.shader", "lightingFragment.shader");
 
     lightingShader.use();
@@ -119,8 +119,16 @@ int run()
 
     while (!glfwWindowShouldClose(window))
     {
+        ImGuiData player = imGuiData.getPlayer();
+        glm::vec3 playerPosition = player.getTranslation();
+        glm::vec3 playerRotation = player.getRotation();
+
         camera.updateDeltaTime();
-        camera.processInput(window);
+        camera.processInput(window, playerPosition, playerRotation);
+
+        player.setTranslation(playerPosition);
+        player.setRotation(playerRotation);
+        imGuiData.setPlayer(player);
 
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -129,7 +137,7 @@ int run()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        initShaders(camera, shader, lightingShader, modelShader, waterShader);
+        initShaders(camera, shader, lightingShader, waterShader);
 
         if (useImGui)
         {
@@ -195,7 +203,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 }
 
-void initShaders(Camera& camera, Shader& shader, Shader& lightingShader, Shader& modelShader, Shader& waterShader)
+void initShaders(Camera& camera, Shader& shader, Shader& lightingShader, Shader& waterShader)
 {
     shader.use();
 
@@ -224,11 +232,6 @@ void initShaders(Camera& camera, Shader& shader, Shader& lightingShader, Shader&
     lightingShader.setMat4("view", view);
     model = glm::mat4(1.0f);
     lightingShader.setMat4("model", model);
-
-    modelShader.use();
-    modelShader.setMat4("projection", projection);
-    modelShader.setMat4("view", view);
-    modelShader.setMat4("model", model);
 
     waterShader.use();
     waterShader.setMat4("projection", projection);

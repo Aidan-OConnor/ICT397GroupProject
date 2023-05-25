@@ -29,6 +29,7 @@ struct objectData
     float tx, ty, tz;
     float sx, sy, sz;
     float rx, ry, rz;
+    bool isPlayer;
 
     objectData() {};
 };
@@ -48,6 +49,8 @@ private:
     float maxHeight; 
     /// Stores the filter for a fault formation
     float filter;
+
+    bool isPlayer;
     /// Stores the data types file path as a const char *
     std::string filepath;
     /// Stores the data types texture path as a const char *
@@ -96,6 +99,7 @@ public:
     {
         this->iterations = this->width = this->length = 
             this->minHeight = this->maxHeight = this->filter = 0;
+        this->isPlayer = false;
     }
 
     int getNumType(std::string modelType)
@@ -456,6 +460,30 @@ public:
             ImGui::TreePop();
         }
 
+        ///////
+
+        if (ImGui::TreeNode("Load Player"))
+        {
+            if (ImGui::TreeNode("Boat"))
+            {
+                if (ImGui::Button("Load", ImVec2(100, 25)))
+                {
+                    ImGuiData ImTemp;
+                    ImTemp.objectType = "Model";
+                    ImTemp.model = new Model("Models/NewBoat/boat.obj");
+                    ImTemp.translation = { 0.0f, 0.0f, 0.0f };
+                    ImTemp.scale = { 1.0f, 1.0f, 1.0f };
+                    ImTemp.filepath = "Models/NewBoat/boat.obj";
+                    ImTemp.isPlayer = true;
+
+                    imGuiObjects.push_back(ImTemp);
+                }
+                ImGui::TreePop();
+            }
+            ImGui::TreePop();
+        }
+        ///////
+
         if (ImGui::TreeNode("Object Data"))
         {
             if (imGuiObjects.size() != 0)
@@ -590,6 +618,10 @@ public:
                     else
                     {
                         luaMap << "\n";
+
+                        if(imGuiObjects[i].isPlayer)
+                            luaMap << "model" << mCount << "isPlayer = " << imGuiObjects[i].isPlayer << "\n";
+
                         luaMap << "model" << mCount << ".objectType = \"" << imGuiObjects[i].objectType << "\"\n";
                         luaMap << "model" << mCount << ".filepath = \"" << imGuiObjects[i].filepath << "\"\n";
                         luaMap << "model" << mCount << ".tx = " << imGuiObjects[i].translation.x << "\n";
@@ -699,7 +731,7 @@ public:
 
         lua.new_usertype<objectData>("objectData", sol::constructors<void()>(),
             "filepath", &objectData::filepath, "texturePath", &objectData::texturePath, "objectType", &objectData::objectType,
-            "iterations", &objectData::iterations, "width", &objectData::width,
+            "iterations", &objectData::iterations, "width", &objectData::width, "isPlayer", &objectData::isPlayer,
             "length", &objectData::length, "minHeight", &objectData::minHeight,
             "maxHeight", &objectData::maxHeight, "filter", &objectData::filter,
             "tx", &objectData::tx, "ty", &objectData::ty, "tz", &objectData::tz,
@@ -769,6 +801,8 @@ public:
             }
             else
             {
+                if (luaMap[i].isPlayer)
+                    tempGuiData.setIsPlayer(luaMap[i].isPlayer);
                 tempGuiData.setModel(luaMap[i].filepath);
                 tempGuiData.setObjectType(luaMap[i].objectType);
                 tempGuiData.setFilePath(luaMap[i].filepath);
@@ -892,7 +926,7 @@ public:
      */
     void setRotation(glm::vec3 rotate)
     {
-        this->rotation = rotation;
+        this->rotation = rotate;
     }
 
     /*
@@ -1021,6 +1055,20 @@ public:
         filter = Filter;
     }
 
+    void setIsPlayer(bool IsPlayer)
+    {
+        isPlayer = IsPlayer;
+    }
+
+    void setPlayer(ImGuiData player)
+    {
+        for (int i = 0; i < imGuiObjects.size(); i++)
+        {
+            if (imGuiObjects[i].isPlayer)
+                imGuiObjects[i] = player;
+        }
+    }
+
     /*
      * @brief Gets the heightScale
      *
@@ -1032,5 +1080,28 @@ public:
     int getHeightScale()
     {
         return heightScale;
+    }
+
+    ImGuiData getPlayer()
+    {
+        for (int i = 0; i < imGuiObjects.size(); i++)
+        {
+            if (imGuiObjects[i].isPlayer)
+                return imGuiObjects[i];
+        }
+
+        ImGuiData none;
+
+        return (none);
+    }
+
+    glm::vec3 getTranslation()
+    {
+        return translation;
+    }
+
+    glm::vec3 getRotation()
+    {
+        return rotation;
     }
 };
