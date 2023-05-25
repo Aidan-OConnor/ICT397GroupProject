@@ -621,7 +621,7 @@ public:
                         luaMap << "\n";
 
                         if(imGuiObjects[i].isPlayer)
-                            luaMap << "model" << mCount << "isPlayer = true" << "\n";
+                            luaMap << "model" << mCount << ".isPlayer = true" << "\n";
 
                         luaMap << "model" << mCount << ".objectType = \"" << imGuiObjects[i].objectType << "\"\n";
                         luaMap << "model" << mCount << ".filepath = \"" << imGuiObjects[i].filepath << "\"\n";
@@ -704,9 +704,9 @@ public:
                     glm::mat4 model = glm::mat4(1.0f);
                     model = glm::translate(model, { imGuiObjects[i].translation[0], imGuiObjects[i].translation[1], imGuiObjects[i].translation[2] });
                     model = glm::scale(model, { imGuiObjects[i].scale[0], imGuiObjects[i].scale[1], imGuiObjects[i].scale[2] });
-                    model = glm::rotate(model, imGuiObjects[i].rotation[0], glm::vec3(1, 0, 0));
-                    model = glm::rotate(model, imGuiObjects[i].rotation[1], glm::vec3(0, 1, 0));
-                    model = glm::rotate(model, imGuiObjects[i].rotation[2], glm::vec3(0, 0, 1));
+                    model = glm::rotate(model, glm::radians(imGuiObjects[i].rotation[0]), glm::vec3(1, 0, 0));
+                    model = glm::rotate(model, glm::radians(imGuiObjects[i].rotation[1]), glm::vec3(0, 1, 0));
+                    model = glm::rotate(model, glm::radians(imGuiObjects[i].rotation[2]), glm::vec3(0, 0, 1));
                     lightingShader.setMat4("model", model);
                     imGuiObjects[i].model->Draw(lightingShader);
                 }

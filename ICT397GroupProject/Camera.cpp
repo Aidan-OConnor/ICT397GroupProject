@@ -24,7 +24,7 @@ Camera::Camera()
     this->grounded = false;
     this->renderTriangle = true;
     this->mouseControls = true;
-    this->firstPerson = true;
+    this->firstPerson = false;
     this->level = 0;
 }
 
@@ -61,7 +61,7 @@ void Camera::processInput(GLFWwindow* window, glm::vec3& playerPosition, glm::ve
     else
     {
         float movementSpeed = 15;
-        float playerRotationSpeed = 15;
+        float playerRotationSpeed = 50;
         float distance = 0;
 
         glm::vec3 movement(0.0f);
