@@ -201,6 +201,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         camera.swapRenderType();
     }
 
+    if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+    {
+        camera.setPerspective(!camera.getPerspective());
+    }
+
 }
 
 void initShaders(Camera& camera, Shader& shader, Shader& lightingShader, Shader& waterShader, ImGuiData player)
@@ -210,9 +215,12 @@ void initShaders(Camera& camera, Shader& shader, Shader& lightingShader, Shader&
     glm::mat4 projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 25000.0f);
     shader.setMat4("projection", projection);
 
-    //glm::mat4 view = glm::lookAt(camera.getCameraPos(), camera.getCameraPos() + camera.getCameraFront(), camera.getCameraUp());
+    glm::mat4 view = glm::lookAt(camera.getCameraPos(), camera.getCameraPos() + camera.getCameraFront(), camera.getCameraUp());
 
-    glm::mat4 view = glm::lookAt(glm::vec3(camera.getCameraPos()), glm::vec3(player.getTranslation()), camera.getCameraUp());
+    if (!camera.getPerspective())
+    {
+        view = glm::lookAt(glm::vec3(camera.getCameraPos()), glm::vec3(player.getTranslation()), camera.getCameraUp());
+    }
 
     shader.setMat4("view", view);
 

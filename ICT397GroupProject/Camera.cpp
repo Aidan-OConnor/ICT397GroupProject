@@ -24,7 +24,7 @@ Camera::Camera()
     this->grounded = false;
     this->renderTriangle = true;
     this->mouseControls = true;
-    this->firstPerson = false;
+    this->firstPerson = true;
     this->level = 0;
 
     this->cameraDistance = 10;
@@ -188,6 +188,11 @@ float Camera::getDeltaTime()
     return this->deltaTime;
 }
 
+bool Camera::getPerspective()
+{
+    return this->firstPerson;
+}
+
 void Camera::setGrounded(bool grounded)
 {
     this->grounded = grounded;
@@ -206,6 +211,11 @@ void Camera::setCameraY(float newValue)
 void Camera::setLevel(int value)
 {
     this->level = value;
+}
+
+void Camera::setPerspective(bool perspective)
+{
+    this->firstPerson = perspective;
 }
 
 void Camera::swapRenderType()

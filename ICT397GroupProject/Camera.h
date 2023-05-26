@@ -168,6 +168,8 @@ public:
     */
     float getDeltaTime();
 
+    bool getPerspective();
+
     /*
     * @brief Returns the camera position
     *
@@ -210,6 +212,8 @@ public:
     * @return void
     */
     void setLevel(int value);
+
+    void setPerspective(bool perspective);
 
     void swapRenderType();
 
