@@ -61,7 +61,7 @@ void Camera::processInput(GLFWwindow* window, glm::vec3& playerPosition, glm::ve
     else
     {
         float movementSpeed = 15;
-        float playerRotationSpeed = 50;
+        float playerRotationSpeed = 1;
         float distance = 0;
 
         glm::vec3 movement(0.0f);
@@ -84,8 +84,8 @@ void Camera::processInput(GLFWwindow* window, glm::vec3& playerPosition, glm::ve
 
         playerRotation += rotation;
 
-        playerPosition.x += (float)(distance * glm::sin(glm::radians(playerRotation.y)));
-        playerPosition.z += (float)(distance * -glm::cos(glm::radians(playerRotation.y)));
+        playerPosition.z += (float)(distance * glm::sin(playerRotation.y));
+        playerPosition.x += (float)(distance * -glm::cos(playerRotation.y));
     }
 
     updateDeltaTime();
