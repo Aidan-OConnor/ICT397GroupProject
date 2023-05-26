@@ -34,7 +34,8 @@ using namespace reactphysics3d;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-void initShaders(Camera& camera, Shader& shader, Shader& lightingShader, Shader& waterShader, ImGuiData player);
+void initShaders(Camera& camera, Shader& shader, Shader& lightingShader, Shader& waterShader, ImGuiData player,
+    glm::mat4& projection, glm::mat4& view, glm::mat4& model);
 
 const unsigned int SCR_WIDTH = 1600;
 const unsigned int SCR_HEIGHT = 1200;
@@ -120,6 +121,10 @@ int run()
     Shader modelShader("md2Vert.shader", "md2Frag.shader");
     Shader lightingShader("lightingVertex.shader", "lightingFragment.shader");
 
+    glm::mat4 projection;
+    glm::mat4 view;
+    glm::mat4 model;
+
     lightingShader.use();
     lightingShader.setInt("material.diffuse", 0);
     lightingShader.setInt("material.specular", 1);
@@ -164,7 +169,7 @@ int run()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        initShaders(camera, shader, lightingShader, waterShader, player);
+        initShaders(camera, shader, lightingShader, waterShader, player, projection, view, model);
 
         if (useImGui)
         {
@@ -176,21 +181,6 @@ int run()
         currentFrame = (float)glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
-
-        glm::mat4 projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 25000.0f);
-        shader.setMat4("projection", projection);
-
-        glm::mat4 view = glm::lookAt(camera.getCameraPos(), camera.getCameraPos() + camera.getCameraFront(), camera.getCameraUp());
-
-        if (!camera.getPerspective())
-        {
-            view = glm::lookAt(glm::vec3(camera.getCameraPos()), glm::vec3(player.getTranslation()), camera.getCameraUp());
-        }
-
-        shader.setMat4("view", view);
-
-        glm::mat4 model = glm::mat4(1.0f);
-        shader.setMat4("model", model);
 
         if (animations)
         {
@@ -223,7 +213,14 @@ int run()
         //    camera.setLevel(currentY + 4);
         //}
 
-        
+        projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
+        view = glm::mat4(glm::mat3(glm::lookAt(camera.getCameraPos(), camera.getCameraPos() + camera.getCameraFront(), camera.getCameraUp())));
+
+        if (!camera.getPerspective())
+        {
+            view = glm::mat4(glm::mat3(glm::lookAt(glm::vec3(camera.getCameraPos()), glm::vec3(player.getTranslation()), camera.getCameraUp())));
+        }
+
         skybox.Draw(view, projection);
 
         ImGui::Render();
@@ -293,14 +290,15 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 }
 
-void initShaders(Camera& camera, Shader& shader, Shader& lightingShader, Shader& waterShader, ImGuiData player)
+void initShaders(Camera& camera, Shader& shader, Shader& lightingShader, Shader& waterShader, ImGuiData player, 
+    glm::mat4& projection, glm::mat4& view, glm::mat4& model)
 {
     shader.use();
 
-    glm::mat4 projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 25000.0f);
+    projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 25000.0f);
     shader.setMat4("projection", projection);
 
-    glm::mat4 view = glm::lookAt(camera.getCameraPos(), camera.getCameraPos() + camera.getCameraFront(), camera.getCameraUp());
+    view = glm::lookAt(camera.getCameraPos(), camera.getCameraPos() + camera.getCameraFront(), camera.getCameraUp());
 
     if (!camera.getPerspective())
     {
@@ -309,7 +307,7 @@ void initShaders(Camera& camera, Shader& shader, Shader& lightingShader, Shader&
 
     shader.setMat4("view", view);
 
-    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::mat4(1.0f);
     shader.setMat4("model", model);
 
     lightingShader.use();
