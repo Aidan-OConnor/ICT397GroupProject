@@ -33,7 +33,7 @@ using namespace reactphysics3d;
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-void initShaders(Camera& camera, Shader& shader, Shader& lightingShader, Shader& waterShader);
+void initShaders(Camera& camera, Shader& shader, Shader& lightingShader, Shader& waterShader, ImGuiData player);
 
 const unsigned int SCR_WIDTH = 1600;
 const unsigned int SCR_HEIGHT = 1200;
@@ -137,7 +137,7 @@ int run()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        initShaders(camera, shader, lightingShader, waterShader);
+        initShaders(camera, shader, lightingShader, waterShader, player);
 
         if (useImGui)
         {
@@ -203,14 +203,17 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 }
 
-void initShaders(Camera& camera, Shader& shader, Shader& lightingShader, Shader& waterShader)
+void initShaders(Camera& camera, Shader& shader, Shader& lightingShader, Shader& waterShader, ImGuiData player)
 {
     shader.use();
 
     glm::mat4 projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 25000.0f);
     shader.setMat4("projection", projection);
 
-    glm::mat4 view = glm::lookAt(camera.getCameraPos(), camera.getCameraPos() + camera.getCameraFront(), camera.getCameraUp());
+    //glm::mat4 view = glm::lookAt(camera.getCameraPos(), camera.getCameraPos() + camera.getCameraFront(), camera.getCameraUp());
+
+    glm::mat4 view = glm::lookAt(glm::vec3(camera.getCameraPos()), glm::vec3(player.getTranslation()), camera.getCameraUp());
+
     shader.setMat4("view", view);
 
     glm::mat4 model = glm::mat4(1.0f);

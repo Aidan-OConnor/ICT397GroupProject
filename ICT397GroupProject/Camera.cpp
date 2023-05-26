@@ -26,9 +26,12 @@ Camera::Camera()
     this->mouseControls = true;
     this->firstPerson = false;
     this->level = 0;
+
+    this->cameraDistance = 10;
+    this->cameraHeight = 5;
 }
 
-void Camera::processInput(GLFWwindow* window, glm::vec3& playerPosition, glm::vec3& playerRotation)
+void Camera::processInput(GLFWwindow* window, glm::vec3& PlayerPosition, glm::vec3& PlayerRotation)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
@@ -60,7 +63,7 @@ void Camera::processInput(GLFWwindow* window, glm::vec3& playerPosition, glm::ve
     }
     else
     {
-        float movementSpeed = 15;
+        float movementSpeed = 20;
         float playerRotationSpeed = 1;
         float distance = 0;
 
@@ -82,10 +85,17 @@ void Camera::processInput(GLFWwindow* window, glm::vec3& playerPosition, glm::ve
             rotation -= playerRotationSpeed * deltaTime * glm::vec3(0.0f, 1.0f, 0.0f);
         }
 
-        playerRotation += rotation;
+        PlayerRotation += rotation;
 
-        playerPosition.z += (float)(distance * glm::sin(playerRotation.y));
-        playerPosition.x += (float)(distance * -glm::cos(playerRotation.y));
+        PlayerPosition.z += (float)(distance * glm::sin(PlayerRotation.y));
+        PlayerPosition.x += (float)(distance * -glm::cos(PlayerRotation.y));
+
+        this->playerPosition = PlayerPosition;
+        this->playerRotation = PlayerRotation;
+
+        cameraPos.x = playerPosition.x + cameraDistance * cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+        cameraPos.y = playerPosition.y + cameraHeight + cameraDistance * sin(glm::radians(-pitch));
+        cameraPos.z = playerPosition.z + cameraDistance * sin(glm::radians(yaw)) * cos(glm::radians(pitch));
     }
 
     updateDeltaTime();
@@ -122,11 +132,14 @@ void Camera::updateMouse(double xposIn, double yposIn)
         if (pitch < -89.0f)
             pitch = -89.0f;
 
-        glm::vec3 front;
-        front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-        front.y = sin(glm::radians(pitch));
-        front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-        cameraFront = glm::normalize(front);
+        if (firstPerson)
+        {
+            glm::vec3 front;
+            front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+            front.y = sin(glm::radians(pitch));
+            front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+            cameraFront = glm::normalize(front);
+        }
     }
     
 }

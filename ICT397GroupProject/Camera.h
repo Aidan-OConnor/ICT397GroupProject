@@ -31,6 +31,8 @@ private:
     glm::vec3 cameraUp; /// Vector for the up direction of the camera
     glm::vec3 foot; /// Vector for the foot position of the camera, a value below the current camera position
     glm::vec3 spawnPoint; /// Vector for the location the camera will start/be reset to
+    glm::vec3 playerPosition;
+    glm::vec3 playerRotation;
     bool firstMouse; /// Boolean for the initial use of the mouse
     bool grounded; /// Boolean to check if the camera is on the ground
     float velocity = 15.0; /// Float for the movement speed of the camera
@@ -51,9 +53,8 @@ private:
     bool mouseControls; /// Boolean used to determine what mode of mouse control the user is in, allows for a switch between first person control and mouse cursor control
     bool firstPerson; ///Determines whether the camera is a first person or third person controller
 
-    float m_cameraDistance;
-    float m_cameraHeight;
-    float m_cameraSensitivity;
+    float cameraDistance;
+    float cameraHeight;
 
 public:
     /*
@@ -78,7 +79,7 @@ public:
      * @param window
      * @return void
      */
-    void processInput(GLFWwindow* windowm, glm::vec3& playerPosition, glm::vec3& playerRotation);
+    void processInput(GLFWwindow* windowm, glm::vec3& PlayerPosition, glm::vec3& PlayerRotation);
 
     /*
     * @brief Processes mouse
