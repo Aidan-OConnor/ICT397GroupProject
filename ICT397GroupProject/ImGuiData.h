@@ -458,6 +458,21 @@ public:
                 }
                 ImGui::TreePop();
             }
+            if (ImGui::TreeNode("Dock"))
+            {
+                if (ImGui::Button("Load", ImVec2(100, 25)))
+                {
+                    ImGuiData ImTemp;
+                    ImTemp.objectType = "Model";
+                    ImTemp.model = new Model("Models/Dock/Dock.obj");
+                    ImTemp.translation = { 0.0f, 0.0f, 0.0f };
+                    ImTemp.scale = { 1.0f, 1.0f, 1.0f };
+                    ImTemp.filepath = "Models/Dock/Dock.obj";
+
+                    imGuiObjects.push_back(ImTemp);
+                }
+                ImGui::TreePop();
+            }
             ImGui::TreePop();
         }
 

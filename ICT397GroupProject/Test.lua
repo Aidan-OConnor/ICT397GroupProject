@@ -1,6 +1,6 @@
 numTerrains = 8
 numWater = 1
-numModels = 1
+numModels = 2
 terrain0 = objectData.new()
 terrain1 = objectData.new()
 terrain2 = objectData.new()
@@ -11,6 +11,7 @@ terrain6 = objectData.new()
 terrain7 = objectData.new()
 water0 = objectData.new()
 model0 = objectData.new()
+model1 = objectData.new()
 
 terrain0.objectType = "Terrain"
 terrain0.filepath = "Terrains/VolcanoType27.png"
@@ -146,3 +147,15 @@ model0.sz = 10
 model0.rx = 0
 model0.ry = 0
 model0.rz = 0
+
+model1.objectType = "Model"
+model1.filepath = "Models/Dock/Dock.obj"
+model1.tx = -53
+model1.ty = -33
+model1.tz = -2314
+model1.sx = 7.5
+model1.sy = 7.5
+model1.sz = 10
+model1.rx = 0
+model1.ry = 3.16
+model1.rz = 0

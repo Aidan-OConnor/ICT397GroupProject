@@ -200,19 +200,6 @@ int run()
             }
         }
 
-        //std::vector<glm::vec3> test = imGuiData.temp.getVertices();
-        //glm::vec3 camPos = camera.getCameraPos();
-        //int currentX = camPos.x;
-        //int currentZ = camPos.z;
-        //int currentY = imGuiData.temp.getHeightAtPos(test, currentX, currentZ, imGuiData.getHeightScale());
-        //if (currentY != 0) {
-        //    camera.setCameraY(currentY);
-        //    camera.setLevel(currentY);
-        //}
-        //else {
-        //    camera.setLevel(currentY + 4);
-        //}
-
         projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
         view = glm::mat4(glm::mat3(glm::lookAt(camera.getCameraPos(), camera.getCameraPos() + camera.getCameraFront(), camera.getCameraUp())));
 
