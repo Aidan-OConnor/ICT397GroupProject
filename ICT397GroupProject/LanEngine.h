@@ -42,7 +42,7 @@ const unsigned int SCR_HEIGHT = 1200;
 Camera camera;
 float camHeight = 2.5;
 bool useImGui = false;
-glm::vec3 lightPos(200.0f, 50.0f, 200.0f);
+glm::vec3 lightPos(8000.0f, 2000.0f, 8000.0f);
 
 MD2Loader md2Model;
 MD2Loader weapon;
@@ -318,8 +318,8 @@ void initShaders(Camera& camera, Shader& shader, Shader& lightingShader, Shader&
     lightingShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
     lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
     lightingShader.setFloat("light.constant", 0.5f);
-    lightingShader.setFloat("light.linear", 0.000014f);
-    lightingShader.setFloat("light.quadratic", 0.00000007f);
+    lightingShader.setFloat("light.linear", 0.00000014f);
+    lightingShader.setFloat("light.quadratic", 0.0000000007f);
     lightingShader.setFloat("material.shininess", 32.0f);
 
     lightingShader.setMat4("projection", projection);
