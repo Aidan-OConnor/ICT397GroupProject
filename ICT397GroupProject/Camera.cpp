@@ -27,8 +27,8 @@ Camera::Camera()
     this->firstPerson = true;
     this->level = 0;
 
-    this->cameraDistance = 10;
-    this->cameraHeight = 5;
+    this->cameraDistance = 100;
+    this->cameraHeight = 50;
 }
 
 void Camera::processInput(GLFWwindow* window, glm::vec3& PlayerPosition, glm::vec3& PlayerRotation)
@@ -63,7 +63,7 @@ void Camera::processInput(GLFWwindow* window, glm::vec3& PlayerPosition, glm::ve
     }
     else
     {
-        float movementSpeed = 20;
+        float movementSpeed = 200;
         float playerRotationSpeed = 1;
         float distance = 0;
 
