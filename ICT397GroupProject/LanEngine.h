@@ -26,6 +26,7 @@
 #include "Skybox.h"
 #include "ImGuiData.h"
 #include "reactphysics3d/reactphysics3d.h"
+#include "MD2Loader.h"
 
 // ReactPhysics3D namespace
 using namespace reactphysics3d;
@@ -41,6 +42,13 @@ Camera camera;
 float camHeight = 2.5;
 bool useImGui = false;
 glm::vec3 lightPos(200.0f, 50.0f, 200.0f);
+
+MD2Loader md2Model;
+MD2Loader weapon;
+bool animations = false;
+int selectedAnimation = 0;
+animationType animationTypes[] = { STAND, RUN, ATTACK, SALUTE, JUMP, POINTING, WAVE };
+animationState animState;
 
 int run()
 {
@@ -88,9 +96,28 @@ int run()
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 150");
 
+    animState = md2Model.startAnimation(animationTypes[selectedAnimation]);
+    md2Model.setPos({ 10.0f, 40.0f, 2.5f });
+    weapon.setPos({ 10.0f, 40.0f, 2.5f });
+    glm::vec3 position = md2Model.getPos();
+    float rotation = 180.695;
+    float direction = 0.0;
+
+    //md2Model.loadModel("Models/Ogro/Tris.MD2", "Models/Ogro/Ogrobase.jpg");
+    //weapon.loadModel("Models/Ogro/Weapon.md2", "Models/Ogro/Weapon.jpg");
+    //md2Model.loadModel("Models/crakhor/tris.MD2", "Models/crakhor/army.png");
+    //weapon.loadModel("Models/crakhor/w_blaster.md2", "Models/crakhor/weapon.png");
+    md2Model.loadModel("Models/raptor/tris.MD2", "Models/raptor/green.jpg");
+    weapon.loadModel("Models/raptor/weapon.md2", "Models/raptor/weapon.jpg");
+
+    bool useWeapon = true;
+    float currentFrame = 0.0f;
+    float deltaTime = 0.0f;
+    float lastFrame = 0.0f;
+
     Shader shader("vertex.shader", "fragment.shader");
     Shader waterShader("waterVertex.shader", "waterFragment.shader");
-    //Shader modelShader("modelVertex.shader", "modelFragment.shader");
+    Shader modelShader("md2Vert.shader", "md2Frag.shader");
     Shader lightingShader("lightingVertex.shader", "lightingFragment.shader");
 
     lightingShader.use();
@@ -146,6 +173,43 @@ int run()
 
         imGuiData.RenderObjects(shader, waterShader, lightingShader, camera);
 
+        currentFrame = (float)glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
+        glm::mat4 projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 25000.0f);
+        shader.setMat4("projection", projection);
+
+        glm::mat4 view = glm::lookAt(camera.getCameraPos(), camera.getCameraPos() + camera.getCameraFront(), camera.getCameraUp());
+
+        if (!camera.getPerspective())
+        {
+            view = glm::lookAt(glm::vec3(camera.getCameraPos()), glm::vec3(player.getTranslation()), camera.getCameraUp());
+        }
+
+        shader.setMat4("view", view);
+
+        glm::mat4 model = glm::mat4(1.0f);
+        shader.setMat4("model", model);
+
+        if (animations)
+        {
+            md2Model.renderModel(&animState, projection, view, position, rotation, direction, modelShader);
+            md2Model.updateAnimation(&animState, deltaTime);
+            if (useWeapon)
+            {
+                weapon.renderModel(&animState, projection, view, position, rotation, direction, modelShader);
+            }
+        }
+        else
+        {
+            md2Model.renderModel(nullptr, projection, view, position, rotation, direction, modelShader);
+            if (useWeapon)
+            {
+                weapon.renderModel(nullptr, projection, view, position, rotation, direction, modelShader);
+            }
+        }
+
         //std::vector<glm::vec3> test = imGuiData.temp.getVertices();
         //glm::vec3 camPos = camera.getCameraPos();
         //int currentX = camPos.x;
@@ -159,8 +223,7 @@ int run()
         //    camera.setLevel(currentY + 4);
         //}
 
-        glm::mat4 projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
-        glm::mat4 view = glm::mat4(glm::mat3(glm::lookAt(camera.getCameraPos(), camera.getCameraPos() + camera.getCameraFront(), camera.getCameraUp())));
+        
         skybox.Draw(view, projection);
 
         ImGui::Render();
@@ -204,6 +267,28 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
     {
         camera.setPerspective(!camera.getPerspective());
+    }
+
+    if (key == GLFW_KEY_L && action == GLFW_RELEASE)
+        animations = !animations;
+
+    if (key == GLFW_KEY_E && action == GLFW_RELEASE)
+    {
+        if (selectedAnimation < 6)
+            selectedAnimation++;
+        else
+            selectedAnimation = 0;
+
+        animState = md2Model.startAnimation(animationTypes[selectedAnimation]);
+    }
+    if (key == GLFW_KEY_Q && action == GLFW_RELEASE)
+    {
+        if (selectedAnimation > 0)
+            selectedAnimation--;
+        else
+            selectedAnimation = 6;
+
+        animState = md2Model.startAnimation(animationTypes[selectedAnimation]);
     }
 
 }

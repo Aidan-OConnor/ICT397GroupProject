@@ -66,6 +66,12 @@
     <ClCompile Include="Skybox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MD2Loader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Test.lua" />
@@ -80,6 +86,8 @@
     <None Include="lightingFragment.shader" />
     <None Include="lightingVertex.shader" />
     <None Include="MapData.lua" />
+    <None Include="md2Frag.shader" />
+    <None Include="md2Vert.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Landscape.h">
@@ -140,6 +148,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Skybox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MD2Loader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -111,17 +111,21 @@
     <ClCompile Include="Landscape.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="MD2Loader.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="stb.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fragment.shader" />
     <None Include="lightingFragment.shader" />
     <None Include="lightingVertex.shader" />
     <None Include="MapData.lua" />
+    <None Include="md2Frag.shader" />
+    <None Include="md2Vert.shader" />
     <None Include="modelFragment.shader" />
     <None Include="modelVertex.shader" />
     <None Include="skyboxFragment.shader" />
@@ -144,6 +148,7 @@
     <ClInclude Include="ImGuiData.h" />
     <ClInclude Include="Landscape.h" />
     <ClInclude Include="LanEngine.h" />
+    <ClInclude Include="MD2Loader.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="Camera.h" />
@@ -152,6 +157,7 @@
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="VertexBuffer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
