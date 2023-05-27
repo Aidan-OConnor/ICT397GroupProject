@@ -521,13 +521,9 @@ public:
                 {
                     ImGuiData ImTemp;
                     ImTemp.objectType = "Animation";
-                    std::cout << "Here" << std::endl;
                     ImTemp.animState = md2Model.startAnimation(STAND);
-                    std::cout << "Here" << std::endl;
                     ImTemp.md2Model.loadModel("Models/raptor/tris.MD2", "Models/raptor/green.jpg");
-                    std::cout << "Here" << std::endl;
                     ImTemp.weapon.loadModel("Models/raptor/weapon.md2", "Models/raptor/weapon.jpg");
-                    std::cout << "Here" << std::endl;
                     ImTemp.translation = { 0.0f, 0.0f, 0.0f };
                     ImTemp.scale = { 1.0f, 1.0f, 1.0f };
                     ImTemp.filepath = "Models/raptor/tris.MD2";
@@ -786,9 +782,10 @@ public:
                     model = glm::rotate(model, imGuiObjects[i].rotation[1], glm::vec3(0, 1, 0));
                     model = glm::rotate(model, imGuiObjects[i].rotation[2], glm::vec3(0, 0, 1));
                     modelShader.setMat4("model", model);
-                    imGuiObjects[i].md2Model.renderModel(&imGuiObjects[i].animState, imGuiObjects[i].translation, md2Rotation, md2Direction, modelShader);
+                    modelShader.setMat4("normal", model);
+                    imGuiObjects[i].md2Model.renderModel(&imGuiObjects[i].animState, modelShader);
                     imGuiObjects[i].md2Model.updateAnimation(&imGuiObjects[i].animState, deltaTime);
-                    imGuiObjects[i].weapon.renderModel(&imGuiObjects[i].animState, imGuiObjects[i].translation, md2Rotation, md2Direction, modelShader);
+                    imGuiObjects[i].weapon.renderModel(&imGuiObjects[i].animState, modelShader);
                 }
             }
         }
