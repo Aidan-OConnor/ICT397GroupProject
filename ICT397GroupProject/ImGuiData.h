@@ -5,6 +5,7 @@
 #include "Landscape.h"
 #include "model.h"
 #include "Camera.h"
+#include "MD2Loader.h"
 
 /*
  * @class ImGuiData
@@ -82,6 +83,19 @@ private:
     std::vector<objectData> luaMap;
     /// Stores a tempory string
     std::string tempName;
+
+    MD2Loader md2Model;
+    MD2Loader weapon;
+    bool animations;
+    animationState animState;
+    float md2Rotation;
+    float md2Direction;
+    std::string weaponPath;
+    std::string weaponTexturePath;
+    float currentFrame;
+    float deltaTime;
+    float lastFrame;
+
 public:
     /// Temporary terrain for pushing data
     Terrain temp;
@@ -101,6 +115,10 @@ public:
         this->iterations = this->width = this->length = 
             this->minHeight = this->maxHeight = this->filter = 0;
         this->isPlayer = false;
+        this->animations = true;
+        this->animState = md2Model.startAnimation(STAND);
+        this->md2Rotation = 180.695;
+        this->md2Direction = 0.0;
     }
 
     int getNumType(std::string modelType)
@@ -475,9 +493,6 @@ public:
             }
             ImGui::TreePop();
         }
-
-        ///////
-
         if (ImGui::TreeNode("Load Player"))
         {
             if (ImGui::TreeNode("Boat"))
@@ -498,7 +513,34 @@ public:
             }
             ImGui::TreePop();
         }
-        ///////
+        if (ImGui::TreeNode("Load NPC"))
+        {
+            if (ImGui::TreeNode("Raptor"))
+            {
+                if (ImGui::Button("Load", ImVec2(100, 25)))
+                {
+                    ImGuiData ImTemp;
+                    ImTemp.objectType = "Animation";
+                    std::cout << "Here" << std::endl;
+                    ImTemp.animState = md2Model.startAnimation(STAND);
+                    std::cout << "Here" << std::endl;
+                    ImTemp.md2Model.loadModel("Models/raptor/tris.MD2", "Models/raptor/green.jpg");
+                    std::cout << "Here" << std::endl;
+                    ImTemp.weapon.loadModel("Models/raptor/weapon.md2", "Models/raptor/weapon.jpg");
+                    std::cout << "Here" << std::endl;
+                    ImTemp.translation = { 0.0f, 0.0f, 0.0f };
+                    ImTemp.scale = { 1.0f, 1.0f, 1.0f };
+                    ImTemp.filepath = "Models/raptor/tris.MD2";
+                    ImTemp.weaponPath = "Models/raptor/weapon.md2";
+                    ImTemp.texturePath = "Models/raptor/green.jpg";
+                    ImTemp.weaponTexturePath = "Models/raptor/weapon.jpg";
+
+                    imGuiObjects.push_back(ImTemp);
+                }
+                ImGui::TreePop();
+            }
+            ImGui::TreePop();
+        }
 
         if (ImGui::TreeNode("Object Data"))
         {
@@ -518,6 +560,10 @@ public:
                     else if (imGuiObjects[i].objectType == "Model")
                     {
                         tempName = "Model" + std::to_string(i);
+                    }
+                    else if (imGuiObjects[i].objectType == "Animation")
+                    {
+                        tempName = "Animation" + std::to_string(i);
                     }
 
                     imGuiObjects[i].objectName = tempName.c_str();
@@ -681,7 +727,7 @@ public:
      * @param shader, waterShader, lightingShader, camera
      * @return void
      */
-    void RenderObjects(Shader shader, Shader waterShader, Shader lightingShader, Camera camera)
+    void RenderObjects(Shader shader, Shader waterShader, Shader lightingShader, Shader modelShader, Camera camera)
     {
         if (imGuiObjects.size() != 0)
         {
@@ -725,8 +771,24 @@ public:
                     model = glm::rotate(model, imGuiObjects[i].rotation[1], glm::vec3(0, 1, 0));
                     model = glm::rotate(model, imGuiObjects[i].rotation[2], glm::vec3(0, 0, 1));
                     lightingShader.setMat4("model", model);
-                    std::cout << imGuiObjects[i].filepath << std::endl;
                     imGuiObjects[i].model->Draw(lightingShader);
+                }
+                else if (imGuiObjects[i].objectType == "Animation")
+                {
+                    currentFrame = (float)glfwGetTime();
+                    deltaTime = currentFrame - lastFrame;
+                    lastFrame = currentFrame;
+                    modelShader.use();
+                    glm::mat4 model = glm::mat4(1.0f);
+                    model = glm::translate(model, { imGuiObjects[i].translation[0], imGuiObjects[i].translation[1], imGuiObjects[i].translation[2] });
+                    model = glm::scale(model, { imGuiObjects[i].scale[0], imGuiObjects[i].scale[1], imGuiObjects[i].scale[2] });
+                    model = glm::rotate(model, imGuiObjects[i].rotation[0], glm::vec3(1, 0, 0));
+                    model = glm::rotate(model, imGuiObjects[i].rotation[1], glm::vec3(0, 1, 0));
+                    model = glm::rotate(model, imGuiObjects[i].rotation[2], glm::vec3(0, 0, 1));
+                    modelShader.setMat4("model", model);
+                    imGuiObjects[i].md2Model.renderModel(&imGuiObjects[i].animState, imGuiObjects[i].translation, md2Rotation, md2Direction, modelShader);
+                    imGuiObjects[i].md2Model.updateAnimation(&imGuiObjects[i].animState, deltaTime);
+                    imGuiObjects[i].weapon.renderModel(&imGuiObjects[i].animState, imGuiObjects[i].translation, md2Rotation, md2Direction, modelShader);
                 }
             }
         }

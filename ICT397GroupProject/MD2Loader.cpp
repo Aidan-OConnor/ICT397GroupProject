@@ -164,15 +164,13 @@ void MD2Loader::loadModel(const char* modelFile, const char* textureFile)
 }
 
 
-void MD2Loader::renderModel(animationState* animState, glm::mat4& proj, glm::mat4& view, glm::vec3 position, float rotation, float direction, Shader& shader)
+void MD2Loader::renderModel(animationState* animState, glm::vec3 position, float rotation, float direction, Shader& shader)
 {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, this->texId);
 
     shader.use();
     shader.setInt("texture0", 0);
-    shader.setMat4("projection", proj);
-    shader.setMat4("view", view);
 
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, position);

@@ -106,7 +106,7 @@ public:
 
     void loadModel(const char* modelFile, const char* textureFile);
 
-    void renderModel(animationState* animState, glm::mat4& proj, glm::mat4& view, glm::vec3 position, float rotation, float direction, Shader& shader);
+    void renderModel(animationState* animState, glm::vec3 position, float rotation, float direction, Shader& shader);
 
     animationState startAnimation(animationType type);
     void updateAnimation(animationState* animState, float fTimePassed);
