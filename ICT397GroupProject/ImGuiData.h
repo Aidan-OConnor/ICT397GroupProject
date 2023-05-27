@@ -637,6 +637,8 @@ public:
 
                         if(imGuiObjects[i].isPlayer)
                             luaMap << "model" << mCount << ".isPlayer = true" << "\n";
+                        else
+                            luaMap << "model" << mCount << ".isPlayer = false" << "\n";
 
                         luaMap << "model" << mCount << ".objectType = \"" << imGuiObjects[i].objectType << "\"\n";
                         luaMap << "model" << mCount << ".filepath = \"" << imGuiObjects[i].filepath << "\"\n";
@@ -723,6 +725,7 @@ public:
                     model = glm::rotate(model, imGuiObjects[i].rotation[1], glm::vec3(0, 1, 0));
                     model = glm::rotate(model, imGuiObjects[i].rotation[2], glm::vec3(0, 0, 1));
                     lightingShader.setMat4("model", model);
+                    std::cout << imGuiObjects[i].filepath << std::endl;
                     imGuiObjects[i].model->Draw(lightingShader);
                 }
             }
@@ -817,8 +820,7 @@ public:
             }
             else
             {
-                if (luaMap[i].isPlayer)
-                    tempGuiData.setIsPlayer(luaMap[i].isPlayer);
+                tempGuiData.setIsPlayer(luaMap[i].isPlayer);
                 tempGuiData.setModel(luaMap[i].filepath);
                 tempGuiData.setObjectType(luaMap[i].objectType);
                 tempGuiData.setFilePath(luaMap[i].filepath);
