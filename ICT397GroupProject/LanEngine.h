@@ -125,7 +125,22 @@ int run()
     std::vector<ImGuiData> convertedData;
     ImGuiData imGuiData;
 
-    imGuiData.loadData(convertedData, "Test.lua");
+    sol::state lua;
+    lua.open_libraries(sol::lib::base);
+    lua.script_file("MapFiles.lua");
+
+    std::vector<std::string> maps;
+    int numMaps = lua["numMaps"];
+
+    for (int i = 0; i < numMaps; i++)
+    {
+        std::string tempName = "Map" + std::to_string(i+1);
+        const char* mapName = tempName.c_str();
+        std::string tempMap = lua["maps"][mapName];
+        maps.push_back(tempMap);
+    }
+
+    imGuiData.loadData(convertedData, maps[1]);
     imGuiData.setGuiData(convertedData);
 
     // Reactphysics initialisation

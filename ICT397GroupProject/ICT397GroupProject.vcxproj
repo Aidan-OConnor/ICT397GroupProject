@@ -124,10 +124,12 @@
     <None Include="lightingFragment.shader" />
     <None Include="lightingVertex.shader" />
     <None Include="MapData.lua" />
+    <None Include="MapFiles.lua" />
     <None Include="md2Frag.shader" />
     <None Include="md2Vert.shader" />
     <None Include="modelFragment.shader" />
     <None Include="modelVertex.shader" />
+    <None Include="OgMap.lua" />
     <None Include="skyboxFragment.shader" />
     <None Include="skyboxVertex.shader" />
     <None Include="Test.lua" />
