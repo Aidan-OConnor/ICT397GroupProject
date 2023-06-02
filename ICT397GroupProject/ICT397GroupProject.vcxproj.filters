@@ -74,7 +74,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Test.lua" />
+    <None Include="Map1.lua" />
     <None Include="fragment.shader" />
     <None Include="vertex.shader" />
     <None Include="skyboxFragment.shader" />
@@ -88,6 +88,8 @@
     <None Include="MapData.lua" />
     <None Include="md2Frag.shader" />
     <None Include="md2Vert.shader" />
+    <None Include="MapFiles.lua" />
+    <None Include="OgMap.lua" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Landscape.h">

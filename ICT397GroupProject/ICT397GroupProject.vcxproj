@@ -132,7 +132,7 @@
     <None Include="OgMap.lua" />
     <None Include="skyboxFragment.shader" />
     <None Include="skyboxVertex.shader" />
-    <None Include="Test.lua" />
+    <None Include="Map1.lua" />
     <None Include="vertex.shader" />
     <None Include="waterFragment.shader" />
     <None Include="waterVertex.shader" />

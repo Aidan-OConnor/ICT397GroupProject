@@ -26,6 +26,8 @@ struct objectData
 {
     const char* filepath;
     const char* texturePath;
+    const char* weaponPath;
+    const char* weaponTexturePath;
     const char* objectType;
     float iterations, width, length, minHeight, maxHeight, filter;
     float tx, ty, tz;
@@ -83,13 +85,13 @@ private:
     std::vector<objectData> luaMap;
     /// Stores a tempory string
     std::string tempName;
+    /// Stores the names of all maps
+    std::vector<std::string> maps;
 
     MD2Loader md2Model;
     MD2Loader weapon;
     bool animations;
     animationState animState;
-    float md2Rotation;
-    float md2Direction;
     std::string weaponPath;
     std::string weaponTexturePath;
     float currentFrame;
@@ -117,8 +119,8 @@ public:
         this->isPlayer = false;
         this->animations = true;
         this->animState = md2Model.startAnimation(STAND);
-        this->md2Rotation = 180.695;
-        this->md2Direction = 0.0;
+        this->weaponPath.clear();
+        this->weaponTexturePath.clear();
     }
 
     int getNumType(std::string modelType)
@@ -601,15 +603,18 @@ public:
                 int numOfTerrain = getNumType("Terrain");
                 int numOfWater = getNumType("Water");
                 int numOfModel = getNumType("Model");
+                int numOfAnimations = getNumType("Animation");
                 int tCount = 0;
                 int wCount = 0;
                 int mCount = 0;
+                int aCount = 0;
 
                 std::ofstream luaMap;
-                luaMap.open("Test.lua");
+                luaMap.open("Map1.lua");
                 luaMap << "numTerrains = " << numOfTerrain << "\n";
                 luaMap << "numWater = " << numOfWater << "\n";
                 luaMap << "numModels = " << numOfModel << "\n";
+                luaMap << "numAnimations = " << numOfAnimations << "\n";
 
                 for (int i = 0; i < imGuiObjects.size(); i++)
                 {
@@ -623,14 +628,19 @@ public:
                         luaMap << "water" << wCount << " = objectData.new()\n";
                         wCount++;
                     }
-                    else
+                    else if (imGuiObjects[i].objectType == "Model")
                     {
                         luaMap << "model" << mCount << " = objectData.new()\n";
                         mCount++;
                     }
+                    else if (imGuiObjects[i].objectType == "Animation")
+                    {
+                        luaMap << "animation" << aCount << " = objectData.new()\n";
+                        aCount++;
+                    }
                 }
 
-                tCount = wCount = mCount = 0;
+                tCount = wCount = mCount = aCount = 0;
 
                 for (int i = 0; i < imGuiObjects.size(); i++)
                 {
@@ -673,7 +683,7 @@ public:
                         luaMap << "water" << wCount << ".rz = " << imGuiObjects[i].rotation.z << "\n";
                         wCount++;
                     }
-                    else
+                    else if (imGuiObjects[i].objectType == "Model")
                     {
                         luaMap << "\n";
 
@@ -695,6 +705,25 @@ public:
                         luaMap << "model" << mCount << ".rz = " << imGuiObjects[i].rotation.z << "\n";
                         mCount++;
                     }
+                    else if (imGuiObjects[i].objectType == "Animation")
+                    {
+                        luaMap << "\n";
+                        luaMap << "animation" << aCount << ".objectType = \"" << imGuiObjects[i].objectType << "\"\n";
+                        luaMap << "animation" << aCount << ".filepath = \"" << imGuiObjects[i].filepath << "\"\n";
+                        luaMap << "animation" << aCount << ".texturePath = \"" << imGuiObjects[i].texturePath << "\"\n";
+                        luaMap << "animation" << aCount << ".weaponPath = \"" << imGuiObjects[i].filepath << "\"\n";
+                        luaMap << "animation" << aCount << ".weaponTexturePath = \"" << imGuiObjects[i].texturePath << "\"\n";
+                        luaMap << "animation" << aCount << ".tx = " << imGuiObjects[i].translation.x << "\n";
+                        luaMap << "animation" << aCount << ".ty = " << imGuiObjects[i].translation.y << "\n";
+                        luaMap << "animation" << aCount << ".tz = " << imGuiObjects[i].translation.z << "\n";
+                        luaMap << "animation" << aCount << ".sx = " << imGuiObjects[i].scale.x << "\n";
+                        luaMap << "animation" << aCount << ".sy = " << imGuiObjects[i].scale.y << "\n";
+                        luaMap << "animation" << aCount << ".sz = " << imGuiObjects[i].scale.z << "\n";
+                        luaMap << "animation" << aCount << ".rx = " << imGuiObjects[i].rotation.x << "\n";
+                        luaMap << "animation" << aCount << ".ry = " << imGuiObjects[i].rotation.y << "\n";
+                        luaMap << "animation" << aCount << ".rz = " << imGuiObjects[i].rotation.z << "\n";
+                        aCount++;
+                    }
                 }
 
                 luaMap.close();
@@ -702,7 +731,7 @@ public:
             if (ImGui::Button("Load", ImVec2(100, 25)))
             {
                 imGuiObjects.clear();
-                loadData(imGuiObjects, "Test.lua");
+                loadData(imGuiObjects, "Map1.lua");
             }
             if (ImGui::Button("New", ImVec2(100, 25)))
             {
@@ -785,7 +814,8 @@ public:
                     modelShader.setMat4("normal", model);
                     imGuiObjects[i].md2Model.renderModel(&imGuiObjects[i].animState, modelShader);
                     imGuiObjects[i].md2Model.updateAnimation(&imGuiObjects[i].animState, deltaTime);
-                    imGuiObjects[i].weapon.renderModel(&imGuiObjects[i].animState, modelShader);
+                    if(!imGuiObjects[i].weaponPath.empty())
+                        imGuiObjects[i].weapon.renderModel(&imGuiObjects[i].animState, modelShader);
                 }
             }
         }
@@ -802,13 +832,13 @@ public:
      */
     void loadData(std::vector<ImGuiData>& convertedData, std::string fileName)
     {
-        ImGuiData tempGuiData;
         luaMap.clear();
         sol::state lua;
         lua.open_libraries(sol::lib::base);
 
         lua.new_usertype<objectData>("objectData", sol::constructors<void()>(),
             "filepath", &objectData::filepath, "texturePath", &objectData::texturePath, "objectType", &objectData::objectType,
+            "weaponPath", &objectData::weaponPath, "weaponTexturePath", &objectData::weaponTexturePath,
             "iterations", &objectData::iterations, "width", &objectData::width, "isPlayer", &objectData::isPlayer,
             "length", &objectData::length, "minHeight", &objectData::minHeight,
             "maxHeight", &objectData::maxHeight, "filter", &objectData::filter,
@@ -822,6 +852,7 @@ public:
         int numOfTerrain = lua["numTerrains"];
         int numOfWater = lua["numWater"];
         int numOfModel = lua["numModels"];
+        int numOfAnimations = lua["numAnimations"];
 
         for (int i = 0; i < numOfTerrain; i++)
         {
@@ -847,9 +878,18 @@ public:
             luaMap.push_back(tempObject2);
         }
 
+        for (int i = 0; i < numOfAnimations; i++)
+        {
+            tempName = "animation" + std::to_string(i);
+            const char* animationName = tempName.c_str();
+            objectData& tempObject3 = lua[animationName];
+            luaMap.push_back(tempObject3);
+        }
+
         for (int i = 0; i < luaMap.size(); i++)
         {
             std::string objectType = luaMap[i].objectType;
+            ImGuiData tempGuiData;
 
             if (objectType == "Terrain")
             {
@@ -877,12 +917,22 @@ public:
                 tempGuiData.setMaxHeight(luaMap[i].maxHeight);
                 tempGuiData.setFilter(luaMap[i].filter);
             }
-            else
+            else if (objectType == "Model")
             {
                 tempGuiData.setIsPlayer(luaMap[i].isPlayer);
                 tempGuiData.setModel(luaMap[i].filepath);
                 tempGuiData.setObjectType(luaMap[i].objectType);
                 tempGuiData.setFilePath(luaMap[i].filepath);
+            }
+            else if (objectType == "Animation")
+            {
+                tempGuiData.setObjectType(luaMap[i].objectType);
+                tempGuiData.setMd2Model(luaMap[i].filepath , luaMap[i].texturePath);
+                tempGuiData.setMd2Weapon(luaMap[i].weaponPath, luaMap[i].weaponTexturePath);
+                tempGuiData.setFilePath(luaMap[i].filepath);
+                tempGuiData.setTexturePath(luaMap[i].texturePath);
+                tempGuiData.setWeaponPath(luaMap[i].weaponPath);
+                tempGuiData.setWeaponTexturePath(luaMap[i].weaponTexturePath);
             }
 
             glm::vec3 tempVec;
@@ -962,6 +1012,36 @@ public:
     void setModel(const char* modelPath)
     {
         this->model = new Model(modelPath);
+    }
+
+    /*
+     * @brief Sets the md2 model
+     *
+     * This functions sets an md2 model to be stored
+     * in the ImGuiData using given filepaths
+     * to a model and its texture
+     *
+     * @param md2ModelPath, md2TexturePath
+     * @return void
+     */
+    void setMd2Model(const char* md2ModelPath, const char* md2TexturePath)
+    {
+        this->md2Model.loadModel(md2ModelPath, md2TexturePath);
+    }
+
+    /*
+     * @brief Sets the md2 weapon
+     *
+     * This functions sets a weapon model to be stored
+     * in the ImGuiData using given filepaths
+     * to a weapon and its texture
+     *
+     * @param md2WeaponPath, md2WeaponTexturePath
+     * @return void
+     */
+    void setMd2Weapon(const char* md2WeaponPath, const char* md2WeaponTexturePath)
+    {
+        this->weapon.loadModel(md2WeaponPath, md2WeaponTexturePath);
     }
 
     /*
@@ -1046,6 +1126,34 @@ public:
     void setTexturePath(const char* texturepath)
     {
         texturePath = texturepath;
+    }
+
+    /*
+     * @brief Sets the weapons file path
+     *
+     * This functions sets the weapon file path
+     * of an animated model stored in ImGuiData
+     *
+     * @param WeaponPath
+     * @return void
+     */
+    void setWeaponPath(const char* WeaponPath)
+    {
+        weaponPath = WeaponPath;
+    }
+
+    /*
+     * @brief Sets the weapons ntexture path
+     *
+     * This functions sets the weaons texture path
+     * of an animated model stored in ImGuiData
+     *
+     * @param texturepath
+     * @return void
+     */
+    void setWeaponTexturePath(const char* WeaponTexturePath)
+    {
+        weaponTexturePath = WeaponTexturePath;
     }
 
     /*
