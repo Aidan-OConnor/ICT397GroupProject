@@ -54,6 +54,8 @@ private:
     /// Stores the filter for a fault formation
     float filter;
 
+    int currentMap;
+
     bool isPlayer;
     /// Stores the data types file path as a const char *
     std::string filepath;
@@ -121,6 +123,7 @@ public:
         this->animState = md2Model.startAnimation(STAND);
         this->weaponPath.clear();
         this->weaponTexturePath.clear();
+        this->currentMap = 0;
     }
 
     int getNumType(std::string modelType)
@@ -610,7 +613,7 @@ public:
                 int aCount = 0;
 
                 std::ofstream luaMap;
-                luaMap.open("Map1.lua");
+                luaMap.open(maps[currentMap]);
                 luaMap << "numTerrains = " << numOfTerrain << "\n";
                 luaMap << "numWater = " << numOfWater << "\n";
                 luaMap << "numModels = " << numOfModel << "\n";
@@ -731,11 +734,32 @@ public:
             if (ImGui::Button("Load", ImVec2(100, 25)))
             {
                 imGuiObjects.clear();
-                loadData(imGuiObjects, "Map1.lua");
+                loadData(imGuiObjects, maps, currentMap);
             }
             if (ImGui::Button("New", ImVec2(100, 25)))
             {
                 imGuiObjects.clear();
+            }
+            if (ImGui::TreeNode("Load Map"))
+            {
+                for (int i = 0; i < maps.size(); i++)
+                {
+                    std::string tempName;
+                    for (int j = 0; j < maps[i].size(); j++)
+                    {
+                        if (maps[i][j] == '.')
+                            j = maps[i].size();
+                        else
+                            tempName += maps[i][j];
+                    }
+
+                    if (ImGui::Button(tempName.c_str(), ImVec2(100, 25)))
+                    {
+                        imGuiObjects.clear();
+                        currentMap = i;
+                        loadData(imGuiObjects, maps, currentMap);
+                    }
+                }
             }
             ImGui::TreePop();
         }
@@ -830,8 +854,10 @@ public:
      * @param convertedData
      * @return void
      */
-    void loadData(std::vector<ImGuiData>& convertedData, std::string fileName)
+    void loadData(std::vector<ImGuiData>& convertedData, std::vector<std::string>& mapList, int mapIndex)
     {
+        this->maps = mapList;
+        this->currentMap = mapIndex;
         luaMap.clear();
         sol::state lua;
         lua.open_libraries(sol::lib::base);
@@ -847,7 +873,7 @@ public:
             "rx", &objectData::rx, "ry", &objectData::ry, "rz", &objectData::rz
         );
 
-        lua.script_file(fileName);
+        lua.script_file(maps[currentMap]);
 
         int numOfTerrain = lua["numTerrains"];
         int numOfWater = lua["numWater"];
@@ -969,6 +995,11 @@ public:
     void setGuiData(std::vector<ImGuiData> dataVec)
     {
         this->imGuiObjects = dataVec;
+    }
+
+    void setMaps(std::vector<std::string> Maps)
+    {
+        this->maps = Maps;
     }
 
     /*

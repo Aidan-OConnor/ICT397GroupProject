@@ -140,7 +140,7 @@ int run()
         maps.push_back(tempMap);
     }
 
-    imGuiData.loadData(convertedData, maps[0]);
+    imGuiData.loadData(convertedData, maps, 1);
     imGuiData.setGuiData(convertedData);
 
     // Reactphysics initialisation
