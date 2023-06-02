@@ -55,6 +55,10 @@ private:
 
     float cameraDistance;
     float cameraHeight;
+    float maxMoveSpeed;
+    float movementSpeed;
+    float forwardSpeed;
+    float backwardSpeed;
 
 public:
     /*

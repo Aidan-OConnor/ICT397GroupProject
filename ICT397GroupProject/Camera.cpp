@@ -29,6 +29,10 @@ Camera::Camera()
 
     this->cameraDistance = 100;
     this->cameraHeight = 50;
+    this->movementSpeed = 0;
+    this->forwardSpeed = 0;
+    this->backwardSpeed = 0;
+    this->maxMoveSpeed = 200;
 }
 
 void Camera::processInput(GLFWwindow* window, glm::vec3& PlayerPosition, glm::vec3& PlayerRotation)
@@ -63,7 +67,6 @@ void Camera::processInput(GLFWwindow* window, glm::vec3& PlayerPosition, glm::ve
     }
     else
     {
-        float movementSpeed = 200;
         float playerRotationSpeed = 1;
         float distance = 0;
 
@@ -71,11 +74,28 @@ void Camera::processInput(GLFWwindow* window, glm::vec3& PlayerPosition, glm::ve
         glm::vec3 rotation(0.0f);
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-            distance += movementSpeed * deltaTime;
+            if (forwardSpeed < maxMoveSpeed)
+                forwardSpeed += 100 * deltaTime;
+            if (backwardSpeed > 0)
+                backwardSpeed -= 200 * deltaTime;
         }
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-            distance -= movementSpeed * deltaTime;
+        else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+            if (backwardSpeed < maxMoveSpeed)
+                backwardSpeed += 100 * deltaTime;
+            if (forwardSpeed > 0)
+                forwardSpeed -= 200 * deltaTime;
         }
+        else
+        {
+            if (forwardSpeed > 0)
+                forwardSpeed -= 200 * deltaTime;
+            if (backwardSpeed > 0)
+                backwardSpeed -= 200 * deltaTime;
+        }
+
+        if(movementSpeed + (forwardSpeed - backwardSpeed) < 200 && movementSpeed + (forwardSpeed - backwardSpeed) > 0)
+            movementSpeed += forwardSpeed - backwardSpeed;
+        distance += movementSpeed * deltaTime;
 
         // Handle character rotation
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
