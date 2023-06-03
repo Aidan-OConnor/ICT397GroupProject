@@ -121,13 +121,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="fragment.shader" />
+    <None Include="HeightmapFiles.lua" />
     <None Include="lightingFragment.shader" />
     <None Include="lightingVertex.shader" />
     <None Include="MapData.lua" />
     <None Include="MapFiles.lua" />
     <None Include="md2Frag.shader" />
     <None Include="md2Vert.shader" />
-    <None Include="modelFIles.lua" />
+    <None Include="ModelFiles.lua" />
     <None Include="modelFragment.shader" />
     <None Include="modelVertex.shader" />
     <None Include="OgMap.lua" />
