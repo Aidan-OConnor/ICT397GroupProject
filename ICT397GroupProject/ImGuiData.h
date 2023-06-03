@@ -550,11 +550,13 @@ public:
 
                 luaMap.close();
             }
+            ImGui::SameLine();
             if (ImGui::Button("Load", ImVec2(100, 25)))
             {
                 imGuiObjects.clear();
                 loadData(imGuiObjects, maps, currentMap);
             }
+            ImGui::SameLine();
             if (ImGui::Button("New", ImVec2(100, 25)))
             {
                 imGuiObjects.clear();
@@ -570,6 +572,11 @@ public:
                             j = maps[i].size();
                         else
                             tempName += maps[i][j];
+                    }
+
+                    if (i % 3 != 0)
+                    {
+                        ImGui::SameLine();
                     }
 
                     if (ImGui::Button(tempName.c_str(), ImVec2(100, 25)))
