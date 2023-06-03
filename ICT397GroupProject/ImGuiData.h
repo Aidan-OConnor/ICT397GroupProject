@@ -93,6 +93,8 @@ private:
     std::vector<std::string> maps;
     /// Stores the names of all models
     std::vector<std::string> models;
+    /// Stores the names of all md2 models
+    std::vector<std::string> md2Models;
 
     MD2Loader md2Model;
     MD2Loader weapon;
@@ -151,8 +153,35 @@ public:
         {
             std::string tempName = "Heightmap" + std::to_string(i + 1);
             const char* mapName = tempName.c_str();
-            std::string tempModel = lua["heightmaps"][mapName];
-            this->heightmaps.push_back(tempModel);
+            std::string tempHMap = lua["heightmaps"][mapName];
+            this->heightmaps.push_back(tempHMap);
+        }
+
+        lua.script_file("Md2Models.lua");
+
+        int numMd2Models = lua["numMd2Models"];
+
+        for (int i = 0; i < numMd2Models; i++)
+        {
+            std::string tempName = "ModelF" + std::to_string(i + 1);
+            const char* md2Name = tempName.c_str();
+            std::string tempMd2 = lua["md2Models"][md2Name];
+            this->md2Models.push_back(tempMd2);
+
+            tempName = "ModelT" + std::to_string(i + 1);
+            md2Name = tempName.c_str();
+            std::string tempMd21 = lua["md2Models"][md2Name];
+            this->md2Models.push_back(tempMd21);
+
+            tempName = "WeaponF" + std::to_string(i + 1);
+            md2Name = tempName.c_str();
+            std::string tempMd22 = lua["md2Models"][md2Name];
+            this->md2Models.push_back(tempMd22);
+
+            tempName = "WeaponF" + std::to_string(i + 1);
+            md2Name = tempName.c_str();
+            std::string tempMd23 = lua["md2Models"][md2Name];
+            this->md2Models.push_back(tempMd23);
         }
     }
 
@@ -339,25 +368,35 @@ public:
         }
         if (ImGui::TreeNode("Load NPC"))
         {
-            if (ImGui::TreeNode("Raptor"))
+            for (int i = 0; i < md2Models.size(); i+=4)
             {
-                if (ImGui::Button("Load", ImVec2(100, 25)))
+                std::string tempName;
+                for (int j = 0; j < md2Models[i].size(); j++)
+                {
+                    if (md2Models[i][j] == '.')
+                        j = md2Models[i].size();
+                    else
+                        tempName += md2Models[i][j];
+                }
+
+                if (ImGui::Button(tempName.c_str(), ImVec2(100, 25)))
                 {
                     ImGuiData ImTemp;
                     ImTemp.objectType = "Animation";
                     ImTemp.animState = md2Model.startAnimation(STAND);
-                    ImTemp.md2Model.loadModel("Models/raptor/tris.MD2", "Models/raptor/green.jpg");
-                    ImTemp.weapon.loadModel("Models/raptor/weapon.md2", "Models/raptor/weapon.jpg");
+                    ImTemp.md2Model.loadModel(md2Models[i].c_str(), md2Models[i+1].c_str());
+                    if(md2Models[i+2] != "")
+                        ImTemp.weapon.loadModel(md2Models[i+2].c_str(), md2Models[i+3].c_str());
+                    std::cout << "Here" << std::endl;
                     ImTemp.translation = { 0.0f, 0.0f, 0.0f };
                     ImTemp.scale = { 1.0f, 1.0f, 1.0f };
-                    ImTemp.filepath = "Models/raptor/tris.MD2";
-                    ImTemp.weaponPath = "Models/raptor/weapon.md2";
-                    ImTemp.texturePath = "Models/raptor/green.jpg";
-                    ImTemp.weaponTexturePath = "Models/raptor/weapon.jpg";
+                    ImTemp.filepath = md2Models[i];
+                    ImTemp.weaponPath = md2Models[i+2];
+                    ImTemp.texturePath = md2Models[i+1];
+                    ImTemp.weaponTexturePath = md2Models[i+3];
 
                     imGuiObjects.push_back(ImTemp);
                 }
-                ImGui::TreePop();
             }
             ImGui::TreePop();
         }
@@ -664,7 +703,8 @@ public:
                     modelShader.setMat4("normal", model);
                     imGuiObjects[i].md2Model.renderModel(&imGuiObjects[i].animState, modelShader);
                     imGuiObjects[i].md2Model.updateAnimation(&imGuiObjects[i].animState, deltaTime);
-                    if(!imGuiObjects[i].weaponPath.empty())
+                    std::cout << imGuiObjects[i].weaponPath << std::endl;
+                    if(imGuiObjects[i].weaponPath != "")
                         imGuiObjects[i].weapon.renderModel(&imGuiObjects[i].animState, modelShader);
                 }
             }

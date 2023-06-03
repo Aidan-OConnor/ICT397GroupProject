@@ -92,6 +92,7 @@
     <None Include="OgMap.lua" />
     <None Include="ModelFiles.lua" />
     <None Include="HeightmapFiles.lua" />
+    <None Include="Md2Models.lua" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Landscape.h">
