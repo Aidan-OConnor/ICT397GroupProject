@@ -127,6 +127,7 @@
     <None Include="MapFiles.lua" />
     <None Include="md2Frag.shader" />
     <None Include="md2Vert.shader" />
+    <None Include="modelFIles.lua" />
     <None Include="modelFragment.shader" />
     <None Include="modelVertex.shader" />
     <None Include="OgMap.lua" />

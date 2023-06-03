@@ -89,6 +89,8 @@ private:
     std::string tempName;
     /// Stores the names of all maps
     std::vector<std::string> maps;
+    /// Stores the names of all models
+    std::vector<std::string> models;
 
     MD2Loader md2Model;
     MD2Loader weapon;
@@ -124,6 +126,20 @@ public:
         this->weaponPath.clear();
         this->weaponTexturePath.clear();
         this->currentMap = 0;
+
+        sol::state lua;
+        lua.open_libraries(sol::lib::base);
+        lua.script_file("modelFiles.lua");
+
+        int numModels = lua["numModels"];
+
+        for (int i = 0; i < numModels; i++)
+        {
+            std::string tempName = "Model" + std::to_string(i + 1);
+            const char* mapName = tempName.c_str();
+            std::string tempModel = lua["models"][mapName];
+            this->models.push_back(tempModel);
+        }
     }
 
     int getNumType(std::string modelType)
@@ -151,6 +167,7 @@ public:
      */
     void RenderUI(Camera& camera)
     {
+
         ImGui::Begin("Control Centre");
 
         if (ImGui::TreeNode("Create Terrain"))
@@ -376,125 +393,30 @@ public:
 
         if (ImGui::TreeNode("Load Model"))
         {
-            if (ImGui::TreeNode("Bruiser T-Pose"))
+            for (int i = 0; i < models.size(); i++)
             {
-                if (ImGui::Button("Load", ImVec2(100, 25)))
+                std::string tempName;
+                for (int j = 0; j < models[i].size(); j++)
+                {
+                    if (models[i][j] == '.')
+                        j = models[i].size();
+                    if (models[i][j] == '/')
+                        tempName.clear();
+                    else
+                        tempName += models[i][j];
+                }
+
+                if (ImGui::Button(tempName.c_str(), ImVec2(100, 25)))
                 {
                     ImGuiData ImTemp;
                     ImTemp.objectType = "Model";
-                    ImTemp.model = new Model("Models/Bruiser/bruiserTpose.obj");
+                    ImTemp.model = new Model(models[i]);
                     ImTemp.translation = { 0.0f, 0.0f, 0.0f };
                     ImTemp.scale = { 1.0f, 1.0f, 1.0f };
-                    ImTemp.filepath = "Models/Bruiser/bruiserTpose.obj";
+                    ImTemp.filepath = models[i];
 
                     imGuiObjects.push_back(ImTemp);
                 }
-                ImGui::TreePop();
-            }
-            if (ImGui::TreeNode("Bruiser Stance"))
-            {
-                if (ImGui::Button("Load", ImVec2(100, 25)))
-                {
-                    ImGuiData ImTemp;
-                    ImTemp.objectType = "Model";
-                    ImTemp.model = new Model("Models/Bruiser/bruiserStance.obj");
-                    ImTemp.translation = { 0.0f, 0.0f, 0.0f };
-                    ImTemp.scale = { 1.0f, 1.0f, 1.0f };
-                    ImTemp.filepath = "Models/Bruiser/bruiserStance.obj";
-
-                    imGuiObjects.push_back(ImTemp);
-                }
-                ImGui::TreePop();
-            }
-            if (ImGui::TreeNode("Boat"))
-            {
-                if (ImGui::Button("Load", ImVec2(100, 25)))
-                {
-                    ImGuiData ImTemp;
-                    ImTemp.objectType = "Model";
-                    ImTemp.model = new Model("Models/NewBoat/boat.obj");
-                    ImTemp.translation = { 0.0f, 0.0f, 0.0f };
-                    ImTemp.scale = { 1.0f, 1.0f, 1.0f };
-                    ImTemp.filepath = "Models/NewBoat/boat.obj";
-
-                    imGuiObjects.push_back(ImTemp);
-                }
-                ImGui::TreePop();
-            }
-            if (ImGui::TreeNode("Palm Tree"))
-            {
-                if (ImGui::Button("Load", ImVec2(100, 25)))
-                {
-                    ImGuiData ImTemp;
-                    ImTemp.objectType = "Model";
-                    ImTemp.model = new Model("Models/PalmTree/palmtree.obj");
-                    ImTemp.translation = { 0.0f, 0.0f, 0.0f };
-                    ImTemp.scale = { 1.0f, 1.0f, 1.0f };
-                    ImTemp.filepath = "Models/PalmTree/palmtree.obj";
-
-                    imGuiObjects.push_back(ImTemp);
-                }
-                ImGui::TreePop();
-            }
-            if (ImGui::TreeNode("Rock1"))
-            {
-                if (ImGui::Button("Load", ImVec2(100, 25)))
-                {
-                    ImGuiData ImTemp;
-                    ImTemp.objectType = "Model";
-                    ImTemp.model = new Model("Models/Rocks/rock.obj");
-                    ImTemp.translation = { 0.0f, 0.0f, 0.0f };
-                    ImTemp.scale = { 1.0f, 1.0f, 1.0f };
-                    ImTemp.filepath = "Models/Rocks/rock.obj";
-
-                    imGuiObjects.push_back(ImTemp);
-                }
-                ImGui::TreePop();
-            }
-            if (ImGui::TreeNode("Rock2"))
-            {
-                if (ImGui::Button("Load", ImVec2(100, 25)))
-                {
-                    ImGuiData ImTemp;
-                    ImTemp.objectType = "Model";
-                    ImTemp.model = new Model("Models/Rocks/rock2.obj");
-                    ImTemp.translation = { 0.0f, 0.0f, 0.0f };
-                    ImTemp.scale = { 1.0f, 1.0f, 1.0f };
-                    ImTemp.filepath = "Models/Rocks/rock2.obj";
-
-                    imGuiObjects.push_back(ImTemp);
-                }
-                ImGui::TreePop();
-            }
-            if (ImGui::TreeNode("Rock3"))
-            {
-                if (ImGui::Button("Load", ImVec2(100, 25)))
-                {
-                    ImGuiData ImTemp;
-                    ImTemp.objectType = "Model";
-                    ImTemp.model = new Model("Models/Rocks/rock3.obj");
-                    ImTemp.translation = { 0.0f, 0.0f, 0.0f };
-                    ImTemp.scale = { 1.0f, 1.0f, 1.0f };
-                    ImTemp.filepath = "Models/Rocks/rock3.obj";
-
-                    imGuiObjects.push_back(ImTemp);
-                }
-                ImGui::TreePop();
-            }
-            if (ImGui::TreeNode("Dock"))
-            {
-                if (ImGui::Button("Load", ImVec2(100, 25)))
-                {
-                    ImGuiData ImTemp;
-                    ImTemp.objectType = "Model";
-                    ImTemp.model = new Model("Models/Dock/Dock.obj");
-                    ImTemp.translation = { 0.0f, 0.0f, 0.0f };
-                    ImTemp.scale = { 1.0f, 1.0f, 1.0f };
-                    ImTemp.filepath = "Models/Dock/Dock.obj";
-
-                    imGuiObjects.push_back(ImTemp);
-                }
-                ImGui::TreePop();
             }
             ImGui::TreePop();
         }

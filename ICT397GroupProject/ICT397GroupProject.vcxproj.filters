@@ -90,6 +90,7 @@
     <None Include="md2Vert.shader" />
     <None Include="MapFiles.lua" />
     <None Include="OgMap.lua" />
+    <None Include="modelFIles.lua" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Landscape.h">
