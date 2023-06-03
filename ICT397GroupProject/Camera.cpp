@@ -69,6 +69,8 @@ void Camera::processInput(GLFWwindow* window, glm::vec3& PlayerPosition, glm::ve
     {
         float playerRotationSpeed = 1;
         float distance = 0;
+        float forwardDistance = 0;
+        float backwardDistance = 0;
 
         glm::vec3 movement(0.0f);
         glm::vec3 rotation(0.0f);
@@ -76,26 +78,24 @@ void Camera::processInput(GLFWwindow* window, glm::vec3& PlayerPosition, glm::ve
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
             if (forwardSpeed < maxMoveSpeed)
                 forwardSpeed += 100 * deltaTime;
-            if (backwardSpeed > 0)
-                backwardSpeed -= 200 * deltaTime;
+            backwardSpeed = 0;
+            distance += forwardSpeed * deltaTime;
         }
         else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-            if (backwardSpeed < maxMoveSpeed)
-                backwardSpeed += 100 * deltaTime;
-            if (forwardSpeed > 0)
-                forwardSpeed -= 200 * deltaTime;
+            if (backwardSpeed < maxMoveSpeed/4)
+                backwardSpeed += 25 * deltaTime;
+            forwardSpeed = 0;
+            distance -= backwardSpeed * deltaTime;
         }
         else
         {
             if (forwardSpeed > 0)
                 forwardSpeed -= 200 * deltaTime;
             if (backwardSpeed > 0)
-                backwardSpeed -= 200 * deltaTime;
+                backwardSpeed -= 50 * deltaTime;
+            distance += forwardSpeed * deltaTime;
+            distance -= backwardSpeed * deltaTime;
         }
-
-        if(movementSpeed + (forwardSpeed - backwardSpeed) < 200 && movementSpeed + (forwardSpeed - backwardSpeed) > 0)
-            movementSpeed += forwardSpeed - backwardSpeed;
-        distance += movementSpeed * deltaTime;
 
         // Handle character rotation
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
