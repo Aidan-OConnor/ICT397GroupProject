@@ -375,6 +375,8 @@ public:
                 {
                     if (md2Models[i][j] == '.')
                         j = md2Models[i].size();
+                    if (md2Models[i][j] == '/')
+                        tempName.clear();
                     else
                         tempName += md2Models[i][j];
                 }
@@ -695,7 +697,7 @@ public:
                     glm::mat4 model = glm::mat4(1.0f);
                     model = glm::translate(model, { imGuiObjects[i].translation[0], imGuiObjects[i].translation[1], imGuiObjects[i].translation[2] });
                     model = glm::scale(model, { imGuiObjects[i].scale[0], imGuiObjects[i].scale[1], imGuiObjects[i].scale[2] });
-                    model = glm::rotate(model, imGuiObjects[i].rotation[0], glm::vec3(1, 0, 0));
+                    model = glm::rotate(model, imGuiObjects[i].rotation[0]-1.5f, glm::vec3(1, 0, 0));
                     model = glm::rotate(model, imGuiObjects[i].rotation[1], glm::vec3(0, 1, 0));
                     model = glm::rotate(model, imGuiObjects[i].rotation[2], glm::vec3(0, 0, 1));
                     modelShader.setMat4("model", model);
