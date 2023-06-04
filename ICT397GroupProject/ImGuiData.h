@@ -178,7 +178,7 @@ public:
             std::string tempMd22 = lua["md2Models"][md2Name];
             this->md2Models.push_back(tempMd22);
 
-            tempName = "WeaponF" + std::to_string(i + 1);
+            tempName = "WeaponT" + std::to_string(i + 1);
             md2Name = tempName.c_str();
             std::string tempMd23 = lua["md2Models"][md2Name];
             this->md2Models.push_back(tempMd23);
@@ -385,9 +385,8 @@ public:
                     ImTemp.objectType = "Animation";
                     ImTemp.animState = md2Model.startAnimation(STAND);
                     ImTemp.md2Model.loadModel(md2Models[i].c_str(), md2Models[i+1].c_str());
-                    if(md2Models[i+2] != "")
-                        ImTemp.weapon.loadModel(md2Models[i+2].c_str(), md2Models[i+3].c_str());
-                    std::cout << "Here" << std::endl;
+                    if (md2Models[i + 2] != "")
+                        ImTemp.weapon.loadModel(md2Models[i + 2].c_str(), md2Models[i + 3].c_str());
                     ImTemp.translation = { 0.0f, 0.0f, 0.0f };
                     ImTemp.scale = { 1.0f, 1.0f, 1.0f };
                     ImTemp.filepath = md2Models[i];
@@ -572,8 +571,8 @@ public:
                         luaMap << "animation" << aCount << ".objectType = \"" << imGuiObjects[i].objectType << "\"\n";
                         luaMap << "animation" << aCount << ".filepath = \"" << imGuiObjects[i].filepath << "\"\n";
                         luaMap << "animation" << aCount << ".texturePath = \"" << imGuiObjects[i].texturePath << "\"\n";
-                        luaMap << "animation" << aCount << ".weaponPath = \"" << imGuiObjects[i].filepath << "\"\n";
-                        luaMap << "animation" << aCount << ".weaponTexturePath = \"" << imGuiObjects[i].texturePath << "\"\n";
+                        luaMap << "animation" << aCount << ".weaponPath = \"" << imGuiObjects[i].weaponPath << "\"\n";
+                        luaMap << "animation" << aCount << ".weaponTexturePath = \"" << imGuiObjects[i].weaponTexturePath << "\"\n";
                         luaMap << "animation" << aCount << ".tx = " << imGuiObjects[i].translation.x << "\n";
                         luaMap << "animation" << aCount << ".ty = " << imGuiObjects[i].translation.y << "\n";
                         luaMap << "animation" << aCount << ".tz = " << imGuiObjects[i].translation.z << "\n";
@@ -703,9 +702,10 @@ public:
                     modelShader.setMat4("normal", model);
                     imGuiObjects[i].md2Model.renderModel(&imGuiObjects[i].animState, modelShader);
                     imGuiObjects[i].md2Model.updateAnimation(&imGuiObjects[i].animState, deltaTime);
-                    std::cout << imGuiObjects[i].weaponPath << std::endl;
                     if(imGuiObjects[i].weaponPath != "")
+                    {
                         imGuiObjects[i].weapon.renderModel(&imGuiObjects[i].animState, modelShader);
+                    }
                 }
             }
         }
@@ -820,7 +820,10 @@ public:
             {
                 tempGuiData.setObjectType(luaMap[i].objectType);
                 tempGuiData.setMd2Model(luaMap[i].filepath , luaMap[i].texturePath);
-                tempGuiData.setMd2Weapon(luaMap[i].weaponPath, luaMap[i].weaponTexturePath);
+                if (strlen(luaMap[i].weaponPath) != 0)
+                {
+                    tempGuiData.setMd2Weapon(luaMap[i].weaponPath, luaMap[i].weaponTexturePath);
+                }
                 tempGuiData.setFilePath(luaMap[i].filepath);
                 tempGuiData.setTexturePath(luaMap[i].texturePath);
                 tempGuiData.setWeaponPath(luaMap[i].weaponPath);

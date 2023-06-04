@@ -1,7 +1,7 @@
 numTerrains = 8
 numWater = 1
 numModels = 2
-numAnimations = 0
+numAnimations = 1
 terrain0 = objectData.new()
 terrain1 = objectData.new()
 terrain2 = objectData.new()
@@ -13,6 +13,7 @@ terrain7 = objectData.new()
 water0 = objectData.new()
 model0 = objectData.new()
 model1 = objectData.new()
+animation0 = objectData.new()
 
 terrain0.objectType = "Terrain"
 terrain0.filepath = "Terrains/VolcanoType27.png"
@@ -161,3 +162,18 @@ model1.sz = 10
 model1.rx = 0
 model1.ry = 3.3
 model1.rz = 0
+
+animation0.objectType = "Animation"
+animation0.filepath = "Models/raptor/tris.MD2"
+animation0.texturePath = "Models/raptor/green.jpg"
+animation0.weaponPath = ""
+animation0.weaponTexturePath = ""
+animation0.tx = 0
+animation0.ty = 0
+animation0.tz = 0
+animation0.sx = 1
+animation0.sy = 1
+animation0.sz = 1
+animation0.rx = -1.5
+animation0.ry = 0
+animation0.rz = 0
