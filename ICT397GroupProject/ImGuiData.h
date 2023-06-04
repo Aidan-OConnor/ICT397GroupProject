@@ -688,9 +688,9 @@ public:
                 }
                 else if (imGuiObjects[i].objectType == "Animation")
                 {
-                    currentFrame = (float)glfwGetTime();
-                    deltaTime = currentFrame - lastFrame;
-                    lastFrame = currentFrame;
+                    imGuiObjects[i].currentFrame = (float)glfwGetTime();
+                    imGuiObjects[i].deltaTime = imGuiObjects[i].currentFrame - imGuiObjects[i].lastFrame;
+                    imGuiObjects[i].lastFrame = imGuiObjects[i].currentFrame;
                     modelShader.use();
                     glm::mat4 model = glm::mat4(1.0f);
                     model = glm::translate(model, { imGuiObjects[i].translation[0], imGuiObjects[i].translation[1], imGuiObjects[i].translation[2] });
@@ -701,7 +701,7 @@ public:
                     modelShader.setMat4("model", model);
                     modelShader.setMat4("normal", model);
                     imGuiObjects[i].md2Model.renderModel(&imGuiObjects[i].animState, modelShader);
-                    imGuiObjects[i].md2Model.updateAnimation(&imGuiObjects[i].animState, deltaTime);
+                    imGuiObjects[i].md2Model.updateAnimation(&imGuiObjects[i].animState, imGuiObjects[i].deltaTime);
                     if(imGuiObjects[i].weaponPath != "")
                     {
                         imGuiObjects[i].weapon.renderModel(&imGuiObjects[i].animState, modelShader);
@@ -942,6 +942,11 @@ public:
     void setMd2Weapon(const char* md2WeaponPath, const char* md2WeaponTexturePath)
     {
         this->weapon.loadModel(md2WeaponPath, md2WeaponTexturePath);
+    }
+
+    void setAnimationState(animationType type)
+    {
+        this->animState = md2Model.startAnimation(type);
     }
 
     /*
