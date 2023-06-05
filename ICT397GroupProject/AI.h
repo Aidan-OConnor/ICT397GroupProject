@@ -5,7 +5,7 @@ class AI
 {
 private:
 	float movementSpeed;
-    bool isRunning;
+    std::vector<bool> isRunning;
     float currentFrame;
     float deltaTime;
     float lastFrame;
@@ -13,7 +13,16 @@ public:
     AI()
     {
         movementSpeed = 100;
-        isRunning = false;
+    }
+
+    AI(std::vector<ImGuiData>& NPCs)
+    {
+        movementSpeed = 100;
+        
+        for (int i = 0; i < NPCs.size(); i++)
+        {
+            isRunning.push_back(false);
+        }
     }
 
 	void chasePlayer(std::vector<ImGuiData>& NPCs, glm::vec3& player)
@@ -21,6 +30,14 @@ public:
         currentFrame = (float)glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+
+        if (NPCs.size() > isRunning.size())
+        {
+            for (int i = 0; i < NPCs.size() - isRunning.size(); i++)
+            {
+                isRunning.push_back(false);
+            }
+        }
 
         for (int i = 0; i < NPCs.size(); i++)
         {
@@ -30,10 +47,10 @@ public:
 
             if (distance <= 250.0f)
             {
-                if (!isRunning)
+                if (!isRunning[i])
                 {
                     NPCs[i].setAnimationState(RUN);
-                    isRunning = true;
+                    isRunning[i] = true;
                 }
 
                 float directionX = player.x - NPCposition.x;
@@ -52,10 +69,10 @@ public:
                 
                 NPCs[i].setTranslation(NPCposition);
             }
-            else if (distance > 50 && isRunning)
+            else if (distance > 50 && isRunning[i])
             {
                 NPCs[i].setAnimationState(STAND);
-                isRunning = false;
+                isRunning[i] = false;
             }
         }
 
