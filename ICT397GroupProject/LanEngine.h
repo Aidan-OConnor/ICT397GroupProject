@@ -25,6 +25,7 @@
 #include "model.h"
 #include "Skybox.h"
 #include "ImGuiData.h"
+#include "Physics.h"
 #include "reactphysics3d/reactphysics3d.h"
 
 // ReactPhysics3D namespace
@@ -143,9 +144,9 @@ int run()
     imGuiData.loadData(convertedData, maps, 0);
     imGuiData.setGuiData(convertedData);
 
-    // Reactphysics initialisation
-    PhysicsCommon physicsCommon;
-    PhysicsWorld* world = physicsCommon.createPhysicsWorld();
+    Physics physics;
+    physics.createCameraBody(camera);
+    physics.createTestCube();
 
     while (!glfwWindowShouldClose(window))
     {
@@ -155,6 +156,8 @@ int run()
 
         camera.updateDeltaTime();
         camera.processInput(window, playerPosition, playerRotation);
+
+        physics.updateBodies(camera);
 
         player.setTranslation(playerPosition);
         player.setRotation(playerRotation);
