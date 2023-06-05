@@ -42,6 +42,7 @@ public:
         for (int i = 0; i < NPCs.size(); i++)
         {
             glm::vec3 NPCposition = NPCs[i].getTranslation();
+            glm::vec3 NPCrotation = NPCs[i].getRotation();
             float distance = glm::sqrt((NPCposition.x - player.x) * (NPCposition.x - player.x) +
                 (NPCposition.z - player.z) * (NPCposition.z - player.z));
 
@@ -56,18 +57,21 @@ public:
                 float directionX = player.x - NPCposition.x;
                 float directionZ = player.z - NPCposition.z;
                 float magnitude = glm::sqrt(directionX * directionX + directionZ * directionZ);
-                
-                directionX /= magnitude;
-                directionZ /= magnitude;
 
-                std::cout << NPCposition.x << ", " << NPCposition.y << ", " << NPCposition.z << std::endl;
-                
-                NPCposition.x += directionX * movementSpeed * deltaTime;
-                NPCposition.z += directionZ * movementSpeed * deltaTime;
+                if (magnitude > 0.0f) {
+                    directionX /= magnitude;
+                    directionZ /= magnitude;
 
-                std::cout << NPCposition.x << ", " << NPCposition.y << ", " << NPCposition.z << std::endl;
+                    NPCposition.x += directionX * movementSpeed * deltaTime;
+                    NPCposition.z += directionZ * movementSpeed * deltaTime;
+
+                    NPCrotation.z = glm::degrees(atan2(directionX, directionZ));
+                    NPCrotation = glm::radians(NPCrotation);
+                }
                 
                 NPCs[i].setTranslation(NPCposition);
+
+                NPCs[i].setRotation(NPCrotation);
             }
             else if (distance > 50 && isRunning[i])
             {
