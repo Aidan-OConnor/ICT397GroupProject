@@ -381,6 +381,11 @@ public:
                         tempName += md2Models[i][j];
                 }
 
+                if (i % 3 != 0)
+                {
+                    ImGui::SameLine();
+                }
+
                 if (ImGui::Button(tempName.c_str(), ImVec2(100, 25)))
                 {
                     ImGuiData ImTemp;

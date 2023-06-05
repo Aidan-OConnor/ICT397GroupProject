@@ -163,8 +163,6 @@ int run()
         player.setRotation(playerRotation);
         imGuiData.setPlayer(player);
 
-        std::vector<ImGuiData> NPCs = imGuiData.getNPCs();
-
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -178,6 +176,8 @@ int run()
         {
             imGuiData.RenderUI(camera);
         }
+
+        std::vector<ImGuiData> NPCs = imGuiData.getNPCs();
 
         if (camera.getPerspective())
         {
