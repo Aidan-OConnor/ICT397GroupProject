@@ -1,12 +1,15 @@
 #pragma once
-
-#include "reactphysics3d/reactphysics3d.h"
-#include "Camera.h"
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
+
 #include <Vector>
+
+#include "reactphysics3d/reactphysics3d.h"
+#include "Camera.h"
 
 using namespace reactphysics3d;
 
@@ -60,6 +63,13 @@ public:
 	* @return void
 	*/
 	void updateBodies(Camera &camera);
+
+	/*
+	* @brief Creates a terrain collider and rigidbody for the terrain objects in the scene
+	*
+	* @return void
+	*/
+	void createTerrain();
 
 private:
 

@@ -78,3 +78,8 @@ void Physics::updateBodies(Camera &camera)
     glm::vec3 newCamPos(position.x, position.y, position.z);
     camera.updatePosition(newCamPos);
 }
+
+void Physics::createTerrain()
+{
+
+}

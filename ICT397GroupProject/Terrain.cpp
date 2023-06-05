@@ -367,3 +367,8 @@ int Terrain::getHeightAtPos(std::vector<glm::vec3> temp, int x, int z, int heigh
 
     return 0;
 }
+
+int Terrain::getSize()
+{
+    return(this->width);
+}
