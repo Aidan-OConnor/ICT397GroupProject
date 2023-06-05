@@ -17,6 +17,7 @@
 #include <Vector>
 #include <fstream>
 
+#include "AI.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "Camera.h"
@@ -143,6 +144,8 @@ int run()
     imGuiData.loadData(convertedData, maps, 0);
     imGuiData.setGuiData(convertedData);
 
+    AI ai;
+
     // Reactphysics initialisation
     PhysicsCommon physicsCommon;
     PhysicsWorld* world = physicsCommon.createPhysicsWorld();
@@ -160,6 +163,8 @@ int run()
         player.setRotation(playerRotation);
         imGuiData.setPlayer(player);
 
+        std::vector<ImGuiData> NPCs = imGuiData.getNPCs();
+
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -173,6 +178,17 @@ int run()
         {
             imGuiData.RenderUI(camera);
         }
+
+        if (camera.getPerspective())
+        {
+            ai.chasePlayer(NPCs, camera.getCameraPos());
+        }
+        else
+        {
+            ai.chasePlayer(NPCs, playerPosition);
+        }
+
+        imGuiData.setNPCs(NPCs);
 
         imGuiData.RenderObjects(shader, waterShader, lightingShader, modelShader, camera);
 

@@ -150,6 +150,7 @@
     <ClInclude Include="..\Externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\Externals\imgui\imstb_textedit.h" />
     <ClInclude Include="..\Externals\imgui\imstb_truetype.h" />
+    <ClInclude Include="AI.h" />
     <ClInclude Include="ImGuiData.h" />
     <ClInclude Include="Landscape.h" />
     <ClInclude Include="LanEngine.h" />

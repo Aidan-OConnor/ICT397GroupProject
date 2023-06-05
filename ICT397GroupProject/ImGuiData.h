@@ -1161,6 +1161,23 @@ public:
         }
     }
 
+    void setNPCs(std::vector<ImGuiData> NPCs)
+    {
+        int latestNPC = 0;
+        for (int i = 0; i < NPCs.size(); i++)
+        {
+            for (int j = latestNPC; j < imGuiObjects.size(); j++)
+            {
+                if (imGuiObjects[j].objectType == "Animation")
+                {
+                    imGuiObjects[j] = NPCs[i];
+                    latestNPC = j + 1;
+                    j = imGuiObjects.size();
+                }
+            }
+        }
+    }
+
     /*
      * @brief Gets the heightScale
      *
@@ -1187,6 +1204,19 @@ public:
         return (none);
     }
 
+    std::vector<ImGuiData> getNPCs()
+    {
+        std::vector<ImGuiData> NPCs;
+
+        for (int i = 0; i < imGuiObjects.size(); i++)
+        {
+            if (imGuiObjects[i].objectType == "Animation")
+                NPCs.push_back(imGuiObjects[i]);
+        }
+
+        return (NPCs);
+    }
+
     glm::vec3 getTranslation()
     {
         return translation;
@@ -1195,5 +1225,10 @@ public:
     glm::vec3 getRotation()
     {
         return rotation;
+    }
+
+    float getDeltaTime()
+    {
+        return this->deltaTime;
     }
 };
