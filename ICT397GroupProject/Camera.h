@@ -30,13 +30,12 @@ private:
     glm::vec3 cameraPos; /// Vector for position of the camera
     glm::vec3 cameraFront; /// Vector for front direction of the camera
     glm::vec3 cameraUp; /// Vector for the up direction of the camera
-    glm::vec3 foot; /// Vector for the foot position of the camera, a value below the current camera position
     glm::vec3 spawnPoint; /// Vector for the location the camera will start/be reset to
     glm::vec3 playerPosition;
     glm::vec3 playerRotation;
     bool firstMouse; /// Boolean for the initial use of the mouse
     bool grounded; /// Boolean to check if the camera is on the ground
-    float velocity = 15.0; /// Float for the movement speed of the camera
+    float velocity = 500.0; /// Float for the movement speed of the camera
     float gravity = 0.05; /// Float for gravity of the camera, affects how fast it will fall
     float stamina = 60.0; /// Float for stamina of the character, determines whether sprinting is possible
     float cameraSpeed; ///Determines the speed at which the camera moves
@@ -136,15 +135,6 @@ public:
     * @return cameraPos
     */
     glm::vec3 getCameraPos();
-
-    /*
-    * @brief Returns the players foot location
-    *
-    * This function is used to return the location of the foot
-    *
-    * @return foot
-    */
-    glm::vec3 getFoot();
 
     /*
     * @brief Returns the cameras front vector

@@ -5,9 +5,7 @@
 
 Camera::Camera()
 {
-    this->cameraPos = glm::vec3(-50.0f, 0.0f, 0.0f);
-    this->foot = this->cameraPos;
-    this->foot.y -= 2.5;
+    this->cameraPos = glm::vec3(-50.0f, 50.0f, 0.0f);
     this->cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
     this->cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
     this->spawnPoint = glm::vec3(0.0f, 3.0f, 0.0f);
@@ -45,13 +43,29 @@ void Camera::processInput(GLFWwindow* window, glm::vec3& PlayerPosition, glm::ve
         cameraSpeed = static_cast<float>(500.0 * deltaTime);
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-            cameraPos += cameraSpeed * cameraFront;
+        {
+            cameraPos.z += cameraSpeed * cameraFront.z;
+            cameraPos.x += cameraSpeed * cameraFront.x;
+        }
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-            cameraPos -= cameraSpeed * cameraFront;
+        {
+            cameraPos.z -= cameraSpeed * cameraFront.z;
+            cameraPos.x -= cameraSpeed * cameraFront.x;
+        }
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
             cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
             cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+
+        if (glfwGetKey(window, GLFW_KEY_SPACE)) {
+            velocity = velocity + gravity * deltaTime;
+            cameraPos.y = cameraPos.y + velocity * deltaTime;
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL)) {
+            velocity = velocity + gravity * deltaTime;
+            cameraPos.y = cameraPos.y - velocity * deltaTime;
+        }
 
         if (mouseControls)
         {
@@ -61,9 +75,6 @@ void Camera::processInput(GLFWwindow* window, glm::vec3& PlayerPosition, glm::ve
         {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         }
-
-        this->foot = this->cameraPos;
-        this->foot.y -= 2.5;
     }
     else
     {
@@ -193,11 +204,6 @@ void Camera::resetCamera() {
 glm::vec3 Camera::getCameraPos()
 {
     return(cameraPos);
-}
-
-glm::vec3 Camera::getFoot()
-{
-    return(foot);
 }
 
 glm::vec3 Camera::getCameraFront()

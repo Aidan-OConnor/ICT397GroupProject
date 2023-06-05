@@ -10,41 +10,82 @@
 
 using namespace reactphysics3d;
 
+/*
+ * @class Physics
+ * @brief Manages the rigidbodies and colliders for physics objects
+ *
+ * Physics creates and updates physics bodies for interactions that
+ * require physics interactions in the engine
+ *
+ * @author Lochlyn Edward
+ * @version 01
+ * @date 5/6/2023 Lochlyn Edward, created
+ *
+ * @bug No known bugs
+ */
 class Physics
 {
 public:
 	
+	/*
+	* @brief Physics constructor
+	*
+	* Sets up the physicsWorld and its settings
+	* 
+	* @return void
+	*/
 	Physics();
 
+	/*
+	* @brief Creates a large box collider in the middle of the scene for testing
+	*
+	* @return void
+	*/
 	void createTestCube();
-
+	
+	/*
+	* @brief Creates the collider and rigidbody for the player camera
+	*
+	* @param Camera
+	* 
+	* @return void
+	*/
 	void createCameraBody(Camera &camera);
 
+	/*
+	* @brief Updates the position of rigidbodies and colliders in the scene based on physics interactions
+	*
+	* @param Camera
+	*
+	* @return void
+	*/
 	void updateBodies(Camera &camera);
 
 private:
 
-	PhysicsCommon physicsCommon;
+	PhysicsCommon physicsCommon; /// Reactphysics3d physicsCommon variable for managing physics
 
-	PhysicsWorld* world;
+	PhysicsWorld* world; /// Reactphysics3d world variable for managing physics objects contained in the world
 
-	float timeStep;
+	float timeStep; /// Float variable to determine when to update physics
 
-	std::chrono::duration<double> deltaTime;
+	std::chrono::duration<double> deltaTime; /// Float variable for time between frames
 
-	std::chrono::time_point<std::chrono::system_clock> currentFrame;
+	std::chrono::time_point<std::chrono::system_clock> currentFrame; /// Float variable for time of current frame
+	
+	std::chrono::time_point<std::chrono::system_clock> prevFrame; /// Float variable for time of previous frame
 
-	std::chrono::time_point<std::chrono::system_clock> prevFrame;
+	long double accumulator; /// Long double variable for determing whether the physics world will be updated
 
-	long double accumulator;
+	Vector3 position; /// Reactphysics3d Vector3 variable for position of bodies
 
-	Vector3 position;
+	Quaternion orientation; /// Reactphysics3d Quaternion variable for orientation of bodies
 
-	Quaternion orientation;
+	Transform transform; /// Reactphysics3d Transform variable for transform of bodies
 
-	Transform transform;
+	RigidBody* camBody; /// Reactphysics3d RigidBody variable for collisions
 
-	RigidBody* camBody;
+	Collider* collider; /// Reactphysics3d Collider variable for collisions
 
-	Collider* collider;
+	PhysicsWorld::WorldSettings settings; /// Reactphysics3d setting variable for altering settings of the physics world
 };

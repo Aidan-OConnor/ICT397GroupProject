@@ -4,13 +4,12 @@ using namespace reactphysics3d;
 
 Physics::Physics()
 {
-    timeStep = 1.0 / 60.0;
+    timeStep = 1.0 / 144.0;
     currentFrame = std::chrono::system_clock::now();
     prevFrame = std::chrono::system_clock::now();
     accumulator = 0.0;
 
-    PhysicsWorld::WorldSettings settings;
-    settings.gravity = Vector3(0, -9.81, 0);
+    settings.gravity = Vector3(0, 0, 0);
     world = physicsCommon.createPhysicsWorld(settings);
 }
 
@@ -24,9 +23,9 @@ void Physics::createTestCube()
     wall->setType(BodyType::STATIC);
 
     // Collision body for testing cube
-    BoxShape* boxShape = physicsCommon.createBoxShape(Vector3(1000, 1000, 1000));
+    SphereShape* sphereShape = physicsCommon.createSphereShape(1000);
     transform = Transform::identity();
-    collider = wall->addCollider(boxShape, transform);
+    collider = wall->addCollider(sphereShape, transform);
 }
 
 void Physics::createCameraBody(Camera &camera) 
