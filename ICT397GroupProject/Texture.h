@@ -9,7 +9,7 @@
 class Texture
 {
 private:
-    unsigned int id;
+    GLuint id;
     int width;
     int height;
     int numChannels;
@@ -21,11 +21,17 @@ public:
 
     unsigned int TextureFromFile(std::string path);
 
-    inline GLuint getID() const;
+    bool LoadTextureForGUI(const char* filename, GLuint* out_texture, int* out_width, int* out_height);
+
+    GLuint getID();
 
     void bind(const GLint texture_unit);
 
     void unbind();
 
     void loadTexture(const char* fileName);
+
+    int getWidth();
+
+    int getHeight();
 };

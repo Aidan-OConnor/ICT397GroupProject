@@ -51,11 +51,14 @@ int run()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+    const GLFWvidmode* vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
     //Windowed
-    GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "ICT397 Game Engine", NULL, NULL);
+    //GLFWwindow* window = glfwCreateWindow(vidMode->width, vidMode->height, "ICT397 Game Engine", NULL, NULL);
 
     //Fullscreen
-    //GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "ICT397 Game Engine", glfwGetPrimaryMonitor(), nullptr);
+    GLFWwindow* window = glfwCreateWindow(vidMode->width, vidMode->height, "ICT397 Game Engine", glfwGetPrimaryMonitor(), nullptr);
+
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -144,6 +147,13 @@ int run()
     imGuiData.loadData(convertedData, maps, 0);
     imGuiData.setGuiData(convertedData);
 
+    Texture testTexture;
+    int my_image_width = 0;
+    int my_image_height = 0;
+    GLuint my_image_texture = 0;
+    bool ret = testTexture.LoadTextureForGUI("Images/MapImages/Map1Blur.jpg", &my_image_texture, &my_image_width, &my_image_height);
+    IM_ASSERT(ret);
+
     AI ai;
 
     // Reactphysics initialisation
@@ -171,6 +181,12 @@ int run()
         ImGui::NewFrame();
 
         initShaders(camera, shader, lightingShader, waterShader, modelShader, player, projection, view, model);
+
+        ImGui::SetNextWindowPos({ -8.0f, -8.0f });
+        ImGui::SetNextWindowSize({ (float)(vidMode->width*1.007), (float)(vidMode->height*1.009) });
+        ImGui::Begin("OpenGL Texture Text", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground);
+        ImGui::Image((void*)(intptr_t)my_image_texture, ImVec2(vidMode->width+100, vidMode->height+10), { 0, 1 }, { 1, 0 });
+        ImGui::End();
 
         if (useImGui)
         {
