@@ -143,7 +143,8 @@ int run()
   
     Physics physics;
     physics.createCameraBody(camera);
-    physics.createTestCube();
+    //physics.createTestCube(); // Creating both the cube and the terrain was causing the game to freeze
+    physics.createTerrain(imGuiData);
 
     while (!glfwWindowShouldClose(window))
     {

@@ -20,7 +20,7 @@
 #include <map>
 #include <vector>
 
-unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma = false);
+inline unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma = false);
 
 /**
      * @class Model
@@ -260,7 +260,7 @@ private:
      * @param path, directory, gamme
      * @return unsigned int
      */
-unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma)
+inline unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma)
 {
     std::string filename = std::string(path);
     filename = directory + '/' + filename;

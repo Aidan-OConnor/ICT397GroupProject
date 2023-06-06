@@ -79,7 +79,31 @@ void Physics::updateBodies(Camera &camera)
     camera.updatePosition(newCamPos);
 }
 
-void Physics::createTerrain()
+void Physics::createTerrain(ImGuiData &imGuiData)
 {
+    std::vector<Terrain> terrains;
+    terrains = imGuiData.getTerrains();
 
+    HeightFieldShape* terrainShape = nullptr;
+    heightData = new float[terrains[0].getSize() * terrains[0].getSize()];
+
+    for (int x = 0; x < terrains[0].getSize(); ++x) {
+        for (int z = 0; z < terrains[0].getSize(); ++z) {
+            heightData[x * terrains[0].getSize() + z] = terrains[0].getHeight(); // Doesn't actually get the required data needed to create the terrain
+        }
+    }
+
+    terrainShape = physicsCommon.createHeightFieldShape(terrains[0].getSize(), terrains[0].getSize(), 0, 255, heightData, HeightFieldShape::HeightDataType::HEIGHT_FLOAT_TYPE);
+    //delete[] heightData; Throws exception
+    
+    position = Vector3(0, 0, 0);
+    orientation = Quaternion::identity();
+    transform = Transform(position, orientation);
+    RigidBody* rigidBody = world->createRigidBody(transform);
+    rigidBody->setType(BodyType::STATIC);
+    
+    transform = Transform::identity();
+    collider = rigidBody->addCollider(terrainShape, transform);
+    collider->getMaterial().setBounciness(0.0f);  // Adjust as needed
+    collider->getMaterial().setFrictionCoefficient(0.5f);  // Adjust as needed
 }

@@ -10,6 +10,7 @@
 
 #include "reactphysics3d/reactphysics3d.h"
 #include "Camera.h"
+#include "ImGuiData.h"
 
 using namespace reactphysics3d;
 
@@ -69,7 +70,7 @@ public:
 	*
 	* @return void
 	*/
-	void createTerrain();
+	void createTerrain(ImGuiData& imGuiData);
 
 private:
 
@@ -98,4 +99,6 @@ private:
 	Collider* collider; /// Reactphysics3d Collider variable for collisions
 
 	PhysicsWorld::WorldSettings settings; /// Reactphysics3d setting variable for altering settings of the physics world
+
+	float* heightData; /// Float variable for array of heightfield values
 };
