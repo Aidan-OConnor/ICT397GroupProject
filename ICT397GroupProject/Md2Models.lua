@@ -7,8 +7,8 @@ md2Models = {}
 
 md2Models["ModelF1"] = "MD2Models/raptor/Raptor.MD2"
 md2Models["ModelT1"] = "MD2Models/raptor/green.jpg"
-md2Models["WeaponF1"] = "" --"MD2Models/raptor/weapon.md2"
-md2Models["WeaponT1"] = "" --"MD2Models/raptor/weapon.jpg"
+md2Models["WeaponF1"] = "MD2Models/raptor/weapon.md2" --"MD2Models/raptor/weapon.md2"
+md2Models["WeaponT1"] = "MD2Models/raptor/weapon.jpg" --"MD2Models/raptor/weapon.jpg"
 
 md2Models["ModelF2"] = "MD2Models/Ogro/Ogro.MD2"
 md2Models["ModelT2"] = "MD2Models/Ogro/Ogrobase.jpg"

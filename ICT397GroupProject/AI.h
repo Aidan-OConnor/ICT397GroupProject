@@ -93,17 +93,5 @@ public:
                 isAttacking[i] = false;
             }
         }
-
-        //if (distance <= 5.0f) {
-        //    float directionX = playerX - positionX;
-        //    float directionZ = playerZ - positionZ;
-        //    float magnitude = glm::sqrt(directionX * directionX + directionZ * directionZ);
-        //
-        //    directionX /= magnitude;
-        //    directionZ /= magnitude;
-        //
-        //    positionX += directionX * speed * deltaTime;
-        //    positionZ += directionZ * speed * deltaTime;
-        //}
 	}
 };
