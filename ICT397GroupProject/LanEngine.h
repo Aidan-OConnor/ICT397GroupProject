@@ -61,6 +61,8 @@ int run()
     //Windowed
     //GLFWwindow* window = glfwCreateWindow(vidMode->width, vidMode->height, "ICT397 Game Engine", NULL, NULL);
 
+    std::cout << vidMode->width << ", " << vidMode->height << std::endl;
+
     //Fullscreen
     GLFWwindow* window = glfwCreateWindow(vidMode->width, vidMode->height, "ICT397 Game Engine", glfwGetPrimaryMonitor(), nullptr);
 
@@ -220,14 +222,12 @@ int run()
             ImGui::Image((void*)(intptr_t)my_image_texture, ImVec2(vidMode->width + 100, vidMode->height + 10), { 0, 1 }, { 1, 0 });
             ImGui::End();
 
-            ImGui::PushStyleColor(ImGuiCol_Text, ImColor(128, 70, 27, 255).Value);
             ImGui::SetNextWindowPos({ (float)(vidMode->width / 2 - 300.0f), (float)(vidMode->height / 2 - 500.0f) });
             ImGui::SetNextWindowSize({ (float)(vidMode->width * 1.007), (float)(vidMode->height * 1.009) });
             ImGui::Begin("Title", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoMouseInputs);
             ImGui::PushFont(RubikStorm);
             ImGui::Text("LAN's Island");
             ImGui::PopFont();
-            ImGui::PopStyleColor();
             ImGui::End();
 
             ImGui::SetNextWindowPos({ (float)(vidMode->width / 2 - 200.0f), (float)(vidMode->height / 2 - 300.0f) });
