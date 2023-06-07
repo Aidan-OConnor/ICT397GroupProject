@@ -223,19 +223,21 @@ int run()
             camera.setMouseControls(false);
             ImGui::SetNextWindowPos({ -8.0f, -8.0f });
             ImGui::SetNextWindowSize({ (float)(vidMode->width * 1.007), (float)(vidMode->height * 1.009) });
-            ImGui::Begin("OpenGL Texture Text", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground);
+            ImGui::Begin("OpenGL Texture Text", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoMouseInputs);
             ImGui::Image((void*)(intptr_t)my_image_texture, ImVec2(vidMode->width + 100, vidMode->height + 10), { 0, 1 }, { 1, 0 });
             ImGui::End();
 
             ImGui::SetNextWindowPos({ (float)(vidMode->width / 2 - 300.0f), (float)(vidMode->height / 2 - 500.0f) });
-            ImGui::Begin("Button", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground);
+            ImGui::SetNextWindowSize({ (float)(vidMode->width * 1.007), (float)(vidMode->height * 1.009) });
+            ImGui::Begin("Title", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoMouseInputs);
             ImGui::PushFont(RubikStorm);
             ImGui::Text("LAN's Island");
             ImGui::PopFont();
             ImGui::End();
 
             ImGui::SetNextWindowPos({ (float)(vidMode->width / 2 - 200.0f), (float)(vidMode->height / 2 - 300.0f) });
-            ImGui::Begin("Button", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground);
+            ImGui::SetNextWindowSize({ (float)(vidMode->width * 1.007), (float)(vidMode->height * 1.009) });
+            ImGui::Begin("Buttons", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground);
             //ImGui::PushFont(RubikDirt);
             ImGui::PushFont(icons_font);
             CenterButtons({ ICON_FA_PLAY"  Play Game", ICON_FA_DESKTOP"  Dev Mode", ICON_FA_POWER_OFF"  Exit Game" }, window);
