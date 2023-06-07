@@ -59,10 +59,10 @@ int run()
     const GLFWvidmode* vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
     //Windowed
-    GLFWwindow* window = glfwCreateWindow(vidMode->width, vidMode->height, "ICT397 Game Engine", NULL, NULL);
+    //GLFWwindow* window = glfwCreateWindow(vidMode->width, vidMode->height, "ICT397 Game Engine", NULL, NULL);
 
     //Fullscreen
-    //GLFWwindow* window = glfwCreateWindow(vidMode->width, vidMode->height, "ICT397 Game Engine", glfwGetPrimaryMonitor(), nullptr);
+    GLFWwindow* window = glfwCreateWindow(vidMode->width, vidMode->height, "ICT397 Game Engine", glfwGetPrimaryMonitor(), nullptr);
 
     if (window == NULL)
     {
@@ -227,17 +227,19 @@ int run()
             ImGui::Image((void*)(intptr_t)my_image_texture, ImVec2(vidMode->width + 100, vidMode->height + 10), { 0, 1 }, { 1, 0 });
             ImGui::End();
 
+            ImGui::PushStyleColor(ImGuiCol_Text, ImColor(128, 70, 27, 255).Value);
             ImGui::SetNextWindowPos({ (float)(vidMode->width / 2 - 300.0f), (float)(vidMode->height / 2 - 500.0f) });
             ImGui::SetNextWindowSize({ (float)(vidMode->width * 1.007), (float)(vidMode->height * 1.009) });
             ImGui::Begin("Title", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoMouseInputs);
             ImGui::PushFont(RubikStorm);
             ImGui::Text("LAN's Island");
             ImGui::PopFont();
+            ImGui::PopStyleColor();
             ImGui::End();
 
             ImGui::SetNextWindowPos({ (float)(vidMode->width / 2 - 200.0f), (float)(vidMode->height / 2 - 300.0f) });
             ImGui::SetNextWindowSize({ (float)(vidMode->width * 1.007), (float)(vidMode->height * 1.009) });
-            ImGui::Begin("Buttons", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground);
+            ImGui::Begin("Buttons", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoResize);
             //ImGui::PushFont(RubikDirt);
             ImGui::PushFont(icons_font);
             CenterButtons({ ICON_FA_PLAY"  Play Game", ICON_FA_DESKTOP"  Dev Mode", ICON_FA_POWER_OFF"  Exit Game" }, window);
@@ -329,7 +331,7 @@ void CenterButtons(std::vector<std::string> names, GLFWwindow* window)
                 glfwSetWindowShouldClose(window, true);
             }
         }
-        ImGui::PopStyleColor();
+        ImGui::PopStyleColor(3);
     }
 
 }
