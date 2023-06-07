@@ -6,6 +6,7 @@ class AI
 private:
 	float movementSpeed;
     std::vector<bool> isRunning;
+    std::vector<bool> isAttacking;
     float currentFrame;
     float deltaTime;
     float lastFrame;
@@ -22,6 +23,7 @@ public:
         for (int i = 0; i < NPCs.size(); i++)
         {
             isRunning.push_back(false);
+            isAttacking.push_back(false);
         }
     }
 
@@ -36,6 +38,7 @@ public:
             for (int i = 0; i < NPCs.size() - isRunning.size(); i++)
             {
                 isRunning.push_back(false);
+                isAttacking.push_back(false);
             }
         }
 
@@ -46,12 +49,13 @@ public:
             float distance = glm::sqrt((NPCposition.x - player.x) * (NPCposition.x - player.x) +
                 (NPCposition.z - player.z) * (NPCposition.z - player.z));
 
-            if (distance <= 250.0f)
+            if (distance <= 250.0f && distance > 50)
             {
                 if (!isRunning[i])
                 {
                     NPCs[i].setAnimationState(RUN);
                     isRunning[i] = true;
+                    isAttacking[i] = false;
                 }
 
                 float directionX = player.x - NPCposition.x;
@@ -73,10 +77,20 @@ public:
 
                 NPCs[i].setRotation(NPCrotation);
             }
-            else if (distance > 50 && isRunning[i])
+            else if (distance <= 50)
+            {
+                if (!isAttacking[i])
+                {
+                    NPCs[i].setAnimationState(ATTACK);
+                    isAttacking[i] = true;
+                    isRunning[i] = false;
+                }
+            }
+            else if (distance > 250 && isRunning[i])
             {
                 NPCs[i].setAnimationState(STAND);
                 isRunning[i] = false;
+                isAttacking[i] = false;
             }
         }
 

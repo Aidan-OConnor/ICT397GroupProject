@@ -166,13 +166,6 @@ int run()
     GLuint my_image_texture1 = 0;
     bool ret1 = testTexture1.LoadTextureForGUI("Images/MapImages/Map1.jpg", &my_image_texture1, &my_image_width1, &my_image_height1);
     IM_ASSERT(ret1);
-    
-    ImGuiStyle& style = ImGui::GetStyle();
-    auto& colors = style.Colors;
-
-    colors[ImGuiCol_Button] = ImColor(18, 18, 18, 100);
-    colors[ImGuiCol_ButtonActive] = ImColor(21, 21, 21, 100);
-    colors[ImGuiCol_ButtonHovered] = ImColor(250, 21, 21, 100);
 
     ImFont* Default = io.Fonts->AddFontFromFileTTF("Fonts/proggy-clean.ttf", 13.0f);
     ImFont* RubikStorm = io.Fonts->AddFontFromFileTTF("Fonts/RubikStorm-Regular.ttf", 100.0f);
