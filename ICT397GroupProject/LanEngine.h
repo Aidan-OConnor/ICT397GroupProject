@@ -154,6 +154,13 @@ int run()
     bool ret = testTexture.LoadTextureForGUI("Images/MapImages/Map1Blur.jpg", &my_image_texture, &my_image_width, &my_image_height);
     IM_ASSERT(ret);
 
+    Texture testTexture1;
+    int my_image_width1 = 0;
+    int my_image_height1 = 0;
+    GLuint my_image_texture1 = 0;
+    bool ret1 = testTexture1.LoadTextureForGUI("Images/MapImages/Map1.jpg", &my_image_texture1, &my_image_width1, &my_image_height1);
+    IM_ASSERT(ret1);
+
     AI ai;
 
     // Reactphysics initialisation
@@ -186,6 +193,11 @@ int run()
         ImGui::SetNextWindowSize({ (float)(vidMode->width*1.007), (float)(vidMode->height*1.009) });
         ImGui::Begin("OpenGL Texture Text", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground);
         ImGui::Image((void*)(intptr_t)my_image_texture, ImVec2(vidMode->width+100, vidMode->height+10), { 0, 1 }, { 1, 0 });
+        ImGui::End();
+
+        ImGui::SetNextWindowPos({(float)(vidMode->width/2-100.0f), (float)(vidMode->height/2-100.0f)});
+        ImGui::Begin("Button", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground);
+        ImGui::ImageButton((void*)(intptr_t)my_image_texture1, ImVec2(100, 100), { 0, 1 }, { 1, 0 });
         ImGui::End();
 
         if (useImGui)
