@@ -254,3 +254,8 @@ void Camera::swapMouseControls()
 {
     mouseControls = !mouseControls;
 }
+
+void Camera::setMouseControls(bool status)
+{
+    this->mouseControls = status;
+}

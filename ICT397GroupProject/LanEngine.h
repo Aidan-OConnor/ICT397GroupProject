@@ -38,13 +38,15 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 void initShaders(Camera& camera, Shader& shader, Shader& lightingShader, Shader& waterShader, Shader& modelShader, ImGuiData player,
     glm::mat4& projection, glm::mat4& view, glm::mat4& model);
 
-void CenterButtons(std::vector<std::string> names);
+void CenterButtons(std::vector<std::string> names, GLFWwindow* window);
 
 const unsigned int SCR_WIDTH = 1600;
 const unsigned int SCR_HEIGHT = 1200;
 Camera camera;
 float camHeight = 2.5;
 bool useImGui = false;
+bool playGame = false;
+bool isDev = false;
 glm::vec3 lightPos(8000.0f, 2000.0f, 8000.0f);
 
 int run()
@@ -216,59 +218,69 @@ int run()
 
         initShaders(camera, shader, lightingShader, waterShader, modelShader, player, projection, view, model);
 
-        ImGui::SetNextWindowPos({ -8.0f, -8.0f });
-        ImGui::SetNextWindowSize({ (float)(vidMode->width*1.007), (float)(vidMode->height*1.009) });
-        ImGui::Begin("OpenGL Texture Text", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground);
-        ImGui::Image((void*)(intptr_t)my_image_texture, ImVec2(vidMode->width+100, vidMode->height+10), { 0, 1 }, { 1, 0 });
-        ImGui::End();
-
-        ImGui::SetNextWindowPos({ (float)(vidMode->width / 2 - 300.0f), (float)(vidMode->height / 2 - 500.0f) });
-        ImGui::Begin("Button", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground);
-        ImGui::PushFont(RubikStorm);
-        ImGui::Text("LAN's Island");
-        ImGui::PopFont();
-        ImGui::End();
-
-        ImGui::SetNextWindowPos({(float)(vidMode->width/2-200.0f), (float)(vidMode->height/2-300.0f)});
-        ImGui::Begin("Button", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground);
-        //ImGui::PushFont(RubikDirt);
-        ImGui::PushFont(icons_font);
-        CenterButtons({ ICON_FA_PLAY"  Play Game", ICON_FA_USERS"  visuals", ICON_FA_COGS"  other" });
-        ImGui::PopFont();
-        //ImGui::ImageButton((void*)(intptr_t)my_image_texture1, ImVec2(100, 100), { 0, 1 }, { 1, 0 });
-        ImGui::End();
-
-        if (useImGui)
+        if (!playGame)
         {
-            ImGui::PushFont(Default);
-            imGuiData.RenderUI(camera);
+            camera.setMouseControls(false);
+            ImGui::SetNextWindowPos({ -8.0f, -8.0f });
+            ImGui::SetNextWindowSize({ (float)(vidMode->width * 1.007), (float)(vidMode->height * 1.009) });
+            ImGui::Begin("OpenGL Texture Text", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground);
+            ImGui::Image((void*)(intptr_t)my_image_texture, ImVec2(vidMode->width + 100, vidMode->height + 10), { 0, 1 }, { 1, 0 });
+            ImGui::End();
+
+            ImGui::SetNextWindowPos({ (float)(vidMode->width / 2 - 300.0f), (float)(vidMode->height / 2 - 500.0f) });
+            ImGui::Begin("Button", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground);
+            ImGui::PushFont(RubikStorm);
+            ImGui::Text("LAN's Island");
             ImGui::PopFont();
+            ImGui::End();
+
+            ImGui::SetNextWindowPos({ (float)(vidMode->width / 2 - 200.0f), (float)(vidMode->height / 2 - 300.0f) });
+            ImGui::Begin("Button", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground);
+            //ImGui::PushFont(RubikDirt);
+            ImGui::PushFont(icons_font);
+            CenterButtons({ ICON_FA_PLAY"  Play Game", ICON_FA_DESKTOP"  Dev Mode", ICON_FA_POWER_OFF"  Exit Game" }, window);
+            ImGui::PopFont();
+            //ImGui::ImageButton((void*)(intptr_t)my_image_texture1, ImVec2(100, 100), { 0, 1 }, { 1, 0 });
+            ImGui::End();
         }
 
-        std::vector<ImGuiData> NPCs = imGuiData.getNPCs();
-
-        if (camera.getPerspective())
+        if (playGame)
         {
-            ai.chasePlayer(NPCs, camera.getCameraPos());
+            if (isDev)
+            {
+                if (useImGui)
+                {
+                    ImGui::PushFont(Default);
+                    imGuiData.RenderUI(camera);
+                    ImGui::PopFont();
+                }
+            }
+
+            std::vector<ImGuiData> NPCs = imGuiData.getNPCs();
+
+            if (camera.getPerspective())
+            {
+                ai.chasePlayer(NPCs, camera.getCameraPos());
+            }
+            else
+            {
+                ai.chasePlayer(NPCs, playerPosition);
+            }
+
+            imGuiData.setNPCs(NPCs);
+
+            imGuiData.RenderObjects(shader, waterShader, lightingShader, modelShader, camera);
+
+            projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
+            view = glm::mat4(glm::mat3(glm::lookAt(camera.getCameraPos(), camera.getCameraPos() + camera.getCameraFront(), camera.getCameraUp())));
+
+            if (!camera.getPerspective())
+            {
+                view = glm::mat4(glm::mat3(glm::lookAt(glm::vec3(camera.getCameraPos()), glm::vec3(player.getTranslation()), camera.getCameraUp())));
+            }
+
+            skybox.Draw(view, projection);
         }
-        else
-        {
-            ai.chasePlayer(NPCs, playerPosition);
-        }
-
-        imGuiData.setNPCs(NPCs);
-
-        imGuiData.RenderObjects(shader, waterShader, lightingShader, modelShader, camera);
-
-        projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
-        view = glm::mat4(glm::mat3(glm::lookAt(camera.getCameraPos(), camera.getCameraPos() + camera.getCameraFront(), camera.getCameraUp())));
-
-        if (!camera.getPerspective())
-        {
-            view = glm::mat4(glm::mat3(glm::lookAt(glm::vec3(camera.getCameraPos()), glm::vec3(player.getTranslation()), camera.getCameraUp())));
-        }
-
-        skybox.Draw(view, projection);
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -285,7 +297,7 @@ int run()
     return 2;
 }
 
-void CenterButtons(std::vector<std::string> names)
+void CenterButtons(std::vector<std::string> names, GLFWwindow* window)
 {
     const auto& style = ImGui::GetStyle();
 
@@ -297,7 +309,24 @@ void CenterButtons(std::vector<std::string> names)
         ImGui::PushStyleColor(ImGuiCol_Button, ImColor(180, 180, 180, 100).Value);
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImColor(180, 255, 180, 100).Value);
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImColor(180, 255, 180, 100).Value);
-        ImGui::Button(names[i].c_str(), { 400, 100 });
+        if (ImGui::Button(names[i].c_str(), { 400, 100 }))
+        {
+            if (i == 0)
+            {
+                playGame = true;
+                camera.setMouseControls(true);
+            }
+            else if (i == 1)
+            {
+                playGame = true;
+                isDev = true;
+                camera.setMouseControls(true);
+            }
+            else if (i == 2)
+            {
+                glfwSetWindowShouldClose(window, true);
+            }
+        }
         ImGui::PopStyleColor();
     }
 
@@ -315,20 +344,26 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
+    if (playGame)
     {
-        useImGui = !useImGui;
-        camera.swapMouseControls();
-    }
+        if (isDev)
+        {
+            if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
+            {
+                useImGui = !useImGui;
+                camera.swapMouseControls();
+            }
+        }
 
-    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
-    {
-        camera.swapRenderType();
-    }
+        if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+        {
+            camera.swapRenderType();
+        }
 
-    if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
-    {
-        camera.setPerspective(!camera.getPerspective());
+        if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+        {
+            camera.setPerspective(!camera.getPerspective());
+        }
     }
 }
 

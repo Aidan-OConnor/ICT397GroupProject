@@ -222,4 +222,6 @@ public:
     void swapRenderType();
 
     void swapMouseControls();
+
+    void setMouseControls(bool status);
 };
