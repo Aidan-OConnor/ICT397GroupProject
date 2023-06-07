@@ -40,8 +40,8 @@ void initShaders(Camera& camera, Shader& shader, Shader& lightingShader, Shader&
 
 void CenterButtons(std::vector<std::string> names, GLFWwindow* window);
 
-const unsigned int SCR_WIDTH = 1600;
-const unsigned int SCR_HEIGHT = 1200;
+int scrWidth;
+int scrHeight;
 Camera camera;
 float camHeight = 2.5;
 bool useImGui = false;
@@ -61,7 +61,8 @@ int run()
     //Windowed
     //GLFWwindow* window = glfwCreateWindow(vidMode->width, vidMode->height, "ICT397 Game Engine", NULL, NULL);
 
-    std::cout << vidMode->width << ", " << vidMode->height << std::endl;
+    scrWidth = vidMode->width;
+    scrHeight = vidMode->height;
 
     //Fullscreen
     GLFWwindow* window = glfwCreateWindow(vidMode->width, vidMode->height, "ICT397 Game Engine", glfwGetPrimaryMonitor(), nullptr);
@@ -170,8 +171,8 @@ int run()
     IM_ASSERT(ret1);
 
     ImFont* Default = io.Fonts->AddFontFromFileTTF("Fonts/proggy-clean.ttf", 13.0f);
-    ImFont* RubikStorm = io.Fonts->AddFontFromFileTTF("Fonts/RubikStorm-Regular.ttf", 100.0f);
-    ImFont* RubikDirt = io.Fonts->AddFontFromFileTTF("Fonts/RubikDirt-Regular.ttf", 60.0f);
+    ImFont* RubikStorm = io.Fonts->AddFontFromFileTTF("Fonts/RubikStorm-Regular.ttf", vidMode->height/9);
+    ImFont* RubikDirt = io.Fonts->AddFontFromFileTTF("Fonts/RubikDirt-Regular.ttf", vidMode->height/15);
 
     static const ImWchar icon_ranges[]{ 0xf000, 0xf3ff, 0 };
     ImFontConfig icons_config;
@@ -222,7 +223,7 @@ int run()
             ImGui::Image((void*)(intptr_t)my_image_texture, ImVec2(vidMode->width + 100, vidMode->height + 10), { 0, 1 }, { 1, 0 });
             ImGui::End();
 
-            ImGui::SetNextWindowPos({ (float)(vidMode->width / 2 - 300.0f), (float)(vidMode->height / 2 - 500.0f) });
+            ImGui::SetNextWindowPos({ (float)(vidMode->width / 2 - vidMode->width / 5.0f), (float)(vidMode->height / 2 - vidMode->height/2.5f) });
             ImGui::SetNextWindowSize({ (float)(vidMode->width * 1.007), (float)(vidMode->height * 1.009) });
             ImGui::Begin("Title", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoMouseInputs);
             ImGui::PushFont(RubikStorm);
@@ -230,7 +231,7 @@ int run()
             ImGui::PopFont();
             ImGui::End();
 
-            ImGui::SetNextWindowPos({ (float)(vidMode->width / 2 - 200.0f), (float)(vidMode->height / 2 - 300.0f) });
+            ImGui::SetNextWindowPos({ (float)(vidMode->width / 2 - vidMode->width / 7.2f), (float)(vidMode->height / 2 - vidMode->height / 6.0f) });
             ImGui::SetNextWindowSize({ (float)(vidMode->width * 1.007), (float)(vidMode->height * 1.009) });
             ImGui::Begin("Buttons", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoResize);
             //ImGui::PushFont(RubikDirt);
@@ -268,7 +269,7 @@ int run()
 
             imGuiData.RenderObjects(shader, waterShader, lightingShader, modelShader, camera);
 
-            projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
+            projection = glm::perspective(glm::radians(90.0f), (float)scrWidth / (float)scrHeight, 0.1f, 1000.0f);
             view = glm::mat4(glm::mat3(glm::lookAt(camera.getCameraPos(), camera.getCameraPos() + camera.getCameraFront(), camera.getCameraUp())));
 
             if (!camera.getPerspective())
@@ -306,7 +307,7 @@ void CenterButtons(std::vector<std::string> names, GLFWwindow* window)
         ImGui::PushStyleColor(ImGuiCol_Button, ImColor(180, 180, 180, 100).Value);
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImColor(180, 255, 180, 100).Value);
         ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImColor(180, 255, 180, 100).Value);
-        if (ImGui::Button(names[i].c_str(), { 400, 100 }))
+        if (ImGui::Button(names[i].c_str(), { (float)(scrWidth/3.6), (float)(scrHeight/9) }))
         {
             if (i == 0)
             {
@@ -369,7 +370,7 @@ void initShaders(Camera& camera, Shader& shader, Shader& lightingShader, Shader&
 {
     shader.use();
 
-    projection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 25000.0f);
+    projection = glm::perspective(glm::radians(90.0f), (float)scrWidth / (float)scrHeight, 0.1f, 25000.0f);
     shader.setMat4("projection", projection);
 
     view = glm::lookAt(camera.getCameraPos(), camera.getCameraPos() + camera.getCameraFront(), camera.getCameraUp());
