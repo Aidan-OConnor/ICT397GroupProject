@@ -18,6 +18,7 @@
 #include <fstream>
 
 #include "AI.h"
+#include "font_awesome.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "Camera.h"
@@ -37,6 +38,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 void initShaders(Camera& camera, Shader& shader, Shader& lightingShader, Shader& waterShader, Shader& modelShader, ImGuiData player,
     glm::mat4& projection, glm::mat4& view, glm::mat4& model);
 
+void CenterButtons(std::vector<std::string> names);
+
 const unsigned int SCR_WIDTH = 1600;
 const unsigned int SCR_HEIGHT = 1200;
 Camera camera;
@@ -54,10 +57,10 @@ int run()
     const GLFWvidmode* vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
     //Windowed
-    //GLFWwindow* window = glfwCreateWindow(vidMode->width, vidMode->height, "ICT397 Game Engine", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(vidMode->width, vidMode->height, "ICT397 Game Engine", NULL, NULL);
 
     //Fullscreen
-    GLFWwindow* window = glfwCreateWindow(vidMode->width, vidMode->height, "ICT397 Game Engine", glfwGetPrimaryMonitor(), nullptr);
+    //GLFWwindow* window = glfwCreateWindow(vidMode->width, vidMode->height, "ICT397 Game Engine", glfwGetPrimaryMonitor(), nullptr);
 
     if (window == NULL)
     {
@@ -147,6 +150,7 @@ int run()
     imGuiData.loadData(convertedData, maps, 0);
     imGuiData.setGuiData(convertedData);
 
+    //---------------------------------------------------------------
     Texture testTexture;
     int my_image_width = 0;
     int my_image_height = 0;
@@ -160,6 +164,29 @@ int run()
     GLuint my_image_texture1 = 0;
     bool ret1 = testTexture1.LoadTextureForGUI("Images/MapImages/Map1.jpg", &my_image_texture1, &my_image_width1, &my_image_height1);
     IM_ASSERT(ret1);
+    
+    ImGuiStyle& style = ImGui::GetStyle();
+    auto& colors = style.Colors;
+
+    colors[ImGuiCol_Button] = ImColor(18, 18, 18, 100);
+    colors[ImGuiCol_ButtonActive] = ImColor(21, 21, 21, 100);
+    colors[ImGuiCol_ButtonHovered] = ImColor(250, 21, 21, 100);
+
+    ImFont* Default = io.Fonts->AddFontFromFileTTF("Fonts/proggy-clean.ttf", 13.0f);
+    ImFont* RubikStorm = io.Fonts->AddFontFromFileTTF("Fonts/RubikStorm-Regular.ttf", 100.0f);
+    ImFont* RubikDirt = io.Fonts->AddFontFromFileTTF("Fonts/RubikDirt-Regular.ttf", 60.0f);
+
+    static const ImWchar icon_ranges[]{ 0xf000, 0xf3ff, 0 };
+    ImFontConfig icons_config;
+    icons_config.MergeMode = true;
+    icons_config.PixelSnapH = true;
+    icons_config.OversampleH = 3;
+    icons_config.OversampleV = 3;
+
+    ImFont* icons_font = io.Fonts->AddFontFromMemoryCompressedTTF(font_awesome_data, font_awesome_size, 60.0f, &icons_config, icon_ranges);
+
+
+    //--------------------------------------------------------------------
 
     AI ai;
 
@@ -195,14 +222,27 @@ int run()
         ImGui::Image((void*)(intptr_t)my_image_texture, ImVec2(vidMode->width+100, vidMode->height+10), { 0, 1 }, { 1, 0 });
         ImGui::End();
 
-        ImGui::SetNextWindowPos({(float)(vidMode->width/2-100.0f), (float)(vidMode->height/2-100.0f)});
+        ImGui::SetNextWindowPos({ (float)(vidMode->width / 2 - 300.0f), (float)(vidMode->height / 2 - 500.0f) });
         ImGui::Begin("Button", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground);
-        ImGui::ImageButton((void*)(intptr_t)my_image_texture1, ImVec2(100, 100), { 0, 1 }, { 1, 0 });
+        ImGui::PushFont(RubikStorm);
+        ImGui::Text("LAN's Island");
+        ImGui::PopFont();
+        ImGui::End();
+
+        ImGui::SetNextWindowPos({(float)(vidMode->width/2-200.0f), (float)(vidMode->height/2-300.0f)});
+        ImGui::Begin("Button", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground);
+        //ImGui::PushFont(RubikDirt);
+        ImGui::PushFont(icons_font);
+        CenterButtons({ ICON_FA_PLAY"  Play Game", ICON_FA_USERS"  visuals", ICON_FA_COGS"  other" });
+        ImGui::PopFont();
+        //ImGui::ImageButton((void*)(intptr_t)my_image_texture1, ImVec2(100, 100), { 0, 1 }, { 1, 0 });
         ImGui::End();
 
         if (useImGui)
         {
+            ImGui::PushFont(Default);
             imGuiData.RenderUI(camera);
+            ImGui::PopFont();
         }
 
         std::vector<ImGuiData> NPCs = imGuiData.getNPCs();
@@ -243,6 +283,24 @@ int run()
 
     glfwTerminate();
     return 2;
+}
+
+void CenterButtons(std::vector<std::string> names)
+{
+    const auto& style = ImGui::GetStyle();
+
+    for (int i = 0; i < names.size(); i++)
+    {
+        ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10);
+        ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 4.0f);
+
+        ImGui::PushStyleColor(ImGuiCol_Button, ImColor(180, 180, 180, 100).Value);
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImColor(180, 255, 180, 100).Value);
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImColor(180, 255, 180, 100).Value);
+        ImGui::Button(names[i].c_str(), { 400, 100 });
+        ImGui::PopStyleColor();
+    }
+
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
