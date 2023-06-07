@@ -5,6 +5,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <stb_image.h>
+#include <cmath>
+#include <math.h>
 
 /*
  * @class Terrain
@@ -222,7 +224,7 @@ public:
     *
     * @return heightAtPos
     */
-    int getHeightAtPos(std::vector<glm::vec3> temp, int x, int z, int heightScale);
+    float getHeightAtPos(int x, int z);
 
     int getSize();
 };

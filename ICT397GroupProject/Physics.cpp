@@ -83,27 +83,26 @@ void Physics::createTerrain(ImGuiData &imGuiData)
 {
     std::vector<Terrain> terrains;
     terrains = imGuiData.getTerrains();
+    std::vector<glm::vec3> temp = terrains[0].getVertices();
 
-    HeightFieldShape* terrainShape = nullptr;
     heightData = new float[terrains[0].getSize() * terrains[0].getSize()];
+    HeightFieldShape* terrainShape;
 
     for (int x = 0; x < terrains[0].getSize(); ++x) {
         for (int z = 0; z < terrains[0].getSize(); ++z) {
-            heightData[x * terrains[0].getSize() + z] = terrains[0].getHeight(); // Doesn't actually get the required data needed to create the terrain
+            heightData[x * terrains[0].getSize() + z] = terrains[0].getHeight();
         }
     }
 
-    terrainShape = physicsCommon.createHeightFieldShape(terrains[0].getSize(), terrains[0].getSize(), 0, 255, heightData, HeightFieldShape::HeightDataType::HEIGHT_FLOAT_TYPE);
-    //delete[] heightData; Throws exception
+    terrainShape = physicsCommon.createHeightFieldShape(terrains[0].getSize(), terrains[0].getSize(), 0, 512, heightData, HeightFieldShape::HeightDataType::HEIGHT_FLOAT_TYPE);
     
-    position = Vector3(0, 0, 0);
+    position = Vector3(-50, 50, 0);
     orientation = Quaternion::identity();
     transform = Transform(position, orientation);
     RigidBody* rigidBody = world->createRigidBody(transform);
     rigidBody->setType(BodyType::STATIC);
     
-    transform = Transform::identity();
-    collider = rigidBody->addCollider(terrainShape, transform);
+    collider = rigidBody->addCollider(terrainShape, Transform::identity());
     collider->getMaterial().setBounciness(0.0f);  // Adjust as needed
     collider->getMaterial().setFrictionCoefficient(0.5f);  // Adjust as needed
 }

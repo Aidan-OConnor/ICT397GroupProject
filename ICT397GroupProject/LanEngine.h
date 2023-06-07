@@ -140,6 +140,9 @@ int run()
 
     imGuiData.loadData(convertedData, maps, 0);
     imGuiData.setGuiData(convertedData);
+
+    std::vector<Terrain> terrains;
+    terrains = imGuiData.getTerrains();
   
     Physics physics;
     physics.createCameraBody(camera);
