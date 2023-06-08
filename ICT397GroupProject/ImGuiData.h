@@ -1218,6 +1218,23 @@ public:
         }
     }
 
+    void setDocks(std::vector<ImGuiData> Docks)
+    {
+        int latestDock = 0;
+        for (int i = 0; i < Docks.size(); i++)
+        {
+            for (int j = latestDock; j < imGuiObjects.size(); j++)
+            {
+                if (imGuiObjects[j].isDock)
+                {
+                    imGuiObjects[j] = Docks[i];
+                    latestDock = j + 1;
+                    j = imGuiObjects.size();
+                }
+            }
+        }
+    }
+
     /*
      * @brief Gets the heightScale
      *

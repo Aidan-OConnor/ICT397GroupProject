@@ -39,7 +39,7 @@ void initShaders(Camera& camera, Shader& shader, Shader& lightingShader, Shader&
     glm::mat4& projection, glm::mat4& view, glm::mat4& model);
 void enterBoat(glm::vec3 playerPos, glm::vec3 boatPos);
 void leaveBoat(std::vector<ImGuiData> Docks, glm::vec3 playerPos);
-
+void dockBoat();
 void CenterButtons(std::vector<std::string> names, GLFWwindow* window);
 
 int scrWidth;
@@ -51,7 +51,11 @@ bool playGame = false;
 bool isDev = false;
 bool canEnterBoat = false;
 bool canLeaveBoat = false;
+bool boatDocked = false;
 glm::vec3 lightPos(8000.0f, 2000.0f, 8000.0f);
+ImGuiData player;
+std::vector<ImGuiData> Docks;
+int dockIndex;
 
 int run()
 {
@@ -104,13 +108,6 @@ int run()
     ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 150");
-
-    //md2Model.loadModel("Models/Ogro/Tris.MD2", "Models/Ogro/Ogrobase.jpg");
-    //weapon.loadModel("Models/Ogro/Weapon.md2", "Models/Ogro/Weapon.jpg");
-    //md2Model.loadModel("Models/crakhor/tris.MD2", "Models/crakhor/army.png");
-    //weapon.loadModel("Models/crakhor/w_blaster.md2", "Models/crakhor/weapon.png");
-    //md2Model.loadModel("Models/raptor/tris.MD2", "Models/raptor/green.jpg");
-    //weapon.loadModel("Models/raptor/weapon.md2", "Models/raptor/weapon.jpg");
 
     Shader shader("vertex.shader", "fragment.shader");
     Shader waterShader("waterVertex.shader", "waterFragment.shader");
@@ -187,7 +184,6 @@ int run()
 
     ImFont* icons_font = io.Fonts->AddFontFromMemoryCompressedTTF(font_awesome_data, font_awesome_size, 60.0f, &icons_config, icon_ranges);
 
-
     //--------------------------------------------------------------------
 
     AI ai;
@@ -198,16 +194,12 @@ int run()
 
     while (!glfwWindowShouldClose(window))
     {
-        ImGuiData player = imGuiData.getPlayer();
+        player = imGuiData.getPlayer();
         glm::vec3 playerPosition = player.getTranslation();
         glm::vec3 playerRotation = player.getRotation();
 
         camera.updateDeltaTime();
         camera.processInput(window, playerPosition, playerRotation);
-
-        player.setTranslation(playerPosition);
-        player.setRotation(playerRotation);
-        imGuiData.setPlayer(player);
 
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -258,8 +250,11 @@ int run()
                 }
             }
 
+            player.setTranslation(playerPosition);
+            player.setRotation(playerRotation);
+
             std::vector<ImGuiData> NPCs = imGuiData.getNPCs();
-            std::vector<ImGuiData> Docks = imGuiData.getDocks();
+            Docks = imGuiData.getDocks();
 
             if (camera.getPerspective())
             {
@@ -272,6 +267,10 @@ int run()
                 leaveBoat(Docks, playerPosition);
             }
 
+            dockBoat();
+
+            imGuiData.setPlayer(player);
+            imGuiData.setDocks(Docks);
             imGuiData.setNPCs(NPCs);
 
             imGuiData.RenderObjects(shader, waterShader, lightingShader, modelShader, camera);
@@ -359,9 +358,23 @@ void leaveBoat(std::vector<ImGuiData> Docks, glm::vec3 playerPos)
             (Docks[i].getTranslation().z - playerPos.z) * (Docks[i].getTranslation().z - playerPos.z));
 
         if (distance < 100)
+        {
             canLeaveBoat = true;
+            dockIndex = i;
+        }
         else
             canLeaveBoat = false;
+    }
+}
+
+void dockBoat()
+{
+    if (boatDocked)
+    {
+        glm::vec3 camPosition = Docks[dockIndex].getTranslation();
+        camPosition.y += 20;
+        camera.updatePosition(camPosition);
+        boatDocked = false;
     }
 }
 
@@ -396,6 +409,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS && (canEnterBoat || canLeaveBoat))
         {
             camera.setPerspective(!camera.getPerspective());
+
+            if (canLeaveBoat)
+            {
+                boatDocked = true;
+            }
         }
     }
 }
