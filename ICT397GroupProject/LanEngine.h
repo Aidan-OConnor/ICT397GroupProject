@@ -37,6 +37,8 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 void initShaders(Camera& camera, Shader& shader, Shader& lightingShader, Shader& waterShader, Shader& modelShader, ImGuiData player,
     glm::mat4& projection, glm::mat4& view, glm::mat4& model);
+void enterBoat(glm::vec3 playerPos, glm::vec3 boatPos);
+void leaveBoat(std::vector<ImGuiData> Docks, glm::vec3 playerPos);
 
 void CenterButtons(std::vector<std::string> names, GLFWwindow* window);
 
@@ -47,6 +49,8 @@ float camHeight = 2.5;
 bool useImGui = false;
 bool playGame = false;
 bool isDev = false;
+bool canEnterBoat = false;
+bool canLeaveBoat = false;
 glm::vec3 lightPos(8000.0f, 2000.0f, 8000.0f);
 
 int run()
@@ -59,13 +63,13 @@ int run()
     const GLFWvidmode* vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
     //Windowed
-    //GLFWwindow* window = glfwCreateWindow(vidMode->width, vidMode->height, "ICT397 Game Engine", NULL, NULL);
+    GLFWwindow* window = glfwCreateWindow(vidMode->width, vidMode->height, "ICT397 Game Engine", NULL, NULL);
 
     scrWidth = vidMode->width;
     scrHeight = vidMode->height;
 
     //Fullscreen
-    GLFWwindow* window = glfwCreateWindow(vidMode->width, vidMode->height, "ICT397 Game Engine", glfwGetPrimaryMonitor(), nullptr);
+    //GLFWwindow* window = glfwCreateWindow(vidMode->width, vidMode->height, "ICT397 Game Engine", glfwGetPrimaryMonitor(), nullptr);
 
     if (window == NULL)
     {
@@ -255,14 +259,17 @@ int run()
             }
 
             std::vector<ImGuiData> NPCs = imGuiData.getNPCs();
+            std::vector<ImGuiData> Docks = imGuiData.getDocks();
 
             if (camera.getPerspective())
             {
                 ai.chasePlayer(NPCs, camera.getCameraPos());
+                enterBoat(camera.getCameraPos(), playerPosition);
             }
             else
             {
                 ai.chasePlayer(NPCs, playerPosition);
+                leaveBoat(Docks, playerPosition);
             }
 
             imGuiData.setNPCs(NPCs);
@@ -327,7 +334,35 @@ void CenterButtons(std::vector<std::string> names, GLFWwindow* window)
         }
         ImGui::PopStyleColor(3);
     }
+}
 
+void enterBoat(glm::vec3 playerPos, glm::vec3 boatPos)
+{
+    canLeaveBoat = false;
+
+    float distance = glm::sqrt((playerPos.x - boatPos.x) * (playerPos.x - boatPos.x) +
+        (playerPos.z - boatPos.z) * (playerPos.z - boatPos.z));
+
+    if (distance < 100)
+        canEnterBoat = true;
+    else
+        canEnterBoat = false;
+}
+
+void leaveBoat(std::vector<ImGuiData> Docks, glm::vec3 playerPos)
+{
+    canEnterBoat = false;
+
+    for (int i = 0; i < Docks.size(); i++)
+    {
+        float distance = glm::sqrt((Docks[i].getTranslation().x - playerPos.x) * (Docks[i].getTranslation().x - playerPos.x) +
+            (Docks[i].getTranslation().z - playerPos.z) * (Docks[i].getTranslation().z - playerPos.z));
+
+        if (distance < 100)
+            canLeaveBoat = true;
+        else
+            canLeaveBoat = false;
+    }
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -358,7 +393,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
             camera.swapRenderType();
         }
 
-        if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+        if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS && (canEnterBoat || canLeaveBoat))
         {
             camera.setPerspective(!camera.getPerspective());
         }

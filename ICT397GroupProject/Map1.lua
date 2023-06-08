@@ -13,6 +13,7 @@ terrain7 = objectData.new()
 water0 = objectData.new()
 model0 = objectData.new()
 model1 = objectData.new()
+model2 = objectData.new()
 
 terrain0.objectType = "Terrain"
 terrain0.filepath = "Terrains/VolcanoType27.png"
@@ -137,6 +138,7 @@ water0.ry = 0
 water0.rz = 0
 
 model0.isPlayer = true
+model0.isDock = false
 model0.objectType = "Model"
 model0.filepath = "Models/NewBoat/boat.obj"
 model0.tx = -33.5343
@@ -150,6 +152,7 @@ model0.ry = 4.88997
 model0.rz = 0
 
 model1.isPlayer = false
+model1.isDock = true
 model1.objectType = "Model"
 model1.filepath = "Models/Dock/Dock.obj"
 model1.tx = -52

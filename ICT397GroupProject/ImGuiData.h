@@ -34,6 +34,7 @@ struct objectData
     float sx, sy, sz;
     float rx, ry, rz;
     bool isPlayer;
+    bool isDock;
 
     objectData() {};
 };
@@ -57,6 +58,8 @@ private:
     int currentMap;
 
     bool isPlayer;
+
+    bool isDock;
     /// Stores the data types file path as a const char *
     std::string filepath;
     /// Stores the data types texture path as a const char *
@@ -125,6 +128,7 @@ public:
         this->iterations = this->width = this->length = 
             this->minHeight = this->maxHeight = this->filter = 0;
         this->isPlayer = false;
+        this->isDock = false;
         this->animations = true;
         this->animState = md2Model.startAnimation(STAND);
         this->weaponPath.clear();
@@ -366,6 +370,26 @@ public:
             }
             ImGui::TreePop();
         }
+        if (ImGui::TreeNode("Load Dock"))
+        {
+            if (ImGui::TreeNode("Dock"))
+            {
+                if (ImGui::Button("Load", ImVec2(100, 25)))
+                {
+                    ImGuiData ImTemp;
+                    ImTemp.objectType = "Model";
+                    ImTemp.model = new Model("Models/Dock/Dock.obj");
+                    ImTemp.translation = { 0.0f, 0.0f, 0.0f };
+                    ImTemp.scale = { 1.0f, 1.0f, 1.0f };
+                    ImTemp.filepath = "Models/Dock/Dock.obj";
+                    ImTemp.isDock = true;
+
+                    imGuiObjects.push_back(ImTemp);
+                }
+                ImGui::TreePop();
+            }
+            ImGui::TreePop();
+        }
         if (ImGui::TreeNode("Load NPC"))
         {
             for (int i = 0; i < md2Models.size(); i+=4)
@@ -559,6 +583,11 @@ public:
                         else
                             luaMap << "model" << mCount << ".isPlayer = false" << "\n";
 
+                        if (imGuiObjects[i].isDock)
+                            luaMap << "model" << mCount << ".isDock = true" << "\n";
+                        else
+                            luaMap << "model" << mCount << ".isDock = false" << "\n";
+
                         luaMap << "model" << mCount << ".objectType = \"" << imGuiObjects[i].objectType << "\"\n";
                         luaMap << "model" << mCount << ".filepath = \"" << imGuiObjects[i].filepath << "\"\n";
                         luaMap << "model" << mCount << ".tx = " << imGuiObjects[i].translation.x << "\n";
@@ -738,8 +767,8 @@ public:
         lua.new_usertype<objectData>("objectData", sol::constructors<void()>(),
             "filepath", &objectData::filepath, "texturePath", &objectData::texturePath, "objectType", &objectData::objectType,
             "weaponPath", &objectData::weaponPath, "weaponTexturePath", &objectData::weaponTexturePath,
-            "iterations", &objectData::iterations, "width", &objectData::width, "isPlayer", &objectData::isPlayer,
-            "length", &objectData::length, "minHeight", &objectData::minHeight,
+            "iterations", &objectData::iterations, "width", &objectData::width, "isPlayer", &objectData::isPlayer, 
+            "isDock", &objectData::isDock, "length", &objectData::length, "minHeight", &objectData::minHeight,
             "maxHeight", &objectData::maxHeight, "filter", &objectData::filter,
             "tx", &objectData::tx, "ty", &objectData::ty, "tz", &objectData::tz,
             "sx", &objectData::sx, "sy", &objectData::sy, "sz", &objectData::sz,
@@ -818,6 +847,7 @@ public:
             }
             else if (objectType == "Model")
             {
+                tempGuiData.setIsDock(luaMap[i].isDock);
                 tempGuiData.setIsPlayer(luaMap[i].isPlayer);
                 tempGuiData.setModel(luaMap[i].filepath);
                 tempGuiData.setObjectType(luaMap[i].objectType);
@@ -1157,6 +1187,11 @@ public:
         isPlayer = IsPlayer;
     }
 
+    void setIsDock(bool IsDock)
+    {
+        isDock = IsDock;
+    }
+
     void setPlayer(ImGuiData player)
     {
         for (int i = 0; i < imGuiObjects.size(); i++)
@@ -1221,6 +1256,19 @@ public:
 
         return (NPCs);
     }
+    std::vector<ImGuiData> getDocks()
+    {
+        std::vector<ImGuiData> Docks;
+
+        for (int i = 0; i < imGuiObjects.size(); i++)
+        {
+            if (imGuiObjects[i].isDock)
+                Docks.push_back(imGuiObjects[i]);
+        }
+
+        return (Docks);
+    }
+
 
     glm::vec3 getTranslation()
     {
