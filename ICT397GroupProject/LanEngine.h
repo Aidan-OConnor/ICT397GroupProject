@@ -140,11 +140,15 @@ int run()
 
     imGuiData.loadData(convertedData, maps, 0);
     imGuiData.setGuiData(convertedData);
-  
+    
+    std::vector<Terrain> terrains;
+    terrains = imGuiData.getTerrains();
+    std::vector<glm::vec3> temp;
+
     Physics physics;
     physics.createCameraBody(camera);
-    physics.createTestCube();
-    physics.createTerrain(imGuiData);
+    physics.createTestCapsule();
+    //physics.createTerrain(imGuiData);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -154,6 +158,11 @@ int run()
 
         camera.updateDeltaTime();
         camera.processInput(window, playerPosition, playerRotation);
+        
+        if (camera.getCameraPos().y < -40)
+        {
+            camera.updatePosition(glm::vec3(-200, 110, 0));
+        }
 
         physics.updateBodies(camera);
 

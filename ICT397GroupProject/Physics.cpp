@@ -9,23 +9,34 @@ Physics::Physics()
     prevFrame = std::chrono::system_clock::now();
     accumulator = 0.0;
 
-    settings.gravity = Vector3(0, 0, 0);
+    settings.gravity = Vector3(0, -15000, 0);
     world = physicsCommon.createPhysicsWorld(settings);
 }
 
-void Physics::createTestCube()
+void Physics::createTestCapsule()
 {
-    // Rigidbody for a cube at the centre of the scene, using for testing
-    position = Vector3(150, 0, 0);
+    // Rigidbody for a capsule at the centre of the scene, using for testing, can be used for volcano hitbox
+    position = Vector3(0, 0, 0);
     orientation = Quaternion::identity();
     transform = Transform(position, orientation);
     RigidBody* wall = world->createRigidBody(transform);
     wall->setType(BodyType::STATIC);
 
-    // Collision body for testing cube
-    SphereShape* sphereShape = physicsCommon.createSphereShape(1000);
+    // Collision body for testing capsule
+    CapsuleShape* capsuleShape = physicsCommon.createCapsuleShape(515, 800);
     transform = Transform::identity();
-    collider = wall->addCollider(sphereShape, transform);
+    collider = wall->addCollider(capsuleShape, transform);
+
+    // Scuffed box platform for the main island
+    position = Vector3(0, -90, 0);
+    orientation = Quaternion::identity();
+    transform = Transform(position, orientation);
+    RigidBody* cube = world->createRigidBody(transform);
+    cube->setType(BodyType::STATIC);
+
+    BoxShape* boxShape = physicsCommon.createBoxShape(Vector3(2280, 150, 2280));
+    transform = Transform::identity();
+    collider = cube->addCollider(boxShape, transform);
 }
 
 void Physics::createCameraBody(Camera &camera) 
@@ -79,30 +90,28 @@ void Physics::updateBodies(Camera &camera)
     camera.updatePosition(newCamPos);
 }
 
-void Physics::createTerrain(ImGuiData &imGuiData)
+bool Physics::createTerrain(ImGuiData &imGuiData)
 {
     std::vector<Terrain> terrains;
     terrains = imGuiData.getTerrains();
-    std::vector<glm::vec3> temp = terrains[0].getVertices();
 
-    heightData = new float[terrains[0].getSize() * terrains[0].getSize()];
-    HeightFieldShape* terrainShape;
+    heightData = new float[terrains[0].getWidth() * terrains[0].getWidth()];
 
-    for (int x = 0; x < terrains[0].getSize(); ++x) {
-        for (int z = 0; z < terrains[0].getSize(); ++z) {
-            heightData[x * terrains[0].getSize() + z] = terrains[0].getHeightAtPos(x, z, terrains[0].getSize() * terrains[0].getSize());
+    for (int x = 0; x < terrains[0].getWidth(); ++x) {
+        for (int z = 0; z < terrains[0].getWidth(); ++z) {
+            heightData[x * terrains[0].getWidth() + z] = terrains[0].getHeightAtPos(x, z);
         }
     }
 
-    terrainShape = physicsCommon.createHeightFieldShape(terrains[0].getSize(), terrains[0].getSize(), 0, 512, heightData, HeightFieldShape::HeightDataType::HEIGHT_FLOAT_TYPE);
+    HeightFieldShape* terrainShape = physicsCommon.createHeightFieldShape(terrains[0].getWidth(), terrains[0].getWidth(), -100, 200, heightData, HeightFieldShape::HeightDataType::HEIGHT_FLOAT_TYPE);
     
-    position = Vector3(-50, 50, 0);
+    position = Vector3(0, 0, 0);
     orientation = Quaternion::identity();
     transform = Transform(position, orientation);
     RigidBody* rigidBody = world->createRigidBody(transform);
     rigidBody->setType(BodyType::STATIC);
     
     collider = rigidBody->addCollider(terrainShape, Transform::identity());
-    collider->getMaterial().setBounciness(0.0f);  // Adjust as needed
-    collider->getMaterial().setFrictionCoefficient(0.5f);  // Adjust as needed
+
+    return true;
 }

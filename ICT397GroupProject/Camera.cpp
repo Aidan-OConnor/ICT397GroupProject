@@ -5,7 +5,7 @@
 
 Camera::Camera()
 {
-    this->cameraPos = glm::vec3(-50.0f, 50.0f, 0.0f);
+    this->cameraPos = glm::vec3(-200.0f, 110.0f, 0.0f);
     this->cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
     this->cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
     this->spawnPoint = glm::vec3(0.0f, 3.0f, 0.0f);
@@ -40,7 +40,7 @@ void Camera::processInput(GLFWwindow* window, glm::vec3& PlayerPosition, glm::ve
 
     if (firstPerson)
     {
-        cameraSpeed = static_cast<float>(500.0 * deltaTime);
+        cameraSpeed = static_cast<float>(200.0 * deltaTime);
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         {
@@ -57,10 +57,10 @@ void Camera::processInput(GLFWwindow* window, glm::vec3& PlayerPosition, glm::ve
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
             cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 
-        if (glfwGetKey(window, GLFW_KEY_SPACE)) {
+        /*if (glfwGetKey(window, GLFW_KEY_SPACE)) {
             velocity = velocity + gravity * deltaTime;
             cameraPos.y = cameraPos.y + velocity * deltaTime;
-        }
+        }*/
 
         if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL)) {
             velocity = velocity + gravity * deltaTime;

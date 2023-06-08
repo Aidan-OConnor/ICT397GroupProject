@@ -45,7 +45,7 @@ public:
 	*
 	* @return void
 	*/
-	void createTestCube();
+	void createTestCapsule();
 	
 	/*
 	* @brief Creates the collider and rigidbody for the player camera
@@ -70,7 +70,7 @@ public:
 	*
 	* @return void
 	*/
-	void createTerrain(ImGuiData& imGuiData);
+	bool createTerrain(ImGuiData& imGuiData);
 
 private:
 
