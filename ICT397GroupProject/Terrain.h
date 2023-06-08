@@ -224,7 +224,7 @@ public:
     *
     * @return heightAtPos
     */
-    float getHeightAtPos(int x, int z);
+    float getHeightAtPos(float x, float z, int size);
 
     int getSize();
 };

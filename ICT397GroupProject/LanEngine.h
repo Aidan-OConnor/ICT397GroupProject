@@ -140,13 +140,10 @@ int run()
 
     imGuiData.loadData(convertedData, maps, 0);
     imGuiData.setGuiData(convertedData);
-
-    std::vector<Terrain> terrains;
-    terrains = imGuiData.getTerrains();
   
     Physics physics;
     physics.createCameraBody(camera);
-    //physics.createTestCube(); // Creating both the cube and the terrain was causing the game to freeze
+    physics.createTestCube();
     physics.createTerrain(imGuiData);
 
     while (!glfwWindowShouldClose(window))

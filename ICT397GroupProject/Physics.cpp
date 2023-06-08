@@ -90,7 +90,7 @@ void Physics::createTerrain(ImGuiData &imGuiData)
 
     for (int x = 0; x < terrains[0].getSize(); ++x) {
         for (int z = 0; z < terrains[0].getSize(); ++z) {
-            heightData[x * terrains[0].getSize() + z] = terrains[0].getHeight();
+            heightData[x * terrains[0].getSize() + z] = terrains[0].getHeightAtPos(x, z, terrains[0].getSize() * terrains[0].getSize());
         }
     }
 

@@ -356,9 +356,17 @@ int Terrain::getHeight()
     return(this->height*this->widthScale);
 }
 
-float Terrain::getHeightAtPos(int x, int z)
-{
-    // Idk
+float Terrain::getHeightAtPos(float x, float z, int size)
+{  
+    for (int i = 0; i < size; i++)
+    {
+        if (vertices[i].x == x && vertices[i].z == z)
+        {
+            return vertices[i].y;
+        }
+    }
+
+    return 0;
 }
 
 int Terrain::getSize()
