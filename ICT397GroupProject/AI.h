@@ -1,23 +1,62 @@
 #pragma once
 #include "ImGuiData.h"
 
+/*
+ * @class AI
+ * @brief Contains data and functions for AI behaviour
+ *
+ * AI stores the data required to check for interactions
+ * between the player and the AI and adjusts the behaviour
+ * of the NPCs accordingly
+ *
+ * @author Aidan O'Connor
+ * @version 01
+ * @date 09/06/2023 Aidan O'Connor, finished
+ *
+ * @bug No bugs have currently been found
+ */
+
 class AI
 {
 private:
+    /// AI move speed
 	float movementSpeed;
+    /// Running status for all AI
     std::vector<bool> isRunning;
+    /// Attacking status for all AI
     std::vector<bool> isAttacking;
+    /// Stores current frame for delta time
     float currentFrame;
+    /// Stores the delta time
     float deltaTime;
+    /// Stores the last frame for delta time
     float lastFrame;
+    /// Stores the player health
     int playerHealth;
 public:
+    /*
+     * @brief Default AI constructor
+     *
+     * The default constructor for an AI objects that sets the
+     * movement speed and player health
+     *
+     * @return void
+     */
     AI()
     {
         movementSpeed = 175;
         playerHealth = 40;
     }
 
+    /*
+     * @brief AI constructor with a value
+     *
+     * AI constructor for when AI are stored during
+     * initialization
+     *
+     * @param NPCs
+     * @return void
+     */
     AI(std::vector<ImGuiData>& NPCs)
     {
         movementSpeed = 175;
@@ -30,6 +69,14 @@ public:
         }
     }
 
+    /*
+     * @brief Behaviour for an AI
+     *
+     * This functions has the AI chase and attack
+     * a player if the distance is short enough
+     *
+     * @return void
+     */
 	void chasePlayer(std::vector<ImGuiData>& NPCs, glm::vec3& player)
 	{
         currentFrame = (float)glfwGetTime();
@@ -103,11 +150,27 @@ public:
         }
 	}
 
+    /*
+     * @brief Returns player health
+     *
+     * This functions returns the players current
+     * health as a max total of 10
+     *
+     * @return playerHealth/4
+     */
     int getPlayerHealth()
     {
         return playerHealth/4;
     }
 
+    /*
+     * @brief Resets players health
+     *
+     * This function resets the player health
+     * back to maximum
+     *
+     * @return void
+     */
     void resetPlayerHealth()
     {
         playerHealth = 40;

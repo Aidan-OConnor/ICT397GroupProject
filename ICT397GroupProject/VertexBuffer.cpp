@@ -10,7 +10,6 @@ void VertexBuffer::CreateVertexBuffer(int s)
 {
     glGenBuffers(1, &vbo);
     data.reserve(s);
-    iSize = s;
     iCurrentSize = 0;
 }
 

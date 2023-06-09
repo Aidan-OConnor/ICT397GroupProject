@@ -16,8 +16,8 @@
  * as well as the functions necessary to load the GUI and create new objects
  *
  * @author Aidan O'Connor
- * @version 01
- * @date 21/4/2023 Aidan O'Connor, finished
+ * @version 02
+ * @date 09/06/2023 Aidan O'Connor, finished
  *
  * @bug No bugs have currently been found
  */
@@ -56,15 +56,15 @@ private:
     float maxHeight; 
     /// Stores the filter for a fault formation
     float filter;
-
+    /// Stores an index of the currently rendered map
     int currentMap;
-
+    /// Stores the player status of a stored object
     bool isPlayer;
-
+    /// Stores the status of whether an object is a dock or not
     bool isDock;
-
+    /// Stores the status of whether an object is a hut or not
     bool isHut;
-
+    /// Stores the status of whether an object is collectable or not
     bool isCollectable;
     /// Stores the data types file path as a const char *
     std::string filepath;
@@ -104,15 +104,21 @@ private:
     std::vector<std::string> models;
     /// Stores the names of all md2 models
     std::vector<std::string> md2Models;
-
+    /// Stores an md2 loaded model
     MD2Loader md2Model;
+    /// Stores an md2 loaded model to be used as a weapon
     MD2Loader weapon;
-    bool animations;
+    /// Stores an md2 models animation state
     animationState animState;
+    /// Stores the file path to the weapon md2 file
     std::string weaponPath;
+    /// Stores the file path to the weapons texture
     std::string weaponTexturePath;
+    /// Stores the current from for delta time
     float currentFrame;
+    /// Stores the delta time
     float deltaTime;
+    /// Stores the last frame for delta time
     float lastFrame;
 
 public:
@@ -137,7 +143,6 @@ public:
         this->isDock = false;
         this->isHut = false;
         this->isCollectable = false;
-        this->animations = true;
         this->animState = md2Model.startAnimation(STAND);
         this->weaponPath.clear();
         this->weaponTexturePath.clear();
@@ -197,6 +202,15 @@ public:
         }
     }
 
+    /*
+     * @brief Gets the number of a certain model type
+     *
+     * This function returns the number of a certain
+     * model type is being stored for the current map
+     *
+     * @param modelType
+     * @return numOfType
+     */
     int getNumType(std::string modelType)
     {
         int numOfType = 0;
@@ -967,6 +981,15 @@ public:
         this->imGuiObjects = dataVec;
     }
 
+    /*
+     * @brief Sets the loaded maps
+     *
+     * This functions sets the currently stored maps
+     * as per a string of file paths
+     *
+     * @param Maps
+     * @return void
+     */
     void setMaps(std::vector<std::string> Maps)
     {
         this->maps = Maps;
@@ -1045,6 +1068,16 @@ public:
         this->weapon.loadModel(md2WeaponPath, md2WeaponTexturePath);
     }
 
+    /*
+     * @brief Sets md2 animation state
+     *
+     * This functions sets the animation state
+     * for the current md2 model as per a given
+     * animation type
+     *
+     * @param type
+     * @return void
+     */
     void setAnimationState(animationType type)
     {
         this->animState = md2Model.startAnimation(type);
@@ -1246,26 +1279,71 @@ public:
         filter = Filter;
     }
 
+    /*
+     * @brief Sets the player status
+     *
+     * This functions sets the player status of the
+     * current object
+     *
+     * @param IsPlayer
+     * @return void
+     */
     void setIsPlayer(bool IsPlayer)
     {
         isPlayer = IsPlayer;
     }
 
+    /*
+     * @brief Sets the dock status
+     *
+     * This functions sets the dock status of the
+     * current object
+     *
+     * @param IsDock
+     * @return void
+     */
     void setIsDock(bool IsDock)
     {
         isDock = IsDock;
     }
 
+    /*
+     * @brief Sets the hut status
+     *
+     * This functions sets the hut status of the
+     * current object
+     *
+     * @param IsHut
+     * @return void
+     */
     void setIsHut(bool IsHut)
     {
         isHut = IsHut;
     }
 
+    /*
+     * @brief Sets the collectable status
+     *
+     * This functions sets the collectable status of the
+     * current object
+     *
+     * @param IsCollectable
+     * @return void
+     */
     void setIsCollectable(bool IsCollectable)
     {
         isCollectable = IsCollectable;
     }
 
+    /*
+     * @brief Sets the player
+     *
+     * This functions sets the current object
+     * to be a player
+     *
+     * @param player
+     * @return void
+     */
     void setPlayer(ImGuiData player)
     {
         for (int i = 0; i < imGuiObjects.size(); i++)
@@ -1275,6 +1353,15 @@ public:
         }
     }
 
+    /*
+     * @brief Sets the NPCs
+     *
+     * This functions sets the values of the NPCs
+     * as per given NPC data
+     *
+     * @param NPCs
+     * @return void
+     */
     void setNPCs(std::vector<ImGuiData> NPCs)
     {
         int latestNPC = 0;
@@ -1292,6 +1379,15 @@ public:
         }
     }
 
+    /*
+     * @brief Sets the docks
+     *
+     * This functions sets the values of the docks
+     * as per given dock data
+     *
+     * @param Docks
+     * @return void
+     */
     void setDocks(std::vector<ImGuiData> Docks)
     {
         int latestDock = 0;
@@ -1309,6 +1405,15 @@ public:
         }
     }
 
+    /*
+     * @brief Sets the collectables
+     *
+     * This functions sets the values of the 
+     * collectables as per given collectable data
+     *
+     * @param Collectables
+     * @return void
+     */
     void setCollectables(std::vector<ImGuiData> Collectables)
     {
         int latestCollectable = 0;
@@ -1339,6 +1444,14 @@ public:
         return heightScale;
     }
 
+    /*
+     * @brief Gets the player
+     *
+     * If a player is stored within the object
+     * data then the players data is returned
+     *
+     * @return ImGuiObject[i]
+     */
     ImGuiData getPlayer()
     {
         for (int i = 0; i < imGuiObjects.size(); i++)
@@ -1352,6 +1465,14 @@ public:
         return (none);
     }
 
+    /*
+     * @brief Gets the NPCs
+     *
+     * This function returns the data for
+     * every NPC object currently stored
+     *
+     * @return NPCs
+     */
     std::vector<ImGuiData> getNPCs()
     {
         std::vector<ImGuiData> NPCs;
@@ -1365,6 +1486,14 @@ public:
         return (NPCs);
     }
 
+    /*
+     * @brief Gets the Docks
+     *
+     * This function returns the data for
+     * every dock object currently stored
+     *
+     * @return Docks
+     */
     std::vector<ImGuiData> getDocks()
     {
         std::vector<ImGuiData> Docks;
@@ -1378,6 +1507,14 @@ public:
         return (Docks);
     }
 
+    /*
+     * @brief Gets the hut
+     *
+     * If a hut is stored within the object
+     * data then the huts data is returned
+     *
+     * @return ImGuiObject[i]
+     */
     ImGuiData getHut()
     {
         for (int i = 0; i < imGuiObjects.size(); i++)
@@ -1391,6 +1528,14 @@ public:
         return (none);
     }
 
+    /*
+     * @brief Gets the Collectables
+     *
+     * This function returns the data for
+     * every collectable object currently stored
+     *
+     * @return Collectables
+     */
     std::vector<ImGuiData> getCollectables()
     {
         std::vector<ImGuiData> Collectables;
@@ -1404,26 +1549,66 @@ public:
         return (Collectables);
     }
 
+    /*
+     * @brief Gets the translation
+     *
+     * This function returns the translation
+     * of the current object
+     *
+     * @return translation
+     */
     glm::vec3 getTranslation()
     {
         return translation;
     }
 
+    /*
+     * @brief Gets the rotation
+     *
+     * This function returns the rotation
+     * of the current object
+     *
+     * @return rotation
+     */
     glm::vec3 getRotation()
     {
         return rotation;
     }
 
+    /*
+     * @brief Gets the delta time
+     *
+     * This function returns the delta time
+     * of the current object
+     *
+     * @return deltaTime
+     */
     float getDeltaTime()
     {
         return this->deltaTime;
     }
 
+    /*
+     * @brief Gets the animation status
+     *
+     * This function returns the animation status
+     * of the current object
+     *
+     * @return animStatus
+     */
     bool getAnimStatus()
     {
         return this->md2Model.getAnimationStatus();
     }
 
+    /*
+     * @brief Gets the terrains
+     *
+     * This function returns the data for
+     * every terrain object currently stored
+     *
+     * @return terrains
+     */
     std::vector<Terrain> getTerrains()
     {
         std::vector<Terrain> terrains;

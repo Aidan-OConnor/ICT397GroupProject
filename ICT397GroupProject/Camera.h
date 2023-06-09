@@ -47,18 +47,18 @@ private:
     float prevFrame; /// Float for the previous frame, used to calculate deltaTime
     int level; /// Integer for the Y level of the camera, used to keep it on a particular Y level
 
-    float playerRotationSpeed;
+    float playerRotationSpeed; /// Rotation speed for the player in third person
 
     bool renderTriangle; /// Boolean used to determine whether the program renders the terrain in wireframe mode or not
     bool mouseControls; /// Boolean used to determine what mode of mouse control the user is in, allows for a switch between first person control and mouse cursor control
     bool firstPerson; ///Determines whether the camera is a first person or third person controller
 
-    float cameraDistance;
-    float cameraHeight;
-    float maxMoveSpeed;
-    float movementSpeed;
-    float forwardSpeed;
-    float backwardSpeed;
+    float cameraDistance; /// Camera distance from the player in third person
+    float cameraHeight; /// Camera height in third person
+    float maxMoveSpeed; /// Maximum move speed of the third person player
+    float movementSpeed; /// Current movement speed of the player
+    float forwardSpeed; /// Current speed in the forwards direction
+    float backwardSpeed; /// Current speed in the backwards direction
 
 public:
     /*
@@ -217,11 +217,45 @@ public:
     */
     void setLevel(int value);
 
+    /*
+    * @brief Sets the cameras perspective
+    *
+    * This function sets the perspective between
+    * first and third person
+    *
+    * @param perspective
+    * @return void
+    */
     void setPerspective(bool perspective);
 
+    /*
+    * @brief Swaps the render type
+    *
+    * This function swaps the current render
+    * type through a boolean
+    *
+    * @return void
+    */
     void swapRenderType();
 
+    /*
+    * @brief Swaps mouse controls
+    *
+    * This function swaps the mouse controls between
+    * player controller and mouse cursor
+    *
+    * @return void
+    */
     void swapMouseControls();
 
+    /*
+    * @brief Sets the mouse controls manually
+    *
+    * This function sets the mouse controls manually
+    * rather than swapping between
+    *
+    * @param status
+    * @return void
+    */
     void setMouseControls(bool status);
 };

@@ -12,6 +12,21 @@
 #include "Shader.h"
 #include "VertexBuffer.h"
 
+/*
+ * @class MD2Loader
+ * @brief Contains data and functions for loading and rendering md2Models
+ *
+ * MD2Loader contains all the data and functions necessary to load an md2
+ * formatted file with a given filepath and then render the loaded model
+ * and specified animations
+ *
+ * @author Aidan O'Connor
+ * @version 01
+ * @date 09/06/2023 Aidan O'Connor, finished
+ *
+ * @bug No bugs have currently been found
+ */
+
 typedef float int3[3];
 struct md2_t
 {
@@ -102,38 +117,119 @@ typedef enum {
 class MD2Loader
 {
 public:
+    /*
+     * @brief Default MD2Loader constructor
+     *
+     * The default constructor for an MD2Model without
+     * any parameters
+     *
+     * @return void
+     */
     MD2Loader();
 
+    /*
+     * @brief Loads in an md2 formatted model
+     *
+     * Loads in the data stored in an md2 file as well
+     * as its texture
+     *
+     * @param modelFile, textureFile
+     * @return void
+     */
     void loadModel(const char* modelFile, const char* textureFile);
 
+    /*
+     * @brief Renders the model
+     *
+     * This functions renders the model in its
+     * current animation state
+     *
+     * @param animState, shader
+     * @return void
+     */
     void renderModel(animationState* animState, Shader& shader);
 
+    /*
+     * @brief Starts a given animation
+     *
+     * This function starts an animation type
+     * as received through a paramater
+     *
+     * @param type
+     * @return void
+     */
     animationState startAnimation(animationType type);
+
+    /*
+     * @brief Updates the animation state
+     *
+     * This functions updates the animation
+     * as per the amount of time that has passed
+     * since the last update
+     *
+     * @param animState, fTimePassed
+     * @return void
+     */
     void updateAnimation(animationState* animState, float fTimePassed);
+
+    /*
+     * @brief Gets the position of a model
+     *
+     * This functions gets the position of the
+     * md2 model
+     *
+     * @return void
+     */
     glm::vec3 getPos();
+
+    /*
+     * @brief Sets the position of the model
+     *
+     * This function sets the position of the model
+     * as per a given location
+     *
+     * @return void
+     */
     void setPos(glm::vec3 tempPos);
+
+    /*
+     * @brief Gets the animation status
+     *
+     * This function gets the status of the animation
+     * in terms of whether or not it has finished
+     *
+     * @return void
+     */
     bool getAnimationStatus();
 
+    /// Stores list of animations
     static animationState animationList[21];
+    /// Stores the model shader
     Shader shader;
 private:
-    unsigned int modelVAO, VAO, VBO, EBO, texId;
-
+    /// Stores the texture vertex array object
+    unsigned int VAO;
+    /// Stores the id of the stored texture
+    unsigned int texId;
+    /// Stores the model position
     glm::vec3 position;
-
-    std::vector<unsigned int> uiFramesBuffer;
-
+    /// Stores an md2 files header data
     md2_t header;
+    /// Stores the vertices for every frame of the model
     std::vector< std::vector<glm::vec3> > vVertices;
+    /// Stores the normals for every frame of the model
     std::vector <std::vector< int > > vNormals;
+    /// Stores the gl commands stored in the md2 file
     std::vector<int> glCommands;
-
+    /// Stores the vertex data the vertex buffer objects of the model
     std::vector<VertexBuffer> vboFrameVerts;
+    /// Stores the texture coordinates of the vertex buffer object
     VertexBuffer vboTexCoords;
-
+    /// Stores a list of render modes
     std::vector<int> renderModes;
+    /// Stores a list of the number of rendered vertices
     std::vector<int> numRenderVertices;
-
+    /// Stores a check for whether an animation has finished or not
     bool finishedAnimation;
 };
 #endif
