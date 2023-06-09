@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #define SOL_ALL_SAFETIES_ON 1
 #include <sol/sol.hpp>
@@ -41,6 +41,7 @@ void enterBoat(glm::vec3 playerPos, glm::vec3 boatPos);
 void leaveBoat(std::vector<ImGuiData> Docks, glm::vec3 playerPos);
 void dockBoat(std::vector<ImGuiData> Docks);
 void CenterButtons(std::vector<std::string> names, GLFWwindow* window);
+void displayHealthBar(std::vector<std::string> names, GLFWwindow* window);
 
 int scrWidth;
 int scrHeight;
@@ -172,6 +173,7 @@ int run()
     ImFont* Default = io.Fonts->AddFontFromFileTTF("Fonts/proggy-clean.ttf", 13.0f);
     ImFont* RubikStorm = io.Fonts->AddFontFromFileTTF("Fonts/RubikStorm-Regular.ttf", vidMode->height/9);
     ImFont* RubikDirt = io.Fonts->AddFontFromFileTTF("Fonts/RubikDirt-Regular.ttf", vidMode->height/15);
+    ImFont* RubikDirtS = io.Fonts->AddFontFromFileTTF("Fonts/RubikDirt-Regular.ttf", vidMode->height / 60);
 
     static const ImWchar icon_ranges[]{ 0xf000, 0xf3ff, 0 };
     ImFontConfig icons_config;
@@ -180,7 +182,7 @@ int run()
     icons_config.OversampleH = 3;
     icons_config.OversampleV = 3;
 
-    ImFont* icons_font = io.Fonts->AddFontFromMemoryCompressedTTF(font_awesome_data, font_awesome_size, 60.0f, &icons_config, icon_ranges);
+    ImFont* icons_font = io.Fonts->AddFontFromMemoryCompressedTTF(font_awesome_data, font_awesome_size, 20.0f, &icons_config, icon_ranges);
 
     //--------------------------------------------------------------------
 
@@ -274,6 +276,23 @@ int run()
                     camera.resetCamera();
                     ai.resetPlayerHealth();
                 }
+
+                ImGui::SetNextWindowPos({ 0.0f, 0.0f });
+                ImGui::SetNextWindowSize({ (float)(vidMode->width * 1.007), (float)(vidMode->height * 1.009) });
+                ImGui::Begin("Buttons", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoResize);
+                ImGui::PushFont(icons_font);
+                std::string healthBar = "Health: ";
+                for (int i = 0; i < ai.getPlayerHealth(); i++)
+                {
+                    healthBar += ICON_FA_SQUARE;
+                }
+                for (int i = 0; i < 10-ai.getPlayerHealth(); i++)
+                {
+                    healthBar += "      ";
+                }
+                displayHealthBar({ healthBar}, window);
+                ImGui::PopFont();
+                ImGui::End();
             }
 
             initShaders(camera, shader, lightingShader, waterShader, modelShader, player, projection, view, model);
@@ -336,6 +355,23 @@ void CenterButtons(std::vector<std::string> names, GLFWwindow* window)
                 glfwSetWindowShouldClose(window, true);
             }
         }
+        ImGui::PopStyleColor(3);
+    }
+}
+
+void displayHealthBar(std::vector<std::string> names, GLFWwindow* window)
+{
+    const auto& style = ImGui::GetStyle();
+
+    for (int i = 0; i < names.size(); i++)
+    {
+        ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10);
+        ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 4.0f);
+
+        ImGui::PushStyleColor(ImGuiCol_Button, ImColor(180, 180, 180, 100).Value);
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImColor(180, 255, 180, 100).Value);
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImColor(180, 255, 180, 100).Value);
+        ImGui::Button(names[i].c_str(), { (float)(scrWidth / 8), (float)(scrHeight / 27) });
         ImGui::PopStyleColor(3);
     }
 }
