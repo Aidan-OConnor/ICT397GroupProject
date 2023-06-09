@@ -42,7 +42,7 @@ void Camera::processInput(GLFWwindow* window, glm::vec3& PlayerPosition, glm::ve
 
     if (firstPerson)
     {
-        cameraSpeed = static_cast<float>(150.0 * deltaTime);
+        cameraSpeed = static_cast<float>(200.0 * deltaTime);
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         {

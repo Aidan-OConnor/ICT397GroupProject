@@ -190,9 +190,9 @@ int run()
 
     AI ai;
 
-    //Physics physics;
-    //physics.createCameraBody(camera);
-    //physics.createTestCapsule();
+    Physics physics;
+    physics.createCameraBody(camera);
+    physics.createTestCapsule();
     //physics.createTerrain(imGuiData);
 
     while (!glfwWindowShouldClose(window))
@@ -259,31 +259,88 @@ int run()
                 {
                     ai.chasePlayer(NPCs, camera.getCameraPos());
                     enterBoat(camera.getCameraPos(), playerPosition);
-                    //physics.setGravity(true);
+                    physics.setGravity(true);
                 }
                 else
                 {
                     ai.chasePlayer(NPCs, playerPosition);
                     leaveBoat(Docks, playerPosition);
-                    //physics.setGravity(false);
+                    physics.setGravity(false);
                 }
 
-                //physics.updateBodies(camera);
+                physics.updateBodies(camera);
 
-                /*if (camera.getCameraPos().y < -50)
+                // Resets player and to main island and boat to main island dock when falling into the water
+                if (camera.getCameraPos().y < -50)
                 {
-                    camera.updatePosition(glm::vec3(-300, 100, 0));
-                }*/
+                    camera.updatePosition(glm::vec3(-500, 100, 0));
+                    playerPosition.x = -35;
+                    playerPosition.y = -52;
+                    playerPosition.z = -2347;
+                    playerRotation.x = 0;
+                    playerRotation.y = 4.868;
+                    playerRotation.z = 0;
+                }
                 
                 std::vector<glm::vec3> temp;
                 int newY;
                 
-                // Terrain walking for main island
-                if (camera.getCameraPos().x > -2560 && camera.getCameraPos().x < 2560 && camera.getCameraPos().z > -2560 && camera.getCameraPos().z < 2560)
+                std::cout << camera.getCameraPos().x << " " << camera.getCameraPos().y << " " << camera.getCameraPos().z << std::endl;
+
+                // Boundary for main island
+                if (camera.getCameraPos().x > -2370 && camera.getCameraPos().x < 2370 && camera.getCameraPos().z > -2390 && camera.getCameraPos().z < 2380 && camera.getPerspective())
                 {
                     temp = terrains[0].getVertices();
                     newY = terrains[0].getHeightAtPos(temp, camera.getCameraPos().x, camera.getCameraPos().z);
+                    camera.setCameraY(newY + 60);
+                }
+
+                // Boundary for island 1
+                if (camera.getCameraPos().x > 4220 && camera.getCameraPos().x < 6770 && camera.getCameraPos().z > -1270 && camera.getCameraPos().z < 1270 && camera.getPerspective())
+                {
+                    temp = terrains[1].getVertices();
+                    newY = terrains[1].getHeightAtPos(temp, camera.getCameraPos().x, camera.getCameraPos().z);
+                    camera.setCameraY(newY + 85);
+                }
+
+                // Boundary for island 2
+                if (camera.getCameraPos().x > -7400 && camera.getCameraPos().x < -3800 && camera.getCameraPos().z > -1670 && camera.getCameraPos().z < 1670 && camera.getPerspective())
+                {
+                    temp = terrains[2].getVertices();
+                    newY = terrains[2].getHeightAtPos(temp, camera.getCameraPos().x, camera.getCameraPos().z);
                     camera.setCameraY(newY + 50);
+                }
+
+                // Boundary for island 3
+                if (camera.getCameraPos().x > 850 && camera.getCameraPos().x < 3550 && camera.getCameraPos().z > -6850 && camera.getCameraPos().z < -3850 && camera.getPerspective())
+                {
+                    temp = terrains[3].getVertices();
+                    newY = terrains[3].getHeightAtPos(temp, camera.getCameraPos().x, camera.getCameraPos().z);
+                    camera.setCameraY(newY + 30);
+                }
+
+                // Boundary for island 4
+                if (camera.getCameraPos().x > -3650 && camera.getCameraPos().x < -1510 && camera.getCameraPos().z > -7050 && camera.getCameraPos().z < -4450 && camera.getPerspective())
+                {
+                    temp = terrains[4].getVertices();
+                    newY = terrains[4].getHeightAtPos(temp, camera.getCameraPos().x, camera.getCameraPos().z);
+                    camera.setCameraY(newY + 30);
+                }
+
+                // Boundary for island 5
+                if (camera.getCameraPos().x > -2720 && camera.getCameraPos().x < -190 && camera.getCameraPos().z > 5020 && camera.getCameraPos().z < 7450 && camera.getPerspective())
+                {
+                    temp = terrains[5].getVertices();
+                    newY = terrains[5].getHeightAtPos(temp, camera.getCameraPos().x, camera.getCameraPos().z);
+                    camera.setCameraY(newY + 35);
+                }
+
+                // Boundary for island 6
+                if (camera.getCameraPos().x > 1460 && camera.getCameraPos().x < 3760 && camera.getCameraPos().z > 4030 && camera.getCameraPos().z < 6380 && camera.getPerspective())
+                {
+                    temp = terrains[6].getVertices();
+                    newY = terrains[6].getHeightAtPos(temp, camera.getCameraPos().x, camera.getCameraPos().z);
+                    camera.setCameraY(newY + 30);
                 }
 
                 player.setTranslation(playerPosition);

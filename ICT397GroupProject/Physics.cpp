@@ -27,7 +27,7 @@ void Physics::createTestCapsule()
     transform = Transform::identity();
     collider = wall->addCollider(capsuleShape, transform);
 
-    // Scuffed box platform for the main island
+    /* Scuffed box platform for the main island
     position = Vector3(0, -50, 0);
     orientation = Quaternion::identity();
     transform = Transform(position, orientation);
@@ -36,7 +36,7 @@ void Physics::createTestCapsule()
 
     BoxShape* boxShape = physicsCommon.createBoxShape(Vector3(2350, 150, 2350));
     transform = Transform::identity();
-    collider = cube->addCollider(boxShape, transform);
+    collider = cube->addCollider(boxShape, transform);*/
 }
 
 void Physics::createCameraBody(Camera& camera)
