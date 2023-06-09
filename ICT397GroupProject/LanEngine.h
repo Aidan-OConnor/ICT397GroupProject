@@ -264,7 +264,6 @@ int run()
                 }
                 else
                 {
-                    ai.chasePlayer(NPCs, playerPosition);
                     leaveBoat(Docks, playerPosition);
                     physics.setGravity(false);
                 }
@@ -327,17 +326,9 @@ int run()
                     camera.setCameraY(30);
                 }
 
-                player.setTranslation(playerPosition);
-                player.setRotation(playerRotation);
-
-                dockBoat(Docks);
-
-                imGuiData.setPlayer(player);
-                imGuiData.setNPCs(NPCs);
-
                 if (ai.getPlayerHealth() == 0)
                 {
-                    camera.resetCamera();
+                    camera.updatePosition(glm::vec3(-500, 100, 0));
                     playerPosition.x = -35;
                     playerPosition.y = -52;
                     playerPosition.z = -2347;
@@ -346,6 +337,14 @@ int run()
                     playerRotation.z = 0;
                     ai.resetPlayerHealth();
                 }
+
+                player.setTranslation(playerPosition);
+                player.setRotation(playerRotation);
+
+                dockBoat(Docks);
+
+                imGuiData.setPlayer(player);
+                imGuiData.setNPCs(NPCs);
 
                 ImGui::SetNextWindowPos({ 0.0f, 0.0f });
                 ImGui::SetNextWindowSize({ (float)(vidMode->width * 1.007), (float)(vidMode->height * 1.009) });
