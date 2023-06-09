@@ -78,6 +78,10 @@ void Camera::processInput(GLFWwindow* window, glm::vec3& PlayerPosition, glm::ve
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
             if (forwardSpeed < maxMoveSpeed)
                 forwardSpeed += 100 * deltaTime;
+            else
+            {
+                forwardSpeed = maxMoveSpeed;
+            }
             backwardSpeed = 0;
             distance += forwardSpeed * deltaTime;
         }

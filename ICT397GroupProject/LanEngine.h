@@ -269,8 +269,9 @@ int run()
 
             dockBoat();
 
+            Docks.clear();
+
             imGuiData.setPlayer(player);
-            imGuiData.setDocks(Docks);
             imGuiData.setNPCs(NPCs);
 
             imGuiData.RenderObjects(shader, waterShader, lightingShader, modelShader, camera);
@@ -361,6 +362,7 @@ void leaveBoat(std::vector<ImGuiData> Docks, glm::vec3 playerPos)
         {
             canLeaveBoat = true;
             dockIndex = i;
+            i = Docks.size();
         }
         else
             canLeaveBoat = false;
