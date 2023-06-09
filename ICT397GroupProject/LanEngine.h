@@ -236,6 +236,9 @@ int run()
 
         if (playGame)
         {
+            std::vector<ImGuiData> NPCs = imGuiData.getNPCs();
+            std::vector<ImGuiData> Docks = imGuiData.getDocks();
+
             if (isDev)
             {
                 if (useImGui)
@@ -245,23 +248,22 @@ int run()
                     ImGui::PopFont();
                 }
             }
+            else
+            {
+                if (camera.getPerspective())
+                {
+                    ai.chasePlayer(NPCs, camera.getCameraPos());
+                    enterBoat(camera.getCameraPos(), playerPosition);
+                }
+                else
+                {
+                    ai.chasePlayer(NPCs, playerPosition);
+                    leaveBoat(Docks, playerPosition);
+                }
+            }
 
             player.setTranslation(playerPosition);
             player.setRotation(playerRotation);
-
-            std::vector<ImGuiData> NPCs = imGuiData.getNPCs();
-            std::vector<ImGuiData> Docks = imGuiData.getDocks();
-
-            if (camera.getPerspective())
-            {
-                ai.chasePlayer(NPCs, camera.getCameraPos());
-                enterBoat(camera.getCameraPos(), playerPosition);
-            }
-            else
-            {
-                ai.chasePlayer(NPCs, playerPosition);
-                leaveBoat(Docks, playerPosition);
-            }
 
             dockBoat(Docks);
 
