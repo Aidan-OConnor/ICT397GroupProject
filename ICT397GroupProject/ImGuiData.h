@@ -35,6 +35,8 @@ struct objectData
     float rx, ry, rz;
     bool isPlayer;
     bool isDock;
+    bool isHut;
+    bool isCollectable;
 
     objectData() {};
 };
@@ -60,6 +62,10 @@ private:
     bool isPlayer;
 
     bool isDock;
+
+    bool isHut;
+
+    bool isCollectable;
     /// Stores the data types file path as a const char *
     std::string filepath;
     /// Stores the data types texture path as a const char *
@@ -129,6 +135,8 @@ public:
             this->minHeight = this->maxHeight = this->filter = 0;
         this->isPlayer = false;
         this->isDock = false;
+        this->isHut = false;
+        this->isCollectable = false;
         this->animations = true;
         this->animState = md2Model.startAnimation(STAND);
         this->weaponPath.clear();
@@ -350,41 +358,85 @@ public:
             }
             ImGui::TreePop();
         }
-        if (ImGui::TreeNode("Load Player"))
+        if (ImGui::TreeNode("Load Special Component"))
         {
-            if (ImGui::TreeNode("Boat"))
+            if (ImGui::TreeNode("Load Player"))
             {
-                if (ImGui::Button("Load", ImVec2(100, 25)))
+                if (ImGui::TreeNode("Boat"))
                 {
-                    ImGuiData ImTemp;
-                    ImTemp.objectType = "Model";
-                    ImTemp.model = new Model("Models/NewBoat/boat.obj");
-                    ImTemp.translation = { 0.0f, 0.0f, 0.0f };
-                    ImTemp.scale = { 1.0f, 1.0f, 1.0f };
-                    ImTemp.filepath = "Models/NewBoat/boat.obj";
-                    ImTemp.isPlayer = true;
+                    if (ImGui::Button("Load", ImVec2(100, 25)))
+                    {
+                        ImGuiData ImTemp;
+                        ImTemp.objectType = "Model";
+                        ImTemp.model = new Model("Models/NewBoat/boat.obj");
+                        ImTemp.translation = { 0.0f, 0.0f, 0.0f };
+                        ImTemp.scale = { 1.0f, 1.0f, 1.0f };
+                        ImTemp.filepath = "Models/NewBoat/boat.obj";
+                        ImTemp.isPlayer = true;
 
-                    imGuiObjects.push_back(ImTemp);
+                        imGuiObjects.push_back(ImTemp);
+                    }
+                    ImGui::TreePop();
                 }
                 ImGui::TreePop();
             }
-            ImGui::TreePop();
-        }
-        if (ImGui::TreeNode("Load Dock"))
-        {
-            if (ImGui::TreeNode("Dock"))
+            if (ImGui::TreeNode("Load Dock"))
             {
-                if (ImGui::Button("Load", ImVec2(100, 25)))
+                if (ImGui::TreeNode("Dock"))
                 {
-                    ImGuiData ImTemp;
-                    ImTemp.objectType = "Model";
-                    ImTemp.model = new Model("Models/Dock/Dock.obj");
-                    ImTemp.translation = { 0.0f, 0.0f, 0.0f };
-                    ImTemp.scale = { 1.0f, 1.0f, 1.0f };
-                    ImTemp.filepath = "Models/Dock/Dock.obj";
-                    ImTemp.isDock = true;
+                    if (ImGui::Button("Load", ImVec2(100, 25)))
+                    {
+                        ImGuiData ImTemp;
+                        ImTemp.objectType = "Model";
+                        ImTemp.model = new Model("Models/Dock/Dock.obj");
+                        ImTemp.translation = { 0.0f, 0.0f, 0.0f };
+                        ImTemp.scale = { 1.0f, 1.0f, 1.0f };
+                        ImTemp.filepath = "Models/Dock/Dock.obj";
+                        ImTemp.isDock = true;
 
-                    imGuiObjects.push_back(ImTemp);
+                        imGuiObjects.push_back(ImTemp);
+                    }
+                    ImGui::TreePop();
+                }
+                ImGui::TreePop();
+            }
+            if (ImGui::TreeNode("Load Hut"))
+            {
+                if (ImGui::TreeNode("Hut"))
+                {
+                    if (ImGui::Button("Load", ImVec2(100, 25)))
+                    {
+                        ImGuiData ImTemp;
+                        ImTemp.objectType = "Model";
+                        ImTemp.model = new Model("Models/Hut/hut.obj");
+                        ImTemp.translation = { 0.0f, 0.0f, 0.0f };
+                        ImTemp.scale = { 1.0f, 1.0f, 1.0f };
+                        ImTemp.filepath = "Models/Hut/hut.obj";
+                        ImTemp.isHut = true;
+
+                        imGuiObjects.push_back(ImTemp);
+                    }
+                    ImGui::TreePop();
+                }
+                ImGui::TreePop();
+            }
+            if (ImGui::TreeNode("Load Collectable"))
+            {
+                if (ImGui::TreeNode("Plank"))
+                {
+                    if (ImGui::Button("Load", ImVec2(100, 25)))
+                    {
+                        ImGuiData ImTemp;
+                        ImTemp.objectType = "Model";
+                        ImTemp.model = new Model("Models/Plank/plank.obj");
+                        ImTemp.translation = { 0.0f, 0.0f, 0.0f };
+                        ImTemp.scale = { 1.0f, 1.0f, 1.0f };
+                        ImTemp.filepath = "Models/Plank/plank.obj";
+                        ImTemp.isCollectable = true;
+
+                        imGuiObjects.push_back(ImTemp);
+                    }
+                    ImGui::TreePop();
                 }
                 ImGui::TreePop();
             }
@@ -588,6 +640,16 @@ public:
                         else
                             luaMap << "model" << mCount << ".isDock = false" << "\n";
 
+                        if (imGuiObjects[i].isHut)
+                            luaMap << "model" << mCount << ".isHut = true" << "\n";
+                        else
+                            luaMap << "model" << mCount << ".isHut = false" << "\n";
+
+                        if (imGuiObjects[i].isCollectable)
+                            luaMap << "model" << mCount << ".isCollectable = true" << "\n";
+                        else
+                            luaMap << "model" << mCount << ".isCollectable = false" << "\n";
+
                         luaMap << "model" << mCount << ".objectType = \"" << imGuiObjects[i].objectType << "\"\n";
                         luaMap << "model" << mCount << ".filepath = \"" << imGuiObjects[i].filepath << "\"\n";
                         luaMap << "model" << mCount << ".tx = " << imGuiObjects[i].translation.x << "\n";
@@ -768,8 +830,8 @@ public:
             "filepath", &objectData::filepath, "texturePath", &objectData::texturePath, "objectType", &objectData::objectType,
             "weaponPath", &objectData::weaponPath, "weaponTexturePath", &objectData::weaponTexturePath,
             "iterations", &objectData::iterations, "width", &objectData::width, "isPlayer", &objectData::isPlayer, 
-            "isDock", &objectData::isDock, "length", &objectData::length, "minHeight", &objectData::minHeight,
-            "maxHeight", &objectData::maxHeight, "filter", &objectData::filter,
+            "isDock", &objectData::isDock, "isHut", &objectData::isHut, "isCollectable", &objectData::isCollectable, "length", &objectData::length,
+            "minHeight", &objectData::minHeight, "maxHeight", &objectData::maxHeight, "filter", &objectData::filter,
             "tx", &objectData::tx, "ty", &objectData::ty, "tz", &objectData::tz,
             "sx", &objectData::sx, "sy", &objectData::sy, "sz", &objectData::sz,
             "rx", &objectData::rx, "ry", &objectData::ry, "rz", &objectData::rz
@@ -849,6 +911,8 @@ public:
             {
                 tempGuiData.setIsDock(luaMap[i].isDock);
                 tempGuiData.setIsPlayer(luaMap[i].isPlayer);
+                tempGuiData.setIsHut(luaMap[i].isHut);
+                tempGuiData.setIsCollectable(luaMap[i].isCollectable);
                 tempGuiData.setModel(luaMap[i].filepath);
                 tempGuiData.setObjectType(luaMap[i].objectType);
                 tempGuiData.setFilePath(luaMap[i].filepath);
@@ -1192,6 +1256,16 @@ public:
         isDock = IsDock;
     }
 
+    void setIsHut(bool IsHut)
+    {
+        isHut = IsHut;
+    }
+
+    void setIsCollectable(bool IsCollectable)
+    {
+        isCollectable = IsCollectable;
+    }
+
     void setPlayer(ImGuiData player)
     {
         for (int i = 0; i < imGuiObjects.size(); i++)
@@ -1229,6 +1303,23 @@ public:
                 {
                     imGuiObjects[j] = Docks[i];
                     latestDock = j + 1;
+                    j = imGuiObjects.size();
+                }
+            }
+        }
+    }
+
+    void setCollectables(std::vector<ImGuiData> Collectables)
+    {
+        int latestCollectable = 0;
+        for (int i = 0; i < Collectables.size(); i++)
+        {
+            for (int j = latestCollectable; j < imGuiObjects.size(); j++)
+            {
+                if (imGuiObjects[j].isCollectable)
+                {
+                    imGuiObjects[j] = Collectables[i];
+                    latestCollectable = j + 1;
                     j = imGuiObjects.size();
                 }
             }
@@ -1273,6 +1364,7 @@ public:
 
         return (NPCs);
     }
+
     std::vector<ImGuiData> getDocks()
     {
         std::vector<ImGuiData> Docks;
@@ -1286,6 +1378,31 @@ public:
         return (Docks);
     }
 
+    ImGuiData getHut()
+    {
+        for (int i = 0; i < imGuiObjects.size(); i++)
+        {
+            if (imGuiObjects[i].isHut)
+                return imGuiObjects[i];
+        }
+
+        ImGuiData none;
+
+        return (none);
+    }
+
+    std::vector<ImGuiData> getCollectables()
+    {
+        std::vector<ImGuiData> Collectables;
+
+        for (int i = 0; i < imGuiObjects.size(); i++)
+        {
+            if (imGuiObjects[i].isCollectable)
+                Collectables.push_back(imGuiObjects[i]);
+        }
+
+        return (Collectables);
+    }
 
     glm::vec3 getTranslation()
     {

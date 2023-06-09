@@ -44,6 +44,8 @@ void dockBoat(std::vector<ImGuiData> Docks);
 void CenterButtons(std::vector<std::string> names, GLFWwindow* window);
 void displayHealthBar(std::vector<std::string> names, GLFWwindow* window);
 void displayLives(std::vector<std::string> names, GLFWwindow* window);
+void checkCollectables(std::vector<ImGuiData> Collectables, glm::vec3 playerPos);
+void getCollectable(std::vector<ImGuiData>& Collectables);
 
 int scrWidth;
 int scrHeight;
@@ -53,11 +55,16 @@ bool useImGui = false;
 bool playGame = false;
 bool isDev = false;
 bool gameOver = false;
+bool gameWon = false;
 bool canEnterBoat = false;
 bool canLeaveBoat = false;
 bool boatDocked = false;
+bool canPickup = false;
+bool hasPickedup = false;
 glm::vec3 lightPos(8000.0f, 2000.0f, 8000.0f);
 int dockIndex;
+int collectableIndex;
+int numCollectables;
 
 int run()
 {
@@ -162,6 +169,7 @@ int run()
     terrains = imGuiData.getTerrains();
 
     int lives = 4;
+    numCollectables = 0;
 
     Texture testTexture;
     int my_image_width = 0;
@@ -261,6 +269,35 @@ int run()
             ImGui::End();
         }
 
+        if (gameWon)
+        {
+            playGame = false;
+            isDev = false;
+            lives = 4;
+            camera.setMouseControls(false);
+            ImGui::SetNextWindowPos({ -8.0f, -8.0f });
+            ImGui::SetNextWindowSize({ (float)(vidMode->width * 1.007), (float)(vidMode->height * 1.009) });
+            ImGui::Begin("GameWinBackground", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoMouseInputs);
+            ImGui::Image((void*)(intptr_t)my_image_texture, ImVec2(vidMode->width + 100, vidMode->height + 10), { 0, 1 }, { 1, 0 });
+            ImGui::End();
+
+            ImGui::SetNextWindowPos({ (float)(vidMode->width / 2 - vidMode->width / 5.0f), (float)(vidMode->height / 2 - vidMode->height / 2.5f) });
+            ImGui::SetNextWindowSize({ (float)(vidMode->width * 1.007), (float)(vidMode->height * 1.009) });
+            ImGui::Begin("GameWinTitle", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoMouseInputs);
+            ImGui::PushFont(RubikStorm);
+            ImGui::Text("You Won!!!");
+            ImGui::PopFont();
+            ImGui::End();
+
+            ImGui::SetNextWindowPos({ (float)(vidMode->width / 2 - vidMode->width / 7.2f), (float)(vidMode->height / 2 - vidMode->height / 6.0f) });
+            ImGui::SetNextWindowSize({ (float)(vidMode->width * 1.007), (float)(vidMode->height * 1.009) });
+            ImGui::Begin("Button", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoResize);
+            ImGui::PushFont(icons_font);
+            CenterButtons({ ICON_FA_PLAY"  Play Game", ICON_FA_DESKTOP"  Dev Mode", ICON_FA_POWER_OFF"  Exit Game" }, window);
+            ImGui::PopFont();
+            ImGui::End();
+        }
+
         if (playGame)
         {
             if (isDev)
@@ -276,6 +313,7 @@ int run()
             {
                 std::vector<ImGuiData> NPCs = imGuiData.getNPCs();
                 std::vector<ImGuiData> Docks = imGuiData.getDocks();
+                std::vector<ImGuiData> Collectables = imGuiData.getCollectables();
 
                 if (camera.getPerspective())
                 {
@@ -365,6 +403,13 @@ int run()
                     playGame = false;
                     isDev = false;
                 }
+
+                checkCollectables(Collectables, camera.getCameraPos());
+                //if (hasPickedup)
+                //{
+                //    getCollectable(Collectables);
+                //    imGuiData.setCollectables(Collectables);
+                //}
 
                 player.setTranslation(playerPosition);
                 player.setRotation(playerRotation);
@@ -458,12 +503,14 @@ void CenterButtons(std::vector<std::string> names, GLFWwindow* window)
                 playGame = true;
                 camera.setMouseControls(true);
                 gameOver = false;
+                gameWon = false;
             }
             else if (i == 1)
             {
                 playGame = true;
                 isDev = true;
                 gameOver = false;
+                gameWon = false;
                 camera.setMouseControls(true);
             }
             else if (i == 2)
@@ -553,6 +600,32 @@ void dockBoat(std::vector<ImGuiData> Docks)
     }
 }
 
+void checkCollectables(std::vector<ImGuiData> Collectables, glm::vec3 playerPos)
+{
+    for (int i = 0; i < Collectables.size(); i++)
+    {
+        float distance = glm::sqrt((Collectables[i].getTranslation().x - playerPos.x) * (Collectables[i].getTranslation().x - playerPos.x) +
+            (Collectables[i].getTranslation().z - playerPos.z) * (Collectables[i].getTranslation().z - playerPos.z));
+
+        if (distance < 100)
+        {
+            canPickup = true;
+            collectableIndex = i;
+            i = Collectables.size();
+        }
+        else
+            canPickup = false;
+    }
+}
+
+void getCollectable(std::vector<ImGuiData>& Collectables)
+{
+    numCollectables++;
+    Collectables.erase(Collectables.begin() + collectableIndex);
+    canPickup = false;
+    hasPickedup = false;
+}
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
@@ -587,14 +660,19 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
             camera.swapRenderType();
         }
 
-        if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS && (canEnterBoat || canLeaveBoat))
+        if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
         {
-            camera.setPerspective(!camera.getPerspective());
-
-            if (canLeaveBoat)
+            if (canEnterBoat || canLeaveBoat)
             {
-                boatDocked = true;
+                camera.setPerspective(!camera.getPerspective());
+
+                if (canLeaveBoat)
+                {
+                    boatDocked = true;
+                }
             }
+            if (canPickup)
+                hasPickedup = true;
         }
     }
 }

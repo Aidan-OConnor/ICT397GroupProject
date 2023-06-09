@@ -1,6 +1,6 @@
 numTerrains = 8
 numWater = 1
-numModels = 52
+numModels = 59
 numAnimations = 35
 terrain0 = objectData.new()
 terrain1 = objectData.new()
@@ -63,6 +63,8 @@ model48 = objectData.new()
 model49 = objectData.new()
 model50 = objectData.new()
 model51 = objectData.new()
+model52 = objectData.new()
+model53 = objectData.new()
 animation0 = objectData.new()
 animation1 = objectData.new()
 animation2 = objectData.new()
@@ -98,6 +100,11 @@ animation31 = objectData.new()
 animation32 = objectData.new()
 animation33 = objectData.new()
 animation34 = objectData.new()
+model54 = objectData.new()
+model55 = objectData.new()
+model56 = objectData.new()
+model57 = objectData.new()
+model58 = objectData.new()
 
 terrain0.objectType = "Terrain"
 terrain0.filepath = "Terrains/VolcanoType27.png"
@@ -223,6 +230,8 @@ water0.rz = 0
 
 model0.isPlayer = true
 model0.isDock = false
+model0.isHut = false
+model0.isCollectable = false
 model0.objectType = "Model"
 model0.filepath = "Models/NewBoat/boat.obj"
 model0.tx = -35
@@ -237,6 +246,8 @@ model0.rz = 0
 
 model1.isPlayer = false
 model1.isDock = true
+model1.isHut = false
+model1.isCollectable = false
 model1.objectType = "Model"
 model1.filepath = "Models/Dock/Dock.obj"
 model1.tx = -70.5
@@ -251,6 +262,8 @@ model1.rz = 0
 
 model2.isPlayer = false
 model2.isDock = true
+model2.isHut = false
+model2.isCollectable = false
 model2.objectType = "Model"
 model2.filepath = "Models/Dock/Dock.obj"
 model2.tx = 4462.5
@@ -265,6 +278,8 @@ model2.rz = 0
 
 model3.isPlayer = false
 model3.isDock = true
+model3.isHut = false
+model3.isCollectable = false
 model3.objectType = "Model"
 model3.filepath = "Models/Dock/Dock.obj"
 model3.tx = -4050.5
@@ -279,6 +294,8 @@ model3.rz = 0
 
 model4.isPlayer = false
 model4.isDock = true
+model4.isHut = false
+model4.isCollectable = false
 model4.objectType = "Model"
 model4.filepath = "Models/Dock/Dock.obj"
 model4.tx = 1969
@@ -293,6 +310,8 @@ model4.rz = 0
 
 model5.isPlayer = false
 model5.isDock = true
+model5.isHut = false
+model5.isCollectable = false
 model5.objectType = "Model"
 model5.filepath = "Models/Dock/Dock.obj"
 model5.tx = -2682.5
@@ -307,6 +326,8 @@ model5.rz = 0
 
 model6.isPlayer = false
 model6.isDock = true
+model6.isHut = false
+model6.isCollectable = false
 model6.objectType = "Model"
 model6.filepath = "Models/Dock/Dock.obj"
 model6.tx = -1386.5
@@ -321,6 +342,8 @@ model6.rz = 0
 
 model7.isPlayer = false
 model7.isDock = true
+model7.isHut = false
+model7.isCollectable = false
 model7.objectType = "Model"
 model7.filepath = "Models/Dock/Dock.obj"
 model7.tx = 2646.5
@@ -335,6 +358,8 @@ model7.rz = 0
 
 model8.isPlayer = false
 model8.isDock = false
+model8.isHut = false
+model8.isCollectable = false
 model8.objectType = "Model"
 model8.filepath = "Models/Rocks/rock.obj"
 model8.tx = -327
@@ -349,6 +374,8 @@ model8.rz = 0
 
 model9.isPlayer = false
 model9.isDock = false
+model9.isHut = false
+model9.isCollectable = false
 model9.objectType = "Model"
 model9.filepath = "Models/Rocks/rock.obj"
 model9.tx = 225
@@ -363,6 +390,8 @@ model9.rz = 0
 
 model10.isPlayer = false
 model10.isDock = false
+model10.isHut = false
+model10.isCollectable = false
 model10.objectType = "Model"
 model10.filepath = "Models/Rocks/rock.obj"
 model10.tx = 699
@@ -377,6 +406,8 @@ model10.rz = 0
 
 model11.isPlayer = false
 model11.isDock = false
+model11.isHut = false
+model11.isCollectable = false
 model11.objectType = "Model"
 model11.filepath = "Models/Rocks/rock.obj"
 model11.tx = 1203.5
@@ -391,6 +422,8 @@ model11.rz = 0
 
 model12.isPlayer = false
 model12.isDock = false
+model12.isHut = false
+model12.isCollectable = false
 model12.objectType = "Model"
 model12.filepath = "Models/Rocks/rock.obj"
 model12.tx = -940.5
@@ -405,6 +438,8 @@ model12.rz = 0
 
 model13.isPlayer = false
 model13.isDock = false
+model13.isHut = false
+model13.isCollectable = false
 model13.objectType = "Model"
 model13.filepath = "Models/Rocks/rock2.obj"
 model13.tx = -980.5
@@ -419,6 +454,8 @@ model13.rz = 0
 
 model14.isPlayer = false
 model14.isDock = false
+model14.isHut = false
+model14.isCollectable = false
 model14.objectType = "Model"
 model14.filepath = "Models/Rocks/rock2.obj"
 model14.tx = -1434
@@ -433,6 +470,8 @@ model14.rz = 0
 
 model15.isPlayer = false
 model15.isDock = false
+model15.isHut = false
+model15.isCollectable = false
 model15.objectType = "Model"
 model15.filepath = "Models/Rocks/rock2.obj"
 model15.tx = -1493.5
@@ -447,6 +486,8 @@ model15.rz = 0
 
 model16.isPlayer = false
 model16.isDock = false
+model16.isHut = false
+model16.isCollectable = false
 model16.objectType = "Model"
 model16.filepath = "Models/Rocks/rock2.obj"
 model16.tx = -994.5
@@ -461,6 +502,8 @@ model16.rz = 0
 
 model17.isPlayer = false
 model17.isDock = false
+model17.isHut = false
+model17.isCollectable = false
 model17.objectType = "Model"
 model17.filepath = "Models/Rocks/rock2.obj"
 model17.tx = -1250
@@ -475,6 +518,8 @@ model17.rz = 0
 
 model18.isPlayer = false
 model18.isDock = false
+model18.isHut = false
+model18.isCollectable = false
 model18.objectType = "Model"
 model18.filepath = "Models/Rocks/rock3.obj"
 model18.tx = -453
@@ -489,6 +534,8 @@ model18.rz = 0
 
 model19.isPlayer = false
 model19.isDock = false
+model19.isHut = false
+model19.isCollectable = false
 model19.objectType = "Model"
 model19.filepath = "Models/Rocks/rock3.obj"
 model19.tx = -531
@@ -503,6 +550,8 @@ model19.rz = 0
 
 model20.isPlayer = false
 model20.isDock = false
+model20.isHut = false
+model20.isCollectable = false
 model20.objectType = "Model"
 model20.filepath = "Models/Rocks/rock3.obj"
 model20.tx = 108
@@ -517,6 +566,8 @@ model20.rz = 0
 
 model21.isPlayer = false
 model21.isDock = false
+model21.isHut = false
+model21.isCollectable = false
 model21.objectType = "Model"
 model21.filepath = "Models/Rocks/rock.obj"
 model21.tx = 503
@@ -531,6 +582,8 @@ model21.rz = 0
 
 model22.isPlayer = false
 model22.isDock = false
+model22.isHut = false
+model22.isCollectable = false
 model22.objectType = "Model"
 model22.filepath = "Models/Rocks/rock.obj"
 model22.tx = 1113
@@ -545,6 +598,8 @@ model22.rz = 0
 
 model23.isPlayer = false
 model23.isDock = false
+model23.isHut = false
+model23.isCollectable = false
 model23.objectType = "Model"
 model23.filepath = "Models/Rocks/rock.obj"
 model23.tx = 1183
@@ -559,6 +614,8 @@ model23.rz = 0
 
 model24.isPlayer = false
 model24.isDock = false
+model24.isHut = false
+model24.isCollectable = false
 model24.objectType = "Model"
 model24.filepath = "Models/Rocks/rock2.obj"
 model24.tx = 1746
@@ -573,6 +630,8 @@ model24.rz = 0
 
 model25.isPlayer = false
 model25.isDock = false
+model25.isHut = false
+model25.isCollectable = false
 model25.objectType = "Model"
 model25.filepath = "Models/Rocks/rock2.obj"
 model25.tx = 1533
@@ -587,6 +646,8 @@ model25.rz = 0
 
 model26.isPlayer = false
 model26.isDock = false
+model26.isHut = false
+model26.isCollectable = false
 model26.objectType = "Model"
 model26.filepath = "Models/Rocks/rock2.obj"
 model26.tx = 1900.5
@@ -601,6 +662,8 @@ model26.rz = 0
 
 model27.isPlayer = false
 model27.isDock = false
+model27.isHut = false
+model27.isCollectable = false
 model27.objectType = "Model"
 model27.filepath = "Models/Rocks/rock3.obj"
 model27.tx = 1705
@@ -615,6 +678,8 @@ model27.rz = 0
 
 model28.isPlayer = false
 model28.isDock = false
+model28.isHut = false
+model28.isCollectable = false
 model28.objectType = "Model"
 model28.filepath = "Models/Rocks/rock3.obj"
 model28.tx = 1327.5
@@ -629,6 +694,8 @@ model28.rz = 0
 
 model29.isPlayer = false
 model29.isDock = false
+model29.isHut = false
+model29.isCollectable = false
 model29.objectType = "Model"
 model29.filepath = "Models/Rocks/rock.obj"
 model29.tx = 1001
@@ -643,6 +710,8 @@ model29.rz = 0
 
 model30.isPlayer = false
 model30.isDock = false
+model30.isHut = false
+model30.isCollectable = false
 model30.objectType = "Model"
 model30.filepath = "Models/PalmTree/palmtree.obj"
 model30.tx = 1251.5
@@ -657,6 +726,8 @@ model30.rz = 0
 
 model31.isPlayer = false
 model31.isDock = false
+model31.isHut = false
+model31.isCollectable = false
 model31.objectType = "Model"
 model31.filepath = "Models/PalmTree/palmtree.obj"
 model31.tx = 1666.5
@@ -671,6 +742,8 @@ model31.rz = 0
 
 model32.isPlayer = false
 model32.isDock = false
+model32.isHut = false
+model32.isCollectable = false
 model32.objectType = "Model"
 model32.filepath = "Models/PalmTree/palmtree.obj"
 model32.tx = 1089
@@ -685,6 +758,8 @@ model32.rz = 0
 
 model33.isPlayer = false
 model33.isDock = false
+model33.isHut = false
+model33.isCollectable = false
 model33.objectType = "Model"
 model33.filepath = "Models/PalmTree/palmtree.obj"
 model33.tx = 701.5
@@ -699,6 +774,8 @@ model33.rz = 0
 
 model34.isPlayer = false
 model34.isDock = false
+model34.isHut = false
+model34.isCollectable = false
 model34.objectType = "Model"
 model34.filepath = "Models/PalmTree/palmtree.obj"
 model34.tx = 214
@@ -713,6 +790,8 @@ model34.rz = 0
 
 model35.isPlayer = false
 model35.isDock = false
+model35.isHut = false
+model35.isCollectable = false
 model35.objectType = "Model"
 model35.filepath = "Models/PalmTree/palmtree.obj"
 model35.tx = 285.5
@@ -727,6 +806,8 @@ model35.rz = 0
 
 model36.isPlayer = false
 model36.isDock = false
+model36.isHut = false
+model36.isCollectable = false
 model36.objectType = "Model"
 model36.filepath = "Models/PalmTree/palmtree.obj"
 model36.tx = -297.5
@@ -741,6 +822,8 @@ model36.rz = 0
 
 model37.isPlayer = false
 model37.isDock = false
+model37.isHut = false
+model37.isCollectable = false
 model37.objectType = "Model"
 model37.filepath = "Models/PalmTree/palmtree.obj"
 model37.tx = -1213.5
@@ -755,6 +838,8 @@ model37.rz = 0
 
 model38.isPlayer = false
 model38.isDock = false
+model38.isHut = false
+model38.isCollectable = false
 model38.objectType = "Model"
 model38.filepath = "Models/PalmTree/palmtree.obj"
 model38.tx = -622.5
@@ -769,6 +854,8 @@ model38.rz = 0
 
 model39.isPlayer = false
 model39.isDock = false
+model39.isHut = false
+model39.isCollectable = false
 model39.objectType = "Model"
 model39.filepath = "Models/PalmTree/palmtree.obj"
 model39.tx = -1267.5
@@ -783,6 +870,8 @@ model39.rz = 0
 
 model40.isPlayer = false
 model40.isDock = false
+model40.isHut = false
+model40.isCollectable = false
 model40.objectType = "Model"
 model40.filepath = "Models/PalmTree/palmtree.obj"
 model40.tx = -2003
@@ -797,6 +886,8 @@ model40.rz = 0
 
 model41.isPlayer = false
 model41.isDock = false
+model41.isHut = false
+model41.isCollectable = false
 model41.objectType = "Model"
 model41.filepath = "Models/PalmTree/palmtree.obj"
 model41.tx = -1642
@@ -811,6 +902,8 @@ model41.rz = 0
 
 model42.isPlayer = false
 model42.isDock = false
+model42.isHut = false
+model42.isCollectable = false
 model42.objectType = "Model"
 model42.filepath = "Models/PalmTree/palmtree.obj"
 model42.tx = -957
@@ -825,6 +918,8 @@ model42.rz = 0
 
 model43.isPlayer = false
 model43.isDock = false
+model43.isHut = false
+model43.isCollectable = false
 model43.objectType = "Model"
 model43.filepath = "Models/PalmTree/palmtree.obj"
 model43.tx = -909.5
@@ -839,6 +934,8 @@ model43.rz = 0
 
 model44.isPlayer = false
 model44.isDock = false
+model44.isHut = false
+model44.isCollectable = false
 model44.objectType = "Model"
 model44.filepath = "Models/PalmTree/palmtree.obj"
 model44.tx = -298
@@ -853,6 +950,8 @@ model44.rz = 0
 
 model45.isPlayer = false
 model45.isDock = false
+model45.isHut = false
+model45.isCollectable = false
 model45.objectType = "Model"
 model45.filepath = "Models/PalmTree/palmtree.obj"
 model45.tx = -298
@@ -867,6 +966,8 @@ model45.rz = 0
 
 model46.isPlayer = false
 model46.isDock = false
+model46.isHut = false
+model46.isCollectable = false
 model46.objectType = "Model"
 model46.filepath = "Models/PalmTree/palmtree.obj"
 model46.tx = 358.5
@@ -881,6 +982,8 @@ model46.rz = 0
 
 model47.isPlayer = false
 model47.isDock = false
+model47.isHut = false
+model47.isCollectable = false
 model47.objectType = "Model"
 model47.filepath = "Models/PalmTree/palmtree.obj"
 model47.tx = 543.5
@@ -895,6 +998,8 @@ model47.rz = 0
 
 model48.isPlayer = false
 model48.isDock = false
+model48.isHut = false
+model48.isCollectable = false
 model48.objectType = "Model"
 model48.filepath = "Models/PalmTree/palmtree.obj"
 model48.tx = 1286.5
@@ -909,6 +1014,8 @@ model48.rz = 0
 
 model49.isPlayer = false
 model49.isDock = false
+model49.isHut = false
+model49.isCollectable = false
 model49.objectType = "Model"
 model49.filepath = "Models/PalmTree/palmtree.obj"
 model49.tx = 825.5
@@ -923,6 +1030,8 @@ model49.rz = 0
 
 model50.isPlayer = false
 model50.isDock = false
+model50.isHut = false
+model50.isCollectable = false
 model50.objectType = "Model"
 model50.filepath = "Models/PalmTree/palmtree.obj"
 model50.tx = 1426.5
@@ -937,6 +1046,8 @@ model50.rz = 0
 
 model51.isPlayer = false
 model51.isDock = false
+model51.isHut = false
+model51.isCollectable = false
 model51.objectType = "Model"
 model51.filepath = "Models/PalmTree/palmtree.obj"
 model51.tx = 1890
@@ -948,6 +1059,38 @@ model51.sz = 6
 model51.rx = 0
 model51.ry = 0
 model51.rz = 0
+
+model52.isPlayer = false
+model52.isDock = false
+model52.isHut = true
+model52.isCollectable = false
+model52.objectType = "Model"
+model52.filepath = "Models/Hut/hut.obj"
+model52.tx = 31.5
+model52.ty = 18
+model52.tz = -436.5
+model52.sx = 5
+model52.sy = 5
+model52.sz = 5
+model52.rx = 0
+model52.ry = 3.29
+model52.rz = 0
+
+model53.isPlayer = false
+model53.isDock = false
+model53.isHut = false
+model53.isCollectable = true
+model53.objectType = "Model"
+model53.filepath = "Models/Plank/plank.obj"
+model53.tx = 5500
+model53.ty = 85
+model53.tz = 0
+model53.sx = 4
+model53.sy = 4
+model53.sz = 4
+model53.rx = 0.6
+model53.ry = 0.09
+model53.rz = 1.04
 
 animation0.objectType = "Animation"
 animation0.filepath = "MD2Models/ChickenPsycho/ChickenPsycho.MD2"
@@ -1473,3 +1616,83 @@ animation34.sz = 0.35
 animation34.rx = 0
 animation34.ry = 0
 animation34.rz = 0.98
+
+model54.isPlayer = false
+model54.isDock = false
+model54.isHut = false
+model54.isCollectable = true
+model54.objectType = "Model"
+model54.filepath = "Models/Plank/plank.obj"
+model54.tx = -5682.5
+model54.ty = 0
+model54.tz = 634.5
+model54.sx = 4
+model54.sy = 4
+model54.sz = 4
+model54.rx = 0.7
+model54.ry = 0.37
+model54.rz = 1.48
+
+model55.isPlayer = false
+model55.isDock = false
+model55.isHut = false
+model55.isCollectable = true
+model55.objectType = "Model"
+model55.filepath = "Models/Plank/plank.obj"
+model55.tx = 1938
+model55.ty = 0.5
+model55.tz = -5457.5
+model55.sx = 4
+model55.sy = 4
+model55.sz = 4
+model55.rx = 0.7
+model55.ry = 3.56
+model55.rz = 2.08
+
+model56.isPlayer = false
+model56.isDock = false
+model56.isHut = false
+model56.isCollectable = true
+model56.objectType = "Model"
+model56.filepath = "Models/Plank/plank.obj"
+model56.tx = -2932.5
+model56.ty = 32.5
+model56.tz = -6723
+model56.sx = 4
+model56.sy = 4
+model56.sz = 4
+model56.rx = -1.45
+model56.ry = 0.71
+model56.rz = -0.05
+
+model57.isPlayer = false
+model57.isDock = false
+model57.isHut = false
+model57.isCollectable = true
+model57.objectType = "Model"
+model57.filepath = "Models/Plank/plank.obj"
+model57.tx = -1455
+model57.ty = 50.5
+model57.tz = 6129
+model57.sx = 4
+model57.sy = 4
+model57.sz = 4
+model57.rx = -1.41
+model57.ry = -0.85
+model57.rz = 0.02
+
+model58.isPlayer = false
+model58.isDock = false
+model58.isHut = false
+model58.isCollectable = true
+model58.objectType = "Model"
+model58.filepath = "Models/Plank/plank.obj"
+model58.tx = 2646.5
+model58.ty = 53.5
+model58.tz = 5791.5
+model58.sx = 4
+model58.sy = 4
+model58.sz = 4
+model58.rx = 1.69
+model58.ry = 0.92
+model58.rz = 0
