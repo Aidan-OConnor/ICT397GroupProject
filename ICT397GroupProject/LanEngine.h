@@ -39,7 +39,7 @@ void initShaders(Camera& camera, Shader& shader, Shader& lightingShader, Shader&
     glm::mat4& projection, glm::mat4& view, glm::mat4& model);
 void enterBoat(glm::vec3 playerPos, glm::vec3 boatPos);
 void leaveBoat(std::vector<ImGuiData> Docks, glm::vec3 playerPos);
-void dockBoat();
+void dockBoat(std::vector<ImGuiData> Docks);
 void CenterButtons(std::vector<std::string> names, GLFWwindow* window);
 
 int scrWidth;
@@ -53,8 +53,6 @@ bool canEnterBoat = false;
 bool canLeaveBoat = false;
 bool boatDocked = false;
 glm::vec3 lightPos(8000.0f, 2000.0f, 8000.0f);
-ImGuiData player;
-std::vector<ImGuiData> Docks;
 int dockIndex;
 
 int run()
@@ -194,7 +192,7 @@ int run()
 
     while (!glfwWindowShouldClose(window))
     {
-        player = imGuiData.getPlayer();
+        ImGuiData player = imGuiData.getPlayer();
         glm::vec3 playerPosition = player.getTranslation();
         glm::vec3 playerRotation = player.getRotation();
 
@@ -207,8 +205,6 @@ int run()
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-
-        initShaders(camera, shader, lightingShader, waterShader, modelShader, player, projection, view, model);
 
         if (!playGame)
         {
@@ -254,7 +250,7 @@ int run()
             player.setRotation(playerRotation);
 
             std::vector<ImGuiData> NPCs = imGuiData.getNPCs();
-            Docks = imGuiData.getDocks();
+            std::vector<ImGuiData> Docks = imGuiData.getDocks();
 
             if (camera.getPerspective())
             {
@@ -267,12 +263,12 @@ int run()
                 leaveBoat(Docks, playerPosition);
             }
 
-            dockBoat();
-
-            Docks.clear();
+            dockBoat(Docks);
 
             imGuiData.setPlayer(player);
             imGuiData.setNPCs(NPCs);
+
+            initShaders(camera, shader, lightingShader, waterShader, modelShader, player, projection, view, model);
 
             imGuiData.RenderObjects(shader, waterShader, lightingShader, modelShader, camera);
 
@@ -369,7 +365,7 @@ void leaveBoat(std::vector<ImGuiData> Docks, glm::vec3 playerPos)
     }
 }
 
-void dockBoat()
+void dockBoat(std::vector<ImGuiData> Docks)
 {
     if (boatDocked)
     {
