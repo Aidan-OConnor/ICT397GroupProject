@@ -10,15 +10,18 @@ private:
     float currentFrame;
     float deltaTime;
     float lastFrame;
+    int playerHealth;
 public:
     AI()
     {
         movementSpeed = 100;
+        playerHealth = 40;
     }
 
     AI(std::vector<ImGuiData>& NPCs)
     {
         movementSpeed = 100;
+        playerHealth = 40;
         
         for (int i = 0; i < NPCs.size(); i++)
         {
@@ -85,6 +88,11 @@ public:
                     isAttacking[i] = true;
                     isRunning[i] = false;
                 }
+
+                if (NPCs[i].getAnimStatus())
+                {
+                    playerHealth--;
+                }
             }
             else if (distance > 250 && isRunning[i])
             {
@@ -94,4 +102,14 @@ public:
             }
         }
 	}
+
+    int getPlayerHealth()
+    {
+        return playerHealth/4;
+    }
+
+    void resetPlayerHealth()
+    {
+        playerHealth = 40;
+    }
 };

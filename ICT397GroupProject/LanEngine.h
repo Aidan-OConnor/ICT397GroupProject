@@ -268,6 +268,12 @@ int run()
 
                 imGuiData.setPlayer(player);
                 imGuiData.setNPCs(NPCs);
+
+                if (ai.getPlayerHealth() == 0)
+                {
+                    camera.resetCamera();
+                    ai.resetPlayerHealth();
+                }
             }
 
             initShaders(camera, shader, lightingShader, waterShader, modelShader, player, projection, view, model);

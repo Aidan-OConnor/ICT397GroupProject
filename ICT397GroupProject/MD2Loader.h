@@ -112,6 +112,7 @@ public:
     void updateAnimation(animationState* animState, float fTimePassed);
     glm::vec3 getPos();
     void setPos(glm::vec3 tempPos);
+    bool getAnimationStatus();
 
     static animationState animationList[21];
     Shader shader;
@@ -132,5 +133,7 @@ private:
 
     std::vector<int> renderModes;
     std::vector<int> numRenderVertices;
+
+    bool finishedAnimation;
 };
 #endif

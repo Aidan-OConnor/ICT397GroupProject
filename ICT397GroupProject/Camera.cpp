@@ -5,12 +5,12 @@
 
 Camera::Camera()
 {
-    this->cameraPos = glm::vec3(-50.0f, 0.0f, 0.0f);
+    this->cameraPos = glm::vec3(-176.5f, 79.0f, -539.0f);
     this->foot = this->cameraPos;
     this->foot.y -= 2.5;
     this->cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
     this->cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-    this->spawnPoint = glm::vec3(0.0f, 3.0f, 0.0f);
+    this->spawnPoint = glm::vec3(-176.5f, 79.0f, -539.0f);
 
     this->firstMouse = true;
     this->yaw = -90.0f;
@@ -190,8 +190,6 @@ void Camera::updateDeltaTime()
 
 void Camera::resetCamera() {
     cameraPos = spawnPoint;
-    velocity = 15.0;
-    gravity = 0.05;
 }
 
 glm::vec3 Camera::getCameraPos()

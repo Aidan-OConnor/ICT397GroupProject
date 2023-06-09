@@ -1301,4 +1301,9 @@ public:
     {
         return this->deltaTime;
     }
+
+    bool getAnimStatus()
+    {
+        return this->md2Model.getAnimationStatus();
+    }
 };

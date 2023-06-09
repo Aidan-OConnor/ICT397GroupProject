@@ -246,7 +246,14 @@ void MD2Loader::updateAnimation(animationState* animState, float fTimePassed)
         animState->currFrame = animState->nextFrame;
         animState->nextFrame++;
         if (animState->nextFrame > animState->endFrame)
+        {
             animState->nextFrame = animState->startFrame;
+            finishedAnimation = true;
+        }
+        else
+        {
+            finishedAnimation = false;
+        }
     }
 
     animState->interpol = float(animState->fps) * (animState->currTime - animState->prevTime);
@@ -260,4 +267,9 @@ glm::vec3 MD2Loader::getPos()
 void MD2Loader::setPos(glm::vec3 tempPos)
 {
     this->position = tempPos;
+}
+
+bool MD2Loader::getAnimationStatus()
+{
+    return this->finishedAnimation;
 }
