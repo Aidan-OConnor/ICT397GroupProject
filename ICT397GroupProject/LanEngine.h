@@ -43,6 +43,7 @@ void leaveBoat(std::vector<ImGuiData> Docks, glm::vec3 playerPos);
 void dockBoat(std::vector<ImGuiData> Docks);
 void CenterButtons(std::vector<std::string> names, GLFWwindow* window);
 void displayHealthBar(std::vector<std::string> names, GLFWwindow* window);
+void displayLives(std::vector<std::string> names, GLFWwindow* window);
 
 int scrWidth;
 int scrHeight;
@@ -51,6 +52,7 @@ float camHeight = 2.5;
 bool useImGui = false;
 bool playGame = false;
 bool isDev = false;
+bool gameOver = false;
 bool canEnterBoat = false;
 bool canLeaveBoat = false;
 bool boatDocked = false;
@@ -159,20 +161,14 @@ int run()
     std::vector<Terrain> terrains;
     terrains = imGuiData.getTerrains();
 
-    //---------------------------------------------------------------
+    int lives = 4;
+
     Texture testTexture;
     int my_image_width = 0;
     int my_image_height = 0;
     GLuint my_image_texture = 0;
     bool ret = testTexture.LoadTextureForGUI("Images/MapImages/Map1Blur.jpg", &my_image_texture, &my_image_width, &my_image_height);
     IM_ASSERT(ret);
-
-    Texture testTexture1;
-    int my_image_width1 = 0;
-    int my_image_height1 = 0;
-    GLuint my_image_texture1 = 0;
-    bool ret1 = testTexture1.LoadTextureForGUI("Images/MapImages/Map1.jpg", &my_image_texture1, &my_image_width1, &my_image_height1);
-    IM_ASSERT(ret1);
 
     ImFont* Default = io.Fonts->AddFontFromFileTTF("Fonts/proggy-clean.ttf", 13.0f);
     ImFont* RubikStorm = io.Fonts->AddFontFromFileTTF("Fonts/RubikStorm-Regular.ttf", vidMode->height/9);
@@ -187,8 +183,6 @@ int run()
     icons_config.OversampleV = 3;
 
     ImFont* icons_font = io.Fonts->AddFontFromMemoryCompressedTTF(font_awesome_data, font_awesome_size, 20.0f, &icons_config, icon_ranges);
-
-    //--------------------------------------------------------------------
 
     AI ai;
 
@@ -217,7 +211,7 @@ int run()
             camera.setMouseControls(false);
             ImGui::SetNextWindowPos({ -8.0f, -8.0f });
             ImGui::SetNextWindowSize({ (float)(vidMode->width * 1.007), (float)(vidMode->height * 1.009) });
-            ImGui::Begin("OpenGL Texture Text", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoMouseInputs);
+            ImGui::Begin("background", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoMouseInputs);
             ImGui::Image((void*)(intptr_t)my_image_texture, ImVec2(vidMode->width + 100, vidMode->height + 10), { 0, 1 }, { 1, 0 });
             ImGui::End();
 
@@ -232,11 +226,38 @@ int run()
             ImGui::SetNextWindowPos({ (float)(vidMode->width / 2 - vidMode->width / 7.2f), (float)(vidMode->height / 2 - vidMode->height / 6.0f) });
             ImGui::SetNextWindowSize({ (float)(vidMode->width * 1.007), (float)(vidMode->height * 1.009) });
             ImGui::Begin("Buttons", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoResize);
-            //ImGui::PushFont(RubikDirt);
             ImGui::PushFont(icons_font);
             CenterButtons({ ICON_FA_PLAY"  Play Game", ICON_FA_DESKTOP"  Dev Mode", ICON_FA_POWER_OFF"  Exit Game" }, window);
             ImGui::PopFont();
-            //ImGui::ImageButton((void*)(intptr_t)my_image_texture1, ImVec2(100, 100), { 0, 1 }, { 1, 0 });
+            ImGui::End();
+        }
+
+        if (gameOver)
+        {
+            playGame = false;
+            isDev = false;
+            lives = 4;
+            camera.setMouseControls(false);
+            ImGui::SetNextWindowPos({ -8.0f, -8.0f });
+            ImGui::SetNextWindowSize({ (float)(vidMode->width * 1.007), (float)(vidMode->height * 1.009) });
+            ImGui::Begin("GameOverBackground", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoMouseInputs);
+            ImGui::Image((void*)(intptr_t)my_image_texture, ImVec2(vidMode->width + 100, vidMode->height + 10), { 0, 1 }, { 1, 0 });
+            ImGui::End();
+
+            ImGui::SetNextWindowPos({ (float)(vidMode->width / 2 - vidMode->width / 5.0f), (float)(vidMode->height / 2 - vidMode->height / 2.5f) });
+            ImGui::SetNextWindowSize({ (float)(vidMode->width * 1.007), (float)(vidMode->height * 1.009) });
+            ImGui::Begin("GameOverTitle", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoMouseInputs);
+            ImGui::PushFont(RubikStorm);
+            ImGui::Text("Game Over");
+            ImGui::PopFont();
+            ImGui::End();
+
+            ImGui::SetNextWindowPos({ (float)(vidMode->width / 2 - vidMode->width / 7.2f), (float)(vidMode->height / 2 - vidMode->height / 6.0f) });
+            ImGui::SetNextWindowSize({ (float)(vidMode->width * 1.007), (float)(vidMode->height * 1.009) });
+            ImGui::Begin("Button", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoResize);
+            ImGui::PushFont(icons_font);
+            CenterButtons({ ICON_FA_PLAY"  Play Game", ICON_FA_DESKTOP"  Dev Mode", ICON_FA_POWER_OFF"  Exit Game" }, window);
+            ImGui::PopFont();
             ImGui::End();
         }
 
@@ -279,9 +300,8 @@ int run()
                     playerRotation.x = 0;
                     playerRotation.y = 4.868;
                     playerRotation.z = 0;
+                    lives--;
                 }
-
-
                 // Boundary for main island
                 if (camera.getCameraPos().x > -2370 && camera.getCameraPos().x < 2370 && camera.getCameraPos().z > -2390 && camera.getCameraPos().z < 2380 && camera.getPerspective())
                 {
@@ -336,6 +356,14 @@ int run()
                     playerRotation.y = 4.868;
                     playerRotation.z = 0;
                     ai.resetPlayerHealth();
+                    lives--;
+                }
+
+                if (lives == 0)
+                {
+                    gameOver = true;
+                    playGame = false;
+                    isDev = false;
                 }
 
                 player.setTranslation(playerPosition);
@@ -348,7 +376,7 @@ int run()
 
                 ImGui::SetNextWindowPos({ 0.0f, 0.0f });
                 ImGui::SetNextWindowSize({ (float)(vidMode->width * 1.007), (float)(vidMode->height * 1.009) });
-                ImGui::Begin("Buttons", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoResize);
+                ImGui::Begin("HealthBar", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoResize);
                 ImGui::PushFont(icons_font);
                 std::string healthBar = "Health: ";
                 for (int i = 0; i < ai.getPlayerHealth(); i++)
@@ -360,6 +388,23 @@ int run()
                     healthBar += "      ";
                 }
                 displayHealthBar({ healthBar}, window);
+                ImGui::PopFont();
+                ImGui::End();
+
+                ImGui::SetNextWindowPos({ 0.0f, 50.0f });
+                ImGui::SetNextWindowSize({ (float)(vidMode->width * 1.007), (float)(vidMode->height * 1.009) });
+                ImGui::Begin("Lives", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoResize);
+                ImGui::PushFont(icons_font);
+                std::string lifeBar = "Lives: ";
+                for (int i = 0; i < lives; i++)
+                {
+                    lifeBar += ICON_FA_HEART;
+                }
+                for (int i = 0; i < 3 - lives; i++)
+                {
+                    lifeBar += "      ";
+                }
+                displayLives({ lifeBar }, window);
                 ImGui::PopFont();
                 ImGui::End();
             }
@@ -412,11 +457,13 @@ void CenterButtons(std::vector<std::string> names, GLFWwindow* window)
             {
                 playGame = true;
                 camera.setMouseControls(true);
+                gameOver = false;
             }
             else if (i == 1)
             {
                 playGame = true;
                 isDev = true;
+                gameOver = false;
                 camera.setMouseControls(true);
             }
             else if (i == 2)
@@ -429,6 +476,23 @@ void CenterButtons(std::vector<std::string> names, GLFWwindow* window)
 }
 
 void displayHealthBar(std::vector<std::string> names, GLFWwindow* window)
+{
+    const auto& style = ImGui::GetStyle();
+
+    for (int i = 0; i < names.size(); i++)
+    {
+        ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10);
+        ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 4.0f);
+
+        ImGui::PushStyleColor(ImGuiCol_Button, ImColor(180, 180, 180, 100).Value);
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImColor(180, 255, 180, 100).Value);
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImColor(180, 255, 180, 100).Value);
+        ImGui::Button(names[i].c_str(), { (float)(scrWidth / 8), (float)(scrHeight / 27) });
+        ImGui::PopStyleColor(3);
+    }
+}
+
+void displayLives(std::vector<std::string> names, GLFWwindow* window)
 {
     const auto& style = ImGui::GetStyle();
 
