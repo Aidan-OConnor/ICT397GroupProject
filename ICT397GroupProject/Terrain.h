@@ -222,5 +222,5 @@ public:
     *
     * @return heightAtPos
     */
-    int getHeightAtPos(std::vector<glm::vec3> temp, int x, int z, int heightScale);
+    int getHeightAtPos(std::vector<glm::vec3> temp, int x, int z);
 };

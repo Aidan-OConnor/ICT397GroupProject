@@ -27,6 +27,7 @@
 #include "model.h"
 #include "Skybox.h"
 #include "ImGuiData.h"
+#include "Physics.h"
 #include "reactphysics3d/reactphysics3d.h"
 
 // ReactPhysics3D namespace
@@ -155,6 +156,9 @@ int run()
     imGuiData.loadData(convertedData, maps, 0);
     imGuiData.setGuiData(convertedData);
 
+    std::vector<Terrain> terrains;
+    terrains = imGuiData.getTerrains();
+
     //---------------------------------------------------------------
     Texture testTexture;
     int my_image_width = 0;
@@ -188,9 +192,9 @@ int run()
 
     AI ai;
 
-    // Reactphysics initialisation
-    PhysicsCommon physicsCommon;
-    PhysicsWorld* world = physicsCommon.createPhysicsWorld();
+    Physics physics;
+    physics.createCameraBody(camera);
+    physics.createTestCapsule();
 
     while (!glfwWindowShouldClose(window))
     {
@@ -256,11 +260,71 @@ int run()
                 {
                     ai.chasePlayer(NPCs, camera.getCameraPos());
                     enterBoat(camera.getCameraPos(), playerPosition);
+                    physics.setGravity(true);
                 }
                 else
                 {
                     ai.chasePlayer(NPCs, playerPosition);
                     leaveBoat(Docks, playerPosition);
+                    physics.setGravity(false);
+                }
+
+                physics.updateBodies(camera);
+
+                if (camera.getCameraPos().y < -50)
+                {
+                    camera.updatePosition(glm::vec3(-500, 100, 0));
+                    playerPosition.x = -35;
+                    playerPosition.y = -52;
+                    playerPosition.z = -2347;
+                    playerRotation.x = 0;
+                    playerRotation.y = 4.868;
+                    playerRotation.z = 0;
+                }
+
+
+                // Boundary for main island
+                if (camera.getCameraPos().x > -2370 && camera.getCameraPos().x < 2370 && camera.getCameraPos().z > -2390 && camera.getCameraPos().z < 2380 && camera.getPerspective())
+                {
+                    camera.setCameraY(60);
+                }
+
+                // Boundary for island 1
+                if (camera.getCameraPos().x > 4220 && camera.getCameraPos().x < 6770 && camera.getCameraPos().z > -1270 && camera.getCameraPos().z < 1270 && camera.getPerspective())
+                {
+
+                    camera.setCameraY(5);
+                }
+
+                // Boundary for island 2
+                if (camera.getCameraPos().x > -7400 && camera.getCameraPos().x < -3800 && camera.getCameraPos().z > -1670 && camera.getCameraPos().z < 1670 && camera.getPerspective())
+                {
+
+                    camera.setCameraY(50);
+                }
+
+                // Boundary for island 3
+                if (camera.getCameraPos().x > 850 && camera.getCameraPos().x < 3550 && camera.getCameraPos().z > -6850 && camera.getCameraPos().z < -3850 && camera.getPerspective())
+                {
+                    camera.setCameraY(30);
+                }
+
+                // Boundary for island 4
+                if (camera.getCameraPos().x > -3650 && camera.getCameraPos().x < -1510 && camera.getCameraPos().z > -7050 && camera.getCameraPos().z < -4450 && camera.getPerspective())
+                {
+                    camera.setCameraY(30);
+                }
+
+                // Boundary for island 5
+                if (camera.getCameraPos().x > -2720 && camera.getCameraPos().x < -190 && camera.getCameraPos().z > 5020 && camera.getCameraPos().z < 7450 && camera.getPerspective())
+                {
+                    camera.setCameraY(35);
+                }
+
+                // Boundary for island 6
+                if (camera.getCameraPos().x > 1460 && camera.getCameraPos().x < 3760 && camera.getCameraPos().z > 4030 && camera.getCameraPos().z < 6380 && camera.getPerspective())
+                {
+                    camera.setCameraY(30);
                 }
 
                 player.setTranslation(playerPosition);
@@ -274,6 +338,12 @@ int run()
                 if (ai.getPlayerHealth() == 0)
                 {
                     camera.resetCamera();
+                    playerPosition.x = -35;
+                    playerPosition.y = -52;
+                    playerPosition.z = -2347;
+                    playerRotation.x = 0;
+                    playerRotation.y = 4.868;
+                    playerRotation.z = 0;
                     ai.resetPlayerHealth();
                 }
 

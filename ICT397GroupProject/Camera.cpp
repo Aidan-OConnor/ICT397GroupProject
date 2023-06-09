@@ -42,16 +42,25 @@ void Camera::processInput(GLFWwindow* window, glm::vec3& PlayerPosition, glm::ve
 
     if (firstPerson)
     {
-        cameraSpeed = static_cast<float>(500.0 * deltaTime);
+        cameraSpeed = static_cast<float>(150.0 * deltaTime);
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
             cameraPos += cameraSpeed * cameraFront;
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && stamina > 0)
+        {
+            cameraSpeed = static_cast<float>(200.0 * deltaTime);
+            cameraPos += cameraSpeed * cameraFront;
+            stamina -= 0.5;
+        }
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
             cameraPos -= cameraSpeed * cameraFront;
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
             cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
             cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+
+        if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) != GLFW_PRESS && stamina <= 60.0)
+            stamina += 0.1;
 
         if (mouseControls)
         {

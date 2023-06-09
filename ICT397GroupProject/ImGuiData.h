@@ -1306,4 +1306,19 @@ public:
     {
         return this->md2Model.getAnimationStatus();
     }
+
+    std::vector<Terrain> getTerrains()
+    {
+        std::vector<Terrain> terrains;
+
+        for (int i = 0; i < imGuiObjects.size(); i++)
+        {
+            if (imGuiObjects[i].objectType == "Terrain")
+            {
+                terrains.push_back(imGuiObjects[i].terrain.getTerrain());
+            }
+        }
+
+        return terrains;
+    }
 };

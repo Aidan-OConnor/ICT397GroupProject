@@ -37,7 +37,7 @@ private:
     bool grounded; /// Boolean to check if the camera is on the ground
     float velocity = 15.0; /// Float for the movement speed of the camera
     float gravity = 0.05; /// Float for gravity of the camera, affects how fast it will fall
-    float stamina = 60.0; /// Float for stamina of the character, determines whether sprinting is possible
+    float stamina = 70.0; /// Float for stamina of the character, determines whether sprinting is possible
     float cameraSpeed; ///Determines the speed at which the camera moves
     float yaw; /// Float for yaw angle, used to make the camera look around
     float pitch; /// Float for pitch of the camera, used to make the camera look around
