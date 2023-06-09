@@ -1,7 +1,7 @@
 --For models with no weapon, leave the WeaponF1 and WeaponT1 as ""
 --E.g., md2Models["WeaponF1"] = "", md2Models["WeaponT1"] = ""
 
-numMd2Models = 22
+numMd2Models = 24
 
 md2Models = {}
 
@@ -26,7 +26,7 @@ md2Models["WeaponF4"] = "MD2Models/Alien/weapon.md2"
 md2Models["WeaponT4"] = "MD2Models/Alien/weapon.png"
 
 md2Models["ModelF5"] = "MD2Models/Chicken/Chicken.MD2"
-md2Models["ModelT5"] = "MD2Models/Chicken/MRSOFT.png"
+md2Models["ModelT5"] = "MD2Models/Chicken/skin.png"
 md2Models["WeaponF5"] = ""  --"MD2Models/Chicken/WEAPON.MD2"
 md2Models["WeaponT5"] = ""  --"MD2Models/Chicken/WEAPON.png"
 
@@ -114,3 +114,13 @@ md2Models["ModelF22"] = "MD2Models/DarkAwolf/DarkAwolf.md2"
 md2Models["ModelT22"] = "MD2Models/DarkAwolf/skin.png"
 md2Models["WeaponF22"] = ""
 md2Models["WeaponT22"] = ""
+
+md2Models["ModelF23"] = "MD2Models/ChickenPsycho/ChickenPsycho.MD2"
+md2Models["ModelT23"] = "MD2Models/ChickenPsycho/skin.png"
+md2Models["WeaponF23"] = ""
+md2Models["WeaponT23"] = ""
+
+md2Models["ModelF24"] = "MD2Models/ChickenCybor/ChickenCybor.MD2"
+md2Models["ModelT24"] = "MD2Models/ChickenCybor/skin.png"
+md2Models["WeaponF24"] = ""
+md2Models["WeaponT24"] = ""
