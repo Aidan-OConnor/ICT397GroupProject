@@ -44,7 +44,7 @@ void dockBoat(std::vector<ImGuiData> Docks);
 void CenterButtons(std::vector<std::string> names, GLFWwindow* window);
 void displayHealthBar(std::vector<std::string> names, GLFWwindow* window);
 void displayLives(std::vector<std::string> names, GLFWwindow* window);
-void checkCollectables(std::vector<ImGuiData> Collectables, glm::vec3 playerPos);
+void checkCollectables(std::vector<ImGuiData> Collectables);
 void getCollectable(std::vector<ImGuiData>& Collectables);
 
 int scrWidth;
@@ -404,12 +404,12 @@ int run()
                     isDev = false;
                 }
 
-                checkCollectables(Collectables, camera.getCameraPos());
-                //if (hasPickedup)
-                //{
-                //    getCollectable(Collectables);
-                //    imGuiData.setCollectables(Collectables);
-                //}
+                checkCollectables(Collectables); 
+                if (hasPickedup)
+                {
+                    getCollectable(Collectables);
+                    imGuiData.setCollectables(Collectables);
+                }
 
                 player.setTranslation(playerPosition);
                 player.setRotation(playerRotation);
@@ -600,12 +600,12 @@ void dockBoat(std::vector<ImGuiData> Docks)
     }
 }
 
-void checkCollectables(std::vector<ImGuiData> Collectables, glm::vec3 playerPos)
+void checkCollectables(std::vector<ImGuiData> Collectables)
 {
     for (int i = 0; i < Collectables.size(); i++)
     {
-        float distance = glm::sqrt((Collectables[i].getTranslation().x - playerPos.x) * (Collectables[i].getTranslation().x - playerPos.x) +
-            (Collectables[i].getTranslation().z - playerPos.z) * (Collectables[i].getTranslation().z - playerPos.z));
+        float distance = glm::sqrt((Collectables[i].getTranslation().x - camera.getCameraPos().x) * (Collectables[i].getTranslation().x - camera.getCameraPos().x) +
+            (Collectables[i].getTranslation().z - camera.getCameraPos().z) * (Collectables[i].getTranslation().z - camera.getCameraPos().z));
 
         if (distance < 100)
         {
