@@ -27,6 +27,7 @@
 #include "model.h"
 #include "Skybox.h"
 #include "ImGuiData.h"
+#include "Physics.h"
 #include "reactphysics3d/reactphysics3d.h"
 
 // ReactPhysics3D namespace
@@ -154,6 +155,9 @@ int run()
     imGuiData.loadData(convertedData, maps, 0);
     imGuiData.setGuiData(convertedData);
 
+    std::vector<Terrain> terrains;
+    terrains = imGuiData.getTerrains();
+
     //---------------------------------------------------------------
     Texture testTexture;
     int my_image_width = 0;
@@ -186,9 +190,10 @@ int run()
 
     AI ai;
 
-    // Reactphysics initialisation
-    PhysicsCommon physicsCommon;
-    PhysicsWorld* world = physicsCommon.createPhysicsWorld();
+    //Physics physics;
+    //physics.createCameraBody(camera);
+    //physics.createTestCapsule();
+    //physics.createTerrain(imGuiData);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -254,11 +259,31 @@ int run()
                 {
                     ai.chasePlayer(NPCs, camera.getCameraPos());
                     enterBoat(camera.getCameraPos(), playerPosition);
+                    //physics.setGravity(true);
                 }
                 else
                 {
                     ai.chasePlayer(NPCs, playerPosition);
                     leaveBoat(Docks, playerPosition);
+                    //physics.setGravity(false);
+                }
+
+                //physics.updateBodies(camera);
+
+                /*if (camera.getCameraPos().y < -50)
+                {
+                    camera.updatePosition(glm::vec3(-300, 100, 0));
+                }*/
+                
+                std::vector<glm::vec3> temp;
+                int newY;
+                
+                // Terrain walking for main island
+                if (camera.getCameraPos().x > -2560 && camera.getCameraPos().x < 2560 && camera.getCameraPos().z > -2560 && camera.getCameraPos().z < 2560)
+                {
+                    temp = terrains[0].getVertices();
+                    newY = terrains[0].getHeightAtPos(temp, camera.getCameraPos().x, camera.getCameraPos().z);
+                    camera.setCameraY(newY + 50);
                 }
 
                 player.setTranslation(playerPosition);

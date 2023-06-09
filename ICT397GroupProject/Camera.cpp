@@ -5,7 +5,7 @@
 
 Camera::Camera()
 {
-    this->cameraPos = glm::vec3(-50.0f, 0.0f, 0.0f);
+    this->cameraPos = glm::vec3(0.0f, 0.0f, 0.0f);
     this->foot = this->cameraPos;
     this->foot.y -= 2.5;
     this->cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
@@ -42,12 +42,18 @@ void Camera::processInput(GLFWwindow* window, glm::vec3& PlayerPosition, glm::ve
 
     if (firstPerson)
     {
-        cameraSpeed = static_cast<float>(500.0 * deltaTime);
+        cameraSpeed = static_cast<float>(150.0 * deltaTime);
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        {
+            //cameraPos.z += cameraSpeed * cameraFront.z;
             cameraPos += cameraSpeed * cameraFront;
+        }
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        {
+            //cameraPos.z -= cameraSpeed * cameraFront.z;
             cameraPos -= cameraSpeed * cameraFront;
+        }
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
             cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
