@@ -14,13 +14,13 @@ private:
 public:
     AI()
     {
-        movementSpeed = 100;
+        movementSpeed = 175;
         playerHealth = 40;
     }
 
     AI(std::vector<ImGuiData>& NPCs)
     {
-        movementSpeed = 100;
+        movementSpeed = 175;
         playerHealth = 40;
         
         for (int i = 0; i < NPCs.size(); i++)
@@ -52,7 +52,7 @@ public:
             float distance = glm::sqrt((NPCposition.x - player.x) * (NPCposition.x - player.x) +
                 (NPCposition.z - player.z) * (NPCposition.z - player.z));
 
-            if (distance <= 250.0f && distance > 50)
+            if (distance <= 3000.0f && distance > 50)
             {
                 if (!isRunning[i])
                 {

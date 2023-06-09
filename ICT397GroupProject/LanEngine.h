@@ -46,6 +46,7 @@ void displayHealthBar(std::vector<std::string> names, GLFWwindow* window);
 void displayLives(std::vector<std::string> names, GLFWwindow* window);
 void checkCollectables(std::vector<ImGuiData> Collectables);
 void getCollectable(std::vector<ImGuiData>& Collectables);
+void checkForWin(ImGuiData hut);
 
 int scrWidth;
 int scrHeight;
@@ -56,6 +57,7 @@ bool playGame = false;
 bool isDev = false;
 bool gameOver = false;
 bool gameWon = false;
+bool canWin = false;
 bool canEnterBoat = false;
 bool canLeaveBoat = false;
 bool boatDocked = false;
@@ -214,7 +216,7 @@ int run()
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        if (!playGame)
+        if (!playGame && !gameWon)
         {
             camera.setMouseControls(false);
             ImGui::SetNextWindowPos({ -8.0f, -8.0f });
@@ -314,6 +316,7 @@ int run()
                 std::vector<ImGuiData> NPCs = imGuiData.getNPCs();
                 std::vector<ImGuiData> Docks = imGuiData.getDocks();
                 std::vector<ImGuiData> Collectables = imGuiData.getCollectables();
+                ImGuiData hut = imGuiData.getHut();
 
                 if (camera.getPerspective())
                 {
@@ -452,6 +455,20 @@ int run()
                 displayLives({ lifeBar }, window);
                 ImGui::PopFont();
                 ImGui::End();
+
+                ImGui::SetNextWindowPos({ 0.0f, 100.0f });
+                ImGui::SetNextWindowSize({ (float)(vidMode->width * 1.007), (float)(vidMode->height * 1.009) });
+                ImGui::Begin("Collectables", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoResize);
+                ImGui::PushFont(icons_font);
+                std::string collectableBar = "Collectables: " + std::to_string(numCollectables) + "/6";
+                displayLives({ collectableBar }, window);
+                ImGui::PopFont();
+                ImGui::End();
+
+                if (numCollectables == 6)
+                {
+                    checkForWin(hut);
+                }
             }
 
             initShaders(camera, shader, lightingShader, waterShader, modelShader, player, projection, view, model);
@@ -556,6 +573,23 @@ void displayLives(std::vector<std::string> names, GLFWwindow* window)
     }
 }
 
+void displayCollectables(std::vector<std::string> names, GLFWwindow* window)
+{
+    const auto& style = ImGui::GetStyle();
+
+    for (int i = 0; i < names.size(); i++)
+    {
+        ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10);
+        ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 4.0f);
+
+        ImGui::PushStyleColor(ImGuiCol_Button, ImColor(180, 180, 180, 100).Value);
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImColor(180, 255, 180, 100).Value);
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImColor(180, 255, 180, 100).Value);
+        ImGui::Button(names[i].c_str(), { (float)(scrWidth / 8), (float)(scrHeight / 27) });
+        ImGui::PopStyleColor(3);
+    }
+}
+
 void enterBoat(glm::vec3 playerPos, glm::vec3 boatPos)
 {
     canLeaveBoat = false;
@@ -626,6 +660,19 @@ void getCollectable(std::vector<ImGuiData>& Collectables)
     hasPickedup = false;
 }
 
+void checkForWin(ImGuiData hut)
+{
+    float distance = glm::sqrt((hut.getTranslation().x - camera.getCameraPos().x) * (hut.getTranslation().x - camera.getCameraPos().x) +
+        (hut.getTranslation().z - camera.getCameraPos().z) * (hut.getTranslation().z - camera.getCameraPos().z));
+
+    if (distance < 100)
+    {
+        canWin = true;
+    }
+    else
+        canWin = false;
+}
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
@@ -673,6 +720,13 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
             }
             if (canPickup)
                 hasPickedup = true;
+            if (canWin)
+            {
+                gameWon = true;
+                playGame = false;
+                isDev = false;
+                gameOver = false;
+            }
         }
     }
 }
