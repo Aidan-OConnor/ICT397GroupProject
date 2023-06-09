@@ -52,7 +52,7 @@ public:
             float distance = glm::sqrt((NPCposition.x - player.x) * (NPCposition.x - player.x) +
                 (NPCposition.z - player.z) * (NPCposition.z - player.z));
 
-            if (distance <= 3000.0f && distance > 50)
+            if (distance <= 850.0f && distance > 50)
             {
                 if (!isRunning[i])
                 {

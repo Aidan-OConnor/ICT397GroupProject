@@ -353,7 +353,7 @@ int run()
                 if (camera.getCameraPos().x > 4220 && camera.getCameraPos().x < 6770 && camera.getCameraPos().z > -1270 && camera.getCameraPos().z < 1270 && camera.getPerspective())
                 {
 
-                    camera.setCameraY(5);
+                    camera.setCameraY(85);
                 }
 
                 // Boundary for island 2
