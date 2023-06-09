@@ -236,9 +236,6 @@ int run()
 
         if (playGame)
         {
-            std::vector<ImGuiData> NPCs = imGuiData.getNPCs();
-            std::vector<ImGuiData> Docks = imGuiData.getDocks();
-
             if (isDev)
             {
                 if (useImGui)
@@ -250,6 +247,9 @@ int run()
             }
             else
             {
+                std::vector<ImGuiData> NPCs = imGuiData.getNPCs();
+                std::vector<ImGuiData> Docks = imGuiData.getDocks();
+
                 if (camera.getPerspective())
                 {
                     ai.chasePlayer(NPCs, camera.getCameraPos());
@@ -260,15 +260,15 @@ int run()
                     ai.chasePlayer(NPCs, playerPosition);
                     leaveBoat(Docks, playerPosition);
                 }
+
+                player.setTranslation(playerPosition);
+                player.setRotation(playerRotation);
+
+                dockBoat(Docks);
+
+                imGuiData.setPlayer(player);
+                imGuiData.setNPCs(NPCs);
             }
-
-            player.setTranslation(playerPosition);
-            player.setRotation(playerRotation);
-
-            dockBoat(Docks);
-
-            imGuiData.setPlayer(player);
-            imGuiData.setNPCs(NPCs);
 
             initShaders(camera, shader, lightingShader, waterShader, modelShader, player, projection, view, model);
 
@@ -392,6 +392,12 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 {
     if (playGame)
     {
+        if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS)
+        {
+            playGame = false;
+            isDev = false;
+        }
+
         if (isDev)
         {
             if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS)
