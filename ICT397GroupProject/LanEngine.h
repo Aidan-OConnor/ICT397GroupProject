@@ -312,6 +312,7 @@ int run()
         {
             if (isDev)
             {
+                camera.setVelocity(1500);
                 if (useImGui)
                 {
                     ImGui::PushFont(Default);
@@ -321,6 +322,7 @@ int run()
             }
             else
             {
+                camera.setVelocity(0);
                 std::vector<ImGuiData> NPCs = imGuiData.getNPCs();
                 std::vector<ImGuiData> Docks = imGuiData.getDocks();
                 std::vector<ImGuiData> Collectables = imGuiData.getCollectables();
@@ -350,9 +352,11 @@ int run()
                     playerRotation.y = 4.868;
                     playerRotation.z = 0;
                     lives--;
+                    ai.resetPlayerHealth();
                 }
 
-                std::cout << camera.getCameraPos().x << " " << camera.getCameraPos().y << " " << camera.getCameraPos().z << " " << std::endl;
+                // PRINT PLAYER POSITION
+                //std::cout << camera.getCameraPos().x << " " << camera.getCameraPos().y << " " << camera.getCameraPos().z << " " << std::endl;
 
                 // Boundary for island 1
                 if (camera.getCameraPos().x > 4220 && camera.getCameraPos().x < 6770 && camera.getCameraPos().z > -1270 && camera.getCameraPos().z < 1270 && camera.getPerspective())

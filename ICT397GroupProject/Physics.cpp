@@ -136,7 +136,7 @@ void Physics::createMapBoundary()
 
     BoxShape* boxShape3 = physicsCommon.createBoxShape(Vector3(200, 200, 26000));
     transform = Transform::identity();
-    collider = wall3->addCollider(boxShape2, transform);
+    collider = wall3->addCollider(boxShape3, transform);
 
     position = Vector3(12330, 0, 0);
     orientation = Quaternion::identity();
@@ -146,7 +146,7 @@ void Physics::createMapBoundary()
 
     BoxShape* boxShape4 = physicsCommon.createBoxShape(Vector3(200, 200, 26000));
     transform = Transform::identity();
-    collider = wall4->addCollider(boxShape2, transform);
+    collider = wall4->addCollider(boxShape4, transform);
 }
 
 void Physics::createCameraBody(Camera& camera)
@@ -239,7 +239,7 @@ void Physics::createTerrain(ImGuiData imGuiData)
 
     HeightFieldShape* terrainShape = physicsCommon.createHeightFieldShape(terrains[0].getWidth(), terrains[0].getWidth(), -100, 200, heightData, HeightFieldShape::HeightDataType::HEIGHT_FLOAT_TYPE, 1, 1.0, Vector3(10, 1, 10));
 
-    position = Vector3(0, 125, 0);  
+    position = Vector3(0, 80, 0);  
     orientation = Quaternion::identity();
     transform = Transform(position, orientation);
     RigidBody* rigidBody = world->createRigidBody(transform);

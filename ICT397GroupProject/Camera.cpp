@@ -287,3 +287,8 @@ void Camera::setMouseControls(bool status)
 {
     this->mouseControls = status;
 }
+
+void Camera::setVelocity(float value)
+{
+    velocity = value;
+}

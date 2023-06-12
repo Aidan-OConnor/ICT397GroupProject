@@ -258,4 +258,6 @@ public:
     * @return void
     */
     void setMouseControls(bool status);
+
+    void setVelocity(float value);
 };
