@@ -73,15 +73,13 @@ public:
 	*
 	* @return void
 	*/
-	void createTerrain(ImGuiData imGuiData);
+	void createMainTerrain(ImGuiData imGuiData);
 
 	void createMainIslandBoundary();
 
 	void createIslandBoundary1();
 
 	void createIslandBoundary2();
-
-	void createIslandBoundary3();
 
 	void createIslandBoundary4();
 

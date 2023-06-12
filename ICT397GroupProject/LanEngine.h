@@ -199,7 +199,7 @@ int run()
     Physics physics;
     physics.createCameraBody(camera);
     physics.createTestCapsule();
-    physics.createTerrain(imGuiData);
+    physics.createMainTerrain(imGuiData);
     physics.createMainIslandBoundary();
     physics.createIslandBoundary1();
     physics.createIslandBoundary2();
@@ -365,14 +365,14 @@ int run()
                     physics.setGravity(false);
                 }
 
-                // Boundary for island 2
+                //Boundary for island 2
                 if (camera.getCameraPos().x > -7400 && camera.getCameraPos().x < -3800 && camera.getCameraPos().z > -1670 && camera.getCameraPos().z < 1670 && camera.getPerspective())
                 {
                     camera.setCameraY(50);
                     physics.setGravity(false);
                 }
 
-                // Boundary for island 3
+                //Boundary for island 3
                 if (camera.getCameraPos().x > 850 && camera.getCameraPos().x < 3550 && camera.getCameraPos().z > -6850 && camera.getCameraPos().z < -3850 && camera.getPerspective())
                 {
                     camera.setCameraY(30);
@@ -389,7 +389,7 @@ int run()
                 // Boundary for island 5
                 if (camera.getCameraPos().x > -2720 && camera.getCameraPos().x < -190 && camera.getCameraPos().z > 5020 && camera.getCameraPos().z < 7450 && camera.getPerspective())
                 {
-                    camera.setCameraY(35);
+                    camera.setCameraY(50);
                     physics.setGravity(false);
                 }
 
@@ -643,7 +643,7 @@ void dockBoat(std::vector<ImGuiData> Docks)
     if (boatDocked)
     {
         glm::vec3 camPosition = Docks[dockIndex].getTranslation();
-        camPosition.y += 100;
+        camPosition.y += 110;
         camera.updatePosition(camPosition);
         boatDocked = false;
     }

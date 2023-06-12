@@ -36,7 +36,7 @@ void Physics::createMainIslandBoundary()
     boundaries = world->createRigidBody(transform);
     boundaries->setType(BodyType::STATIC);
 
-    CapsuleShape* capsuleShape = physicsCommon.createCapsuleShape(2275, 200);
+    CapsuleShape* capsuleShape = physicsCommon.createCapsuleShape(2275, 300);
     transform = Transform::identity();
     collider = boundaries->addCollider(capsuleShape, transform);
 }
@@ -49,7 +49,7 @@ void Physics::createIslandBoundary1()
     island1 = world->createRigidBody(transform);
     island1->setType(BodyType::STATIC);
 
-    CapsuleShape* capsuleShape = physicsCommon.createCapsuleShape(1200, 200);
+    CapsuleShape* capsuleShape = physicsCommon.createCapsuleShape(1200, 300);
     transform = Transform::identity();
     collider = island1->addCollider(capsuleShape, transform);
 }
@@ -62,7 +62,7 @@ void Physics::createIslandBoundary2()
     island2 = world->createRigidBody(transform);
     island2->setType(BodyType::STATIC);
 
-    CapsuleShape* capsuleShape = physicsCommon.createCapsuleShape(1200, 200);
+    CapsuleShape* capsuleShape = physicsCommon.createCapsuleShape(1200, 300);
     transform = Transform::identity();
     collider = island2->addCollider(capsuleShape, transform);
 }
@@ -75,7 +75,7 @@ void Physics::createIslandBoundary4()
     island4 = world->createRigidBody(transform);
     island4->setType(BodyType::STATIC);
 
-    CapsuleShape* capsuleShape = physicsCommon.createCapsuleShape(1200, 200);
+    CapsuleShape* capsuleShape = physicsCommon.createCapsuleShape(1200, 300);
     transform = Transform::identity();
     collider = island4->addCollider(capsuleShape, transform);
 }
@@ -88,7 +88,7 @@ void Physics::createIslandBoundary5()
     island5 = world->createRigidBody(transform);
     island5->setType(BodyType::STATIC);
 
-    CapsuleShape* capsuleShape = physicsCommon.createCapsuleShape(1200, 200);
+    CapsuleShape* capsuleShape = physicsCommon.createCapsuleShape(1200, 300);
     transform = Transform::identity();
     collider = island5->addCollider(capsuleShape, transform);
 }
@@ -101,7 +101,7 @@ void Physics::createIslandBoundary6()
     island6 = world->createRigidBody(transform);
     island6->setType(BodyType::STATIC);
 
-    CapsuleShape* capsuleShape = physicsCommon.createCapsuleShape(1200, 200);
+    CapsuleShape* capsuleShape = physicsCommon.createCapsuleShape(1200, 300);
     transform = Transform::identity();
     collider = island6->addCollider(capsuleShape, transform);
 }
@@ -161,13 +161,13 @@ void Physics::createCameraBody(Camera& camera)
     camBody->enableGravity(true);
 
     // Camera collision body in the shape of a sphere
-    SphereShape* sphereShape = physicsCommon.createSphereShape(20);
+    CapsuleShape* capsuleShape = physicsCommon.createCapsuleShape(20, 20);
     transform = Transform::identity();
-    collider = camBody->addCollider(sphereShape, transform);
+    collider = camBody->addCollider(capsuleShape, transform);
     camBody->setMass(0.01);
     camBody->setIsAllowedToSleep(false);
-    camBody->setAngularDamping(0.2);
-    camBody->setLinearDamping(0.2);
+    camBody->setAngularDamping(0.0);
+    camBody->setLinearDamping(0.0);
 }
 
 void Physics::updateBodies(Camera& camera, ImGuiData& player)
@@ -224,7 +224,7 @@ void Physics::updateBodies(Camera& camera, ImGuiData& player)
     }
 }
 
-void Physics::createTerrain(ImGuiData imGuiData)
+void Physics::createMainTerrain(ImGuiData imGuiData)
 {
     std::vector<Terrain> terrains;
     terrains = imGuiData.getTerrains();
