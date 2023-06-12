@@ -199,6 +199,14 @@ int run()
     Physics physics;
     physics.createCameraBody(camera);
     physics.createTestCapsule();
+    physics.createTerrain(imGuiData);
+    physics.createMainIslandBoundary();
+    physics.createIslandBoundary1();
+    physics.createIslandBoundary2();
+    physics.createIslandBoundary4();
+    physics.createIslandBoundary5();
+    physics.createIslandBoundary6();
+    physics.createMapBoundary();
 
     while (!glfwWindowShouldClose(window))
     {
@@ -323,14 +331,14 @@ int run()
                     ai.chasePlayer(NPCs, camera.getCameraPos());
                     enterBoat(camera.getCameraPos(), playerPosition);
                     physics.setGravity(true);
+                    physics.toggleBoundaries(false);
                 }
                 else
                 {
                     leaveBoat(Docks, playerPosition);
                     physics.setGravity(false);
+                    physics.toggleBoundaries(true);
                 }
-
-                physics.updateBodies(camera);
 
                 if (camera.getCameraPos().y < -50)
                 {
@@ -343,48 +351,49 @@ int run()
                     playerRotation.z = 0;
                     lives--;
                 }
-                // Boundary for main island
-                if (camera.getCameraPos().x > -2370 && camera.getCameraPos().x < 2370 && camera.getCameraPos().z > -2390 && camera.getCameraPos().z < 2380 && camera.getPerspective())
-                {
-                    camera.setCameraY(60);
-                }
+
+                std::cout << camera.getCameraPos().x << " " << camera.getCameraPos().y << " " << camera.getCameraPos().z << " " << std::endl;
 
                 // Boundary for island 1
                 if (camera.getCameraPos().x > 4220 && camera.getCameraPos().x < 6770 && camera.getCameraPos().z > -1270 && camera.getCameraPos().z < 1270 && camera.getPerspective())
                 {
-
-                    camera.setCameraY(85);
+                    camera.setCameraY(90);
+                    physics.setGravity(false);
                 }
 
                 // Boundary for island 2
                 if (camera.getCameraPos().x > -7400 && camera.getCameraPos().x < -3800 && camera.getCameraPos().z > -1670 && camera.getCameraPos().z < 1670 && camera.getPerspective())
                 {
-
                     camera.setCameraY(50);
+                    physics.setGravity(false);
                 }
 
                 // Boundary for island 3
                 if (camera.getCameraPos().x > 850 && camera.getCameraPos().x < 3550 && camera.getCameraPos().z > -6850 && camera.getCameraPos().z < -3850 && camera.getPerspective())
                 {
                     camera.setCameraY(30);
+                    physics.setGravity(false);
                 }
 
                 // Boundary for island 4
                 if (camera.getCameraPos().x > -3650 && camera.getCameraPos().x < -1510 && camera.getCameraPos().z > -7050 && camera.getCameraPos().z < -4450 && camera.getPerspective())
                 {
                     camera.setCameraY(30);
+                    physics.setGravity(false);
                 }
 
                 // Boundary for island 5
                 if (camera.getCameraPos().x > -2720 && camera.getCameraPos().x < -190 && camera.getCameraPos().z > 5020 && camera.getCameraPos().z < 7450 && camera.getPerspective())
                 {
                     camera.setCameraY(35);
+                    physics.setGravity(false);
                 }
 
                 // Boundary for island 6
                 if (camera.getCameraPos().x > 1460 && camera.getCameraPos().x < 3760 && camera.getCameraPos().z > 4030 && camera.getCameraPos().z < 6380 && camera.getPerspective())
                 {
                     camera.setCameraY(30);
+                    physics.setGravity(false);
                 }
 
                 if (ai.getPlayerHealth() == 0)
@@ -416,6 +425,8 @@ int run()
 
                 player.setTranslation(playerPosition);
                 player.setRotation(playerRotation);
+
+                physics.updateBodies(camera, player);
 
                 dockBoat(Docks);
 
@@ -628,7 +639,7 @@ void dockBoat(std::vector<ImGuiData> Docks)
     if (boatDocked)
     {
         glm::vec3 camPosition = Docks[dockIndex].getTranslation();
-        camPosition.y += 20;
+        camPosition.y += 100;
         camera.updatePosition(camPosition);
         boatDocked = false;
     }

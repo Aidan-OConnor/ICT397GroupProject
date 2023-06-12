@@ -5,7 +5,7 @@
 
 Camera::Camera()
 {
-    this->cameraPos = glm::vec3(-500, 100, 0);
+    this->cameraPos = glm::vec3(0, 150, 0);
     this->foot = this->cameraPos;
     this->foot.y -= 2.5;
     this->cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
@@ -32,7 +32,7 @@ Camera::Camera()
     this->movementSpeed = 0;
     this->forwardSpeed = 0;
     this->backwardSpeed = 0;
-    this->maxMoveSpeed = 200;
+    this->maxMoveSpeed = 300;
 }
 
 void Camera::processInput(GLFWwindow* window, glm::vec3& PlayerPosition, glm::vec3& PlayerRotation)
@@ -42,25 +42,42 @@ void Camera::processInput(GLFWwindow* window, glm::vec3& PlayerPosition, glm::ve
 
     if (firstPerson)
     {
-        cameraSpeed = static_cast<float>(150.0 * deltaTime);
+        cameraSpeed = static_cast<float>(175.0 * deltaTime);
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-            cameraPos += cameraSpeed * cameraFront;
+        {
+            cameraPos.x += cameraSpeed * cameraFront.x;
+            cameraPos.z += cameraSpeed * cameraFront.z;
+        }
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS && glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS && stamina > 0)
         {
             cameraSpeed = static_cast<float>(200.0 * deltaTime);
-            cameraPos += cameraSpeed * cameraFront;
+            cameraPos.x += cameraSpeed * cameraFront.x;
+            cameraPos.z += cameraSpeed * cameraFront.z;
             stamina -= 0.5;
         }
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-            cameraPos -= cameraSpeed * cameraFront;
+        {
+            cameraPos.x -= cameraSpeed * cameraFront.x;
+            cameraPos.z -= cameraSpeed * cameraFront.z;
+        }
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
             cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
             cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 
+        if (glfwGetKey(window, GLFW_KEY_SPACE)) {
+            velocity = velocity + gravity * deltaTime;
+            cameraPos.y = cameraPos.y + velocity * deltaTime;
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL)) {
+            velocity = velocity + gravity * deltaTime;
+            cameraPos.y = cameraPos.y - velocity * deltaTime;
+        }
+
         if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) != GLFW_PRESS && stamina <= 60.0)
-            stamina += 0.1;
+            stamina += 0.2;
 
         if (mouseControls)
         {

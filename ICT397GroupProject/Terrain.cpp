@@ -10,6 +10,20 @@ Terrain::Terrain(const char* fileName, float scale)
 
     float yScale = 64.0f / 256.0f, yShift = 16.0f;
     unsigned bytePerPixel = channels;
+    
+    heightVals.resize(static_cast<size_t>(width) + 1);
+    for (auto& e : heightVals)
+    {
+        e.resize(static_cast<size_t>(width) + 1);
+    }
+    for (int x = 0; x < width; x++)
+    {
+        for (int y = 0; y < width; y++)
+        {
+            heightVals.at((x)).at((y)) = heightMap[((x * width) + y)];
+        }
+    }
+    
     for (int i = 0; i < height; i++)
     {
         for (int j = 0; j < width; j++)
@@ -24,6 +38,20 @@ Terrain::Terrain(const char* fileName, float scale)
             tempVert.z = ((-width / 2.0f + width * j / (float)width) * scale);
 
             vertices.push_back(tempVert);
+        }
+    }
+
+    for (int x = 1; x < width - 1; x++)
+    {
+        for (int y = 1; y < height - 1; y++)
+        {
+            float average = 0;
+            average += heightVals.at((x)).at((y));
+            average += heightVals.at((x + 1)).at((y));
+            average += heightVals.at((x - 1)).at((y));
+            average += heightVals.at((x)).at((y + 1));
+            average += heightVals.at((x)).at((y - 1));
+            heightVals.at((x)).at((y)) = average / 5;
         }
     }
 
@@ -356,14 +384,24 @@ int Terrain::getHeight()
     return(this->height*this->widthScale);
 }
 
-int Terrain::getHeightAtPos(std::vector<glm::vec3> temp, int x, int z)
+float Terrain::getHeightAtPos(float x, float z)
 {
-    for (int i = 0; i < temp.size(); i++) {
-        if ((temp[i].x) == x && (temp[i].z) == z)
-        {
-            return (temp[i].y);
-        }
+    if (x > 0 && x < static_cast<float>(width) && z > 0 && z < static_cast<float>(width))
+    {
+        float fract_x = x - (int)x;
+        float fract_z = z - (int)z;
+
+        float h_00 = heightVals.at((int)x).at((int)z);
+        float h_10 = heightVals.at((int)x).at((int)ceil(z));
+        float h_01 = heightVals.at((int)ceil(x)).at((int)z);
+        float h_11 = heightVals.at((int)ceil(x)).at((int)ceil(z));
+
+        float hLine1 = h_00 + (h_01 - h_00) * fract_x;
+        float hLine2 = h_10 + (h_11 - h_10) * fract_x;
+
+        float cross = hLine1 + (hLine2 - hLine1) * fract_z;
+        return (cross);
     }
 
-    return 0;
+    return(0);
 }

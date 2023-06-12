@@ -2,6 +2,8 @@
 #include <iostream>
 #include <glm.hpp>
 #include <Vector>
+#include <cmath>
+#include <math.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <stb_image.h>
@@ -50,6 +52,8 @@ private:
     unsigned int terrainVBO;
     /// Stores a terrains index buffer object
     unsigned int terrainIBO;
+
+    std::vector<std::vector<float>> heightVals = {};
 
     /*
      * @brief Initializes terrain VAO
@@ -222,5 +226,5 @@ public:
     *
     * @return heightAtPos
     */
-    int getHeightAtPos(std::vector<glm::vec3> temp, int x, int z);
+    float getHeightAtPos(float x, float z);
 };

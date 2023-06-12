@@ -66,16 +66,34 @@ public:
 	*
 	* @return void
 	*/
-	void updateBodies(Camera& camera);
+	void updateBodies(Camera& camera, ImGuiData &player);
 
 	/*
 	* @brief Creates a terrain collider and rigidbody for the terrain objects in the scene
 	*
 	* @return void
 	*/
-	bool createTerrain(ImGuiData imGuiData);
+	void createTerrain(ImGuiData imGuiData);
+
+	void createMainIslandBoundary();
+
+	void createIslandBoundary1();
+
+	void createIslandBoundary2();
+
+	void createIslandBoundary3();
+
+	void createIslandBoundary4();
+
+	void createIslandBoundary5();
+
+	void createIslandBoundary6();
+
+	void createMapBoundary();
 
 	void setGravity(bool gravity);
+
+	void toggleBoundaries(bool check);
 
 private:
 
@@ -101,7 +119,17 @@ private:
 
 	RigidBody* camBody; /// Reactphysics3d RigidBody variable for collisions
 
-	RigidBody* boatBody;
+	RigidBody* boundaries; // Main island
+
+	RigidBody* island1; // Outer islands
+
+	RigidBody* island2;
+
+	RigidBody* island4;
+
+	RigidBody* island5;
+
+	RigidBody* island6;
 
 	Collider* collider; /// Reactphysics3d Collider variable for collisions
 

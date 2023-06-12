@@ -35,7 +35,7 @@ private:
     glm::vec3 playerRotation;
     bool firstMouse; /// Boolean for the initial use of the mouse
     bool grounded; /// Boolean to check if the camera is on the ground
-    float velocity = 15.0; /// Float for the movement speed of the camera
+    float velocity = 1500.0; /// Float for the movement speed of the camera
     float gravity = 0.05; /// Float for gravity of the camera, affects how fast it will fall
     float stamina = 70.0; /// Float for stamina of the character, determines whether sprinting is possible
     float cameraSpeed; ///Determines the speed at which the camera moves
